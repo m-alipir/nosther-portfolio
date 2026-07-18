@@ -1,0 +1,188 @@
+.header {
+  position: fixed;
+  z-index: var(--z-header);
+  top: 0;
+  left: 0;
+  width: 100%;
+  border-bottom: 1px solid color-mix(in srgb, var(--color-ink-700) 78%, transparent);
+  background: color-mix(in srgb, var(--color-ink-950) 92%, transparent);
+}
+
+.inner {
+  display: grid;
+  width: min(100%, var(--container));
+  min-height: 4.75rem;
+  align-items: center;
+  margin-inline: auto;
+  padding-inline: var(--gutter);
+  grid-template-columns: minmax(16rem, 1fr) auto minmax(16rem, 1fr);
+  gap: clamp(var(--space-4), 1.8vw, var(--space-8));
+}
+
+.brand {
+  display: flex;
+  min-width: 0;
+  align-items: baseline;
+  justify-self: start;
+  gap: var(--space-3);
+  white-space: nowrap;
+}
+
+.brand strong {
+  font-family: var(--font-display);
+  font-size: 1.35rem;
+  font-weight: 850;
+  letter-spacing: -0.04em;
+}
+
+.brand span {
+  color: var(--color-paper-500);
+  font-family: var(--font-mono);
+  font-size: 0.58rem;
+  letter-spacing: 0.05em;
+}
+
+.desktopNav {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  justify-self: center;
+  gap: clamp(1rem, 2.2vw, 2rem);
+}
+
+.desktopNav a {
+  color: var(--color-paper-300);
+  font-family: var(--font-mono);
+  font-size: 0.67rem;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+}
+
+.desktopNav a:hover {
+  color: var(--color-paper-100);
+}
+
+.actions {
+  display: flex;
+  align-items: center;
+  justify-self: end;
+  gap: var(--space-3);
+}
+
+.contactButton {
+  display: inline-flex;
+  width: 6.75rem;
+  min-height: 2.55rem;
+  align-items: center;
+  justify-content: center;
+  padding-inline: 0.9rem;
+  border: 1px solid var(--color-red-500);
+  background: var(--color-red-600);
+  font-family: var(--font-mono);
+  font-size: 0.66rem;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  white-space: nowrap;
+}
+
+.menuButton {
+  display: none;
+  width: 2.75rem;
+  height: 2.75rem;
+  place-content: center;
+  gap: 0.35rem;
+  border: 1px solid var(--color-ink-700);
+  border-radius: 0;
+  background: var(--color-ink-950);
+  cursor: pointer;
+}
+
+.menuButton span {
+  display: block;
+  width: 1.15rem;
+  height: 1px;
+  background: currentColor;
+}
+
+.mobileNav {
+  position: fixed;
+  z-index: var(--z-menu);
+  inset: 4.75rem 0 0;
+  display: none;
+  overflow-y: auto;
+  background: var(--color-ink-950);
+}
+
+.mobileLinks {
+  display: flex;
+  min-height: 100%;
+  flex-direction: column;
+  justify-content: center;
+  padding: var(--space-16) var(--gutter);
+}
+
+.mobileLinks a {
+  display: grid;
+  padding: var(--space-5) 0;
+  border-bottom: 1px solid var(--color-ink-700);
+  font-family: var(--font-display);
+  font-size: clamp(2.2rem, 11vw, 4.5rem);
+  font-weight: 800;
+  letter-spacing: -0.04em;
+  line-height: 0.95;
+  grid-template-columns: 2.5rem 1fr;
+}
+
+.mobileLinks span {
+  padding-top: 0.35em;
+  color: var(--color-red-300);
+  font-family: var(--font-mono);
+  font-size: 0.65rem;
+  letter-spacing: 0;
+}
+
+@media (max-width: 74.99rem) {
+  .desktopNav {
+    display: none;
+  }
+
+  .inner {
+    grid-template-columns: minmax(0, 1fr) auto;
+  }
+
+  .menuButton,
+  .mobileNav {
+    display: grid;
+  }
+}
+
+@media (max-width: 39.99rem) {
+  .contactButton {
+    display: none;
+  }
+
+  .brand {
+    display: grid;
+    align-items: center;
+    gap: 0;
+    white-space: normal;
+  }
+
+  .brand span {
+    display: block;
+    max-width: 24ch;
+    font-size: 0.625rem;
+    line-height: 1.2;
+  }
+
+  .inner {
+    gap: var(--space-3);
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .mobileNav,
+  .mobileLinks a {
+    transform: none !important;
+  }
+}

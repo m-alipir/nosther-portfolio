@@ -1,0 +1,84 @@
+.cursor {
+  position: fixed;
+  z-index: var(--z-cursor);
+  inset: 0;
+  opacity: 0;
+  pointer-events: none;
+  transition: opacity var(--duration-fast) ease;
+}
+
+.cursor[data-visible="true"] {
+  opacity: 1;
+}
+
+.dot,
+.follower {
+  position: fixed;
+  top: 0;
+  left: 0;
+  border-radius: 50%;
+  will-change: transform;
+}
+
+.dot {
+  width: 0.38rem;
+  height: 0.38rem;
+  background: var(--color-red-300);
+}
+
+.follower {
+  display: grid;
+  width: 2rem;
+  height: 2rem;
+  place-items: center;
+  border: 1px solid color-mix(in srgb, var(--color-red-300) 72%, transparent);
+  background: rgb(10 10 11 / 4%);
+  color: var(--color-paper-100);
+  transition:
+    width var(--duration-medium) var(--ease-standard),
+    height var(--duration-medium) var(--ease-standard),
+    border-color var(--duration-fast) ease,
+    background-color var(--duration-fast) ease;
+}
+
+.label {
+  opacity: 0;
+  font-family: var(--font-mono);
+  font-size: 0.57rem;
+  font-weight: 500;
+  letter-spacing: 0.08em;
+  line-height: 1;
+  text-transform: uppercase;
+  transition: opacity var(--duration-fast) ease;
+}
+
+.cursor[data-state="interactive"] .follower {
+  width: 2.65rem;
+  height: 2.65rem;
+  border-color: color-mix(in srgb, var(--color-paper-300) 68%, transparent);
+  background: rgb(10 10 11 / 8%);
+}
+
+.cursor[data-state="project"] .follower,
+.cursor[data-state="copy"] .follower {
+  width: 4.25rem;
+  height: 4.25rem;
+  border-color: var(--color-red-300);
+  background: rgb(10 10 11 / 78%);
+}
+
+.cursor[data-state="project"] .dot,
+.cursor[data-state="copy"] .dot {
+  opacity: 0;
+}
+
+.cursor[data-state="project"] .label,
+.cursor[data-state="copy"] .label {
+  opacity: 1;
+}
+
+@media (hover: none), (pointer: coarse), (prefers-reduced-motion: reduce) {
+  .cursor {
+    display: none;
+  }
+}

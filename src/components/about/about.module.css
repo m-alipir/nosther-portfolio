@@ -1,0 +1,116 @@
+.section {
+  padding-block: var(--section-space);
+  border-bottom: 1px solid var(--color-ink-700);
+  background: var(--color-ink-900);
+}
+
+.layout {
+  display: grid;
+  align-items: center;
+  grid-template-columns: minmax(16rem, 5fr) minmax(0, 7fr);
+  gap: clamp(2rem, 8vw, 8rem);
+}
+
+.mediaStage {
+  max-width: 30rem;
+}
+
+.media {
+  position: relative;
+  display: grid;
+  width: 100%;
+  overflow: hidden;
+  place-items: center;
+  border: 1px solid var(--color-ink-700);
+  background:
+    linear-gradient(145deg, transparent 0 70%, rgb(197 82 82 / 13%) 70%),
+    var(--color-ink-850);
+  aspect-ratio: 4 / 5;
+}
+
+.section[data-about-motion="preparing"] [data-about-media],
+.section[data-about-motion="preparing"] [data-about-eyebrow],
+.section[data-about-motion="preparing"] [data-about-title],
+.section[data-about-motion="preparing"] [data-about-body],
+.section[data-about-motion="preparing"] [data-about-action] {
+  opacity: 0;
+}
+
+.section[data-about-motion="preparing"] [data-about-media] {
+  clip-path: inset(0 0 10% 0);
+  transform: translateY(1.5rem) scale(1.025);
+}
+
+.section[data-about-motion="preparing"] [data-about-eyebrow],
+.section[data-about-motion="preparing"] [data-about-title],
+.section[data-about-motion="preparing"] [data-about-body],
+.section[data-about-motion="preparing"] [data-about-action] {
+  transform: translateY(1.25rem);
+}
+
+.media::before {
+  position: absolute;
+  inset: var(--space-5);
+  border: 1px solid rgb(200 195 187 / 12%);
+  content: "";
+}
+
+.initials {
+  color: var(--color-paper-100);
+  font-family: var(--font-display);
+  font-size: clamp(7rem, 17vw, 14rem);
+  font-weight: 850;
+  letter-spacing: -0.1em;
+  line-height: 1;
+  opacity: 0.12;
+}
+
+.mediaLabel {
+  position: absolute;
+  right: var(--space-5);
+  bottom: var(--space-5);
+  left: var(--space-5);
+  color: var(--color-paper-500);
+  font-family: var(--font-mono);
+  font-size: 0.62rem;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+}
+
+.copy {
+  max-width: 48rem;
+}
+
+.copy p:not(:global(.eyebrow)) {
+  max-width: 46rem;
+  margin: var(--space-8) 0;
+  color: var(--color-paper-300);
+  font-size: var(--text-lead);
+}
+
+@media (max-width: 55.99rem) {
+  .layout {
+    grid-template-columns: 1fr;
+  }
+
+  .mediaStage {
+    width: min(100%, 24rem);
+    order: 2;
+  }
+
+  .copy {
+    order: 1;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .section [data-about-media],
+  .section [data-about-eyebrow],
+  .section [data-about-title],
+  .section [data-about-body],
+  .section [data-about-action] {
+    opacity: 1;
+    clip-path: none;
+    transform: none;
+  }
+}

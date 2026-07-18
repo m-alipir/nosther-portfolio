@@ -1,0 +1,110 @@
+.section {
+  padding-block: var(--section-space);
+}
+
+.inner {
+  position: relative;
+}
+
+.inner::before {
+  display: block;
+  width: min(10rem, 25vw);
+  height: 2px;
+  margin-bottom: var(--space-12);
+  background: var(--color-red-500);
+  content: "";
+}
+
+.inner h2 {
+  max-width: 12ch;
+  margin: 0;
+  overflow-wrap: anywhere;
+  font-family: var(--font-display);
+  font-size: clamp(3.25rem, 7vw, 9rem);
+  font-weight: 850;
+  letter-spacing: -0.065em;
+  line-height: 0.88;
+  text-wrap: balance;
+}
+
+.body {
+  max-width: 42rem;
+  margin: var(--space-8) 0 0;
+  color: var(--color-paper-300);
+  font-size: var(--text-lead);
+}
+
+.emailRow {
+  position: relative;
+  display: flex;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: var(--space-4);
+  margin-top: clamp(2.5rem, 6vw, 5rem);
+}
+
+.email {
+  padding-bottom: 0.2rem;
+  border-bottom: 1px solid var(--color-red-500);
+  font-family: var(--font-display);
+  font-size: clamp(1.45rem, 4.5vw, 4.5rem);
+  font-weight: 700;
+  letter-spacing: -0.045em;
+  line-height: 1.1;
+  overflow-wrap: anywhere;
+}
+
+.copyButton {
+  min-height: 2.75rem;
+  padding: 0.65rem 0.8rem;
+  border: 1px solid var(--color-ink-700);
+  background: transparent;
+  cursor: pointer;
+  font-family: var(--font-mono);
+  font-size: 0.62rem;
+  letter-spacing: 0.07em;
+  text-transform: uppercase;
+}
+
+.copyButton:hover {
+  border-color: var(--color-paper-500);
+}
+
+.liveStatus {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  overflow: hidden;
+  clip: rect(0 0 0 0);
+  clip-path: inset(50%);
+  white-space: nowrap;
+}
+
+.socials {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--space-6);
+  margin-top: var(--space-16);
+}
+
+.socials a {
+  display: inline-flex;
+  min-height: 2.75rem;
+  align-items: center;
+  gap: var(--space-2);
+  color: var(--color-paper-300);
+  font-family: var(--font-mono);
+  font-size: 0.68rem;
+  letter-spacing: 0.07em;
+  text-transform: uppercase;
+}
+
+.socials a:hover {
+  color: var(--color-paper-100);
+}
+
+@media (min-width: 160rem) {
+  .inner h2 {
+    font-size: clamp(9rem, 4.6vw, 11rem);
+  }
+}
