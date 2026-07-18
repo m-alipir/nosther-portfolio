@@ -103,7 +103,7 @@ export function CustomCursor({ labels }: { labels: Dictionary["cursor"] }) {
     };
 
     const onPointerMove = (event: PointerEvent) => {
-      if (event.pointerType !== "mouse") {
+      if (event.pointerType && event.pointerType !== "mouse") {
         setVisible(false);
         return;
       }

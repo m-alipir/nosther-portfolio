@@ -60,3 +60,7 @@ pnpm-debug.log*
 
 # typescript
 *.tsbuildinfo
+
+# vercel local state and credentials
+.vercel/
+.env*.local

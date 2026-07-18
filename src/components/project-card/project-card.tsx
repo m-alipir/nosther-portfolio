@@ -31,6 +31,16 @@ function resetVideo(video: HTMLVideoElement) {
   }
 }
 
+function isExpectedPlaybackInterruption(error: unknown) {
+  return error instanceof DOMException && error.name === "AbortError";
+}
+
+function reportPlaybackFailure(error: unknown, title: string) {
+  if (process.env.NODE_ENV !== "production") {
+    console.warn(`Preview playback failed for "${title}".`, error);
+  }
+}
+
 export function ProjectCard({
   project,
   locale,
@@ -40,6 +50,7 @@ export function ProjectCard({
   const title = project.title[locale];
   const videoRef = useRef<HTMLVideoElement>(null);
   const wantsPlaybackRef = useRef(false);
+  const playbackAttemptRef = useRef(0);
   const allowVideo = useVideoPlaybackPolicy(true);
   const [sourceRequested, setSourceRequested] = useState(false);
   const [isPlaying, setIsPlaying] = useState(false);
@@ -63,6 +74,7 @@ export function ProjectCard({
 
   const stopPreview = useCallback(() => {
     wantsPlaybackRef.current = false;
+    playbackAttemptRef.current += 1;
     const video = videoRef.current;
 
     if (video) {
@@ -88,27 +100,46 @@ export function ProjectCard({
     }
 
     activePreview = { video, stop: stopPreview };
-    resetVideo(video);
+    const attempt = playbackAttemptRef.current + 1;
+    playbackAttemptRef.current = attempt;
 
     try {
       await video.play();
-      if (!wantsPlaybackRef.current) {
+      if (
+        playbackAttemptRef.current !== attempt ||
+        !wantsPlaybackRef.current ||
+        activePreview?.video !== video
+      ) {
         resetVideo(video);
       }
-    } catch {
-      if (wantsPlaybackRef.current) {
-        setVideoFailed(true);
+    } catch (error) {
+      const isStale =
+        playbackAttemptRef.current !== attempt ||
+        !wantsPlaybackRef.current ||
+        activePreview?.video !== video;
+
+      if (isStale || isExpectedPlaybackInterruption(error)) {
+        return;
       }
-      stopPreview();
+
+      setIsPlaying(false);
+      if (activePreview?.video === video) {
+        activePreview = null;
+      }
+      reportPlaybackFailure(error, title);
     }
-  }, [allowVideo, stopPreview, videoFailed]);
+  }, [allowVideo, stopPreview, title, videoFailed]);
 
   const requestPreview = useCallback(() => {
     if (!hasPreview || !allowVideo || videoFailed) {
       return;
     }
 
+    const hadPlaybackIntent = wantsPlaybackRef.current;
     wantsPlaybackRef.current = true;
+    if (!hadPlaybackIntent) {
+      setIsPlaying(false);
+    }
     if (!sourceRequested) {
       setSourceRequested(true);
       return;
@@ -120,8 +151,13 @@ export function ProjectCard({
   const maintainPointerIntent = useCallback(() => {
     if (!wantsPlaybackRef.current) {
       requestPreview();
+      return;
     }
-  }, [requestPreview]);
+
+    if (videoRef.current?.paused) {
+      void startPreview();
+    }
+  }, [requestPreview, startPreview]);
 
   useEffect(() => {
     if (sourceRequested && wantsPlaybackRef.current) {
@@ -191,10 +227,25 @@ export function ProjectCard({
             aria-hidden="true"
             tabIndex={-1}
             onPlaying={() => {
-              if (wantsPlaybackRef.current) {
+              const video = videoRef.current;
+              if (
+                video &&
+                wantsPlaybackRef.current &&
+                activePreview?.video === video
+              ) {
                 setIsPlaying(true);
+              } else if (video) {
+                resetVideo(video);
               }
             }}
+            onCanPlay={() => {
+              if (wantsPlaybackRef.current && videoRef.current?.paused) {
+                void startPreview();
+              }
+            }}
+            onPause={() => setIsPlaying(false)}
+            onWaiting={() => setIsPlaying(false)}
+            onStalled={() => setIsPlaying(false)}
             onError={() => {
               setVideoFailed(true);
               stopPreview();
@@ -287,6 +338,7 @@ export function ProjectCard({
       data-project-card
       data-project-index={index}
       data-project-featured={index === 0 ? "true" : undefined}
+      data-cursor-project
       data-preview-policy={allowVideo ? "enabled" : "poster-only"}
       data-preview-source={sourceRequested ? "requested" : "idle"}
       onPointerEnter={requestPreview}

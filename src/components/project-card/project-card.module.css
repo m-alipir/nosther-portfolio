@@ -97,10 +97,10 @@ article.card:focus-visible {
 
 :global([data-work-motion="running"])
   .card[data-card-reveal="pending"]
-  .previewVideo,
+  .previewVideo:not([data-playing="true"]),
 :global([data-work-motion="running"])
   .card[data-card-reveal="running"]
-  .previewVideo {
+  .previewVideo:not([data-playing="true"]) {
   opacity: 0;
 }
 
