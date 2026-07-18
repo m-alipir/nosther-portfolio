@@ -1,3 +1,5 @@
+import Image from "next/image";
+
 import type { Dictionary } from "@/content/dictionaries";
 import styles from "./about.module.css";
 
@@ -19,6 +21,14 @@ export function About({ dictionary }: { dictionary: Dictionary }) {
           >
             <span className={styles.initials}>A</span>
             <span className={styles.mediaLabel}>{dictionary.about.mediaLabel}</span>
+            <Image
+              className={styles.avatar}
+              src="/media/portrait/Logo.png"
+              alt=""
+              fill
+              loading="lazy"
+              sizes="(max-width: 896px) min(100vw, 384px), (max-width: 1919px) 34vw, 480px"
+            />
           </div>
         </div>
 

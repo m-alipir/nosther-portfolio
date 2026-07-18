@@ -12,6 +12,7 @@
 }
 
 .mediaStage {
+  width: 100%;
   max-width: 30rem;
 }
 
@@ -22,10 +23,12 @@
   overflow: hidden;
   place-items: center;
   border: 1px solid var(--color-ink-700);
+  border-radius: 50%;
   background:
     linear-gradient(145deg, transparent 0 70%, rgb(197 82 82 / 13%) 70%),
     var(--color-ink-850);
-  aspect-ratio: 4 / 5;
+  aspect-ratio: 1;
+  isolation: isolate;
 }
 
 .section[data-about-motion="preparing"] [data-about-media],
@@ -50,9 +53,18 @@
 
 .media::before {
   position: absolute;
+  z-index: 2;
   inset: var(--space-5);
   border: 1px solid rgb(200 195 187 / 12%);
+  border-radius: 50%;
   content: "";
+  pointer-events: none;
+}
+
+.avatar {
+  z-index: 1;
+  border-radius: inherit;
+  object-fit: contain;
 }
 
 .initials {
