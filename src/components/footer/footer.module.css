@@ -1,27 +1,30 @@
 .footer {
-  border-top: 1px solid var(--color-ink-700);
-  background: var(--color-ink-900);
+  border-top: 1px solid rgb(169 220 242 / 20%);
+  background: var(--color-deep);
+  color: var(--color-foam);
 }
 
 .inner {
   display: flex;
+  min-height: 5.5rem;
   align-items: center;
   justify-content: space-between;
   gap: var(--space-6);
-  padding-block: var(--space-8);
+  padding-block: var(--space-6);
 }
 
 .inner p {
   margin: 0;
-  color: var(--color-paper-500);
+  color: color-mix(in srgb, var(--color-ice) 78%, transparent);
   font-family: var(--font-mono);
   font-size: 0.62rem;
-  letter-spacing: 0.05em;
+  letter-spacing: 0.055em;
   text-transform: uppercase;
 }
 
 @media (max-width: 39.99rem) {
   .inner {
+    min-height: 0;
     align-items: flex-start;
     flex-direction: column;
     justify-content: center;

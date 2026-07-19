@@ -114,3 +114,11 @@ The five content/media decisions are closed in D-011 through D-015. Palette cali
 - Date: 2026-07-19
 - Status: accepted
 - Decision: update safe existing localized project/dictionary fields and editorial array order during Phase 1. Defer explicit source-title, classification/rank, disclosure, evidence, and multi-surface hero fields until their relevant component/schema phase rather than overloading unrelated fields.
+
+## D-018 — Phase 2 visual calibration
+
+- Date: 2026-07-19
+- Status: accepted implementation checkpoint
+- Decision: use the exact approved foam/ice/aqua/tidal/ocean/deep/ink palette, retain the existing local Archivo/Instrument Sans/IBM Plex Mono stack, cap the shared container at `92rem`, use responsive gutters up to `4.5rem`, and establish static CSS grain/caustic plus selective milky glass.
+- Scope: header, footer, global primitives, inherited colors, borders, section atmosphere, and typography/proportion corrections only. No JSX structure, section order, content schema, playback policy, GSAP timeline, or hero/project composition was changed.
+- Accessibility evidence: core foreground/background pairs meet WCAG AA in calculated contrast checks; the 320px viewport has no content-width overflow; Turkish hero scaling is localized to prevent crowded diacritics.

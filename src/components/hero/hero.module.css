@@ -2,11 +2,27 @@
   position: relative;
   min-height: clamp(44rem, 92svh, 58rem);
   overflow: clip;
-  border-bottom: 1px solid var(--color-ink-700);
-  background: var(--color-ink-950);
+  border-bottom: 1px solid var(--color-line);
+  background:
+    var(--texture-caustic),
+    var(--color-foam);
+  isolation: isolate;
+}
+
+.hero::after {
+  position: absolute;
+  z-index: 0;
+  inset: 0;
+  background-image: var(--texture-grain);
+  background-size: 11rem 11rem;
+  content: "";
+  opacity: 0.016;
+  pointer-events: none;
 }
 
 .grid {
+  position: relative;
+  z-index: 1;
   display: grid;
   min-height: clamp(44rem, 92svh, 58rem);
   align-items: center;
@@ -32,14 +48,19 @@
   font-size: var(--text-hero);
   font-weight: 850;
   letter-spacing: -0.062em;
-  line-height: 0.88;
+  line-height: 0.92;
   text-wrap: balance;
+}
+
+:global(html[lang="tr"]) .title {
+  font-size: clamp(3rem, 5.2vw, 6.4rem);
+  line-height: 0.94;
 }
 
 .lead {
   max-width: 40rem;
   margin: var(--space-8) 0 0;
-  color: var(--color-paper-300);
+  color: var(--color-muted-strong);
   font-size: var(--text-lead);
   line-height: 1.48;
 }
@@ -64,10 +85,12 @@
   position: relative;
   width: 100%;
   overflow: hidden;
-  border: 1px solid var(--color-ink-700);
+  border: 1px solid color-mix(in srgb, var(--color-white) 80%, var(--color-line));
+  border-radius: var(--radius-md);
   background:
-    linear-gradient(150deg, transparent 0 55%, rgb(197 82 82 / 8%) 55% 56%, transparent 56%),
-    var(--color-ink-850);
+    linear-gradient(150deg, transparent 0 55%, rgb(77 170 216 / 10%) 55% 56%, transparent 56%),
+    var(--color-ice);
+  box-shadow: var(--glass-shadow);
   aspect-ratio: 16 / 11;
 }
 
@@ -200,8 +223,8 @@
   flex: none;
   place-items: center;
   margin-bottom: var(--space-5);
-  border: 1px solid var(--color-red-500);
-  color: var(--color-red-300);
+  border: 1px solid var(--color-tidal);
+  color: var(--color-ocean);
   font-size: 0.75rem;
 }
 
@@ -220,8 +243,8 @@
 
 .timeline span {
   min-height: 0.4rem;
-  border-top: 1px solid var(--color-red-500);
-  background: rgb(197 82 82 / 14%);
+  border-top: 1px solid var(--color-tidal);
+  background: rgb(77 170 216 / 14%);
 }
 
 .timeline span:nth-child(2),
@@ -250,7 +273,7 @@
 .scrollCue span {
   width: 2.5rem;
   height: 1px;
-  background: var(--color-red-500);
+  background: var(--color-tidal);
 }
 
 @media (min-width: 75rem) and (max-height: 50rem) {
@@ -267,6 +290,14 @@
   .lead,
   .actions {
     margin-top: var(--space-5);
+  }
+}
+
+@media (min-width: 75rem) and (min-height: 50.01rem) and (max-height: 60rem) {
+  .grid {
+    padding-top: 7rem;
+    padding-bottom: 3rem;
+    row-gap: var(--space-8);
   }
 }
 
@@ -305,6 +336,10 @@
     font-size: clamp(4.25rem, 8.6vw, 6.5rem);
   }
 
+  :global(html[lang="tr"]) .title {
+    font-size: clamp(3.65rem, 7.6vw, 5.75rem);
+  }
+
   .mediaStage {
     max-width: none;
     justify-self: stretch;
@@ -326,6 +361,11 @@
   .title {
     max-width: 11ch;
     font-size: clamp(2.8rem, 13.5vw, 4.8rem);
+  }
+
+  :global(html[lang="tr"]) .title {
+    font-size: clamp(2.55rem, 11.5vw, 4.25rem);
+    line-height: 0.96;
   }
 
   .lead {

@@ -1,6 +1,6 @@
 # Tidal Glass Editorial
 
-Status: V2 visual source of truth. The direction is approved and reconciled against the preserved 2560×6753 Lovable full-page reference. Exact visual calibration remains subject to real-media review; the screenshot is compositional evidence, not a source of final content or code.
+Status: V2 visual source of truth. The direction is approved, reconciled against the preserved 2560×6753 Lovable full-page reference, and calibrated as the Phase 2 global foundation. The screenshot is compositional evidence, not a source of final content or code.
 
 ## Identity
 
@@ -12,15 +12,15 @@ These tokens express hierarchy rather than decoration. Values are the controlled
 
 | Token | Starting value | Role |
 | --- | --- | --- |
-| Foam White | `#F7FAFA` | Primary light canvas |
-| Ice Blue | `#EAF3F5` | Alternating light section atmosphere |
-| Tidal Mist | `#D7E7EB` | Rules, quiet fills, glass edges |
-| Sea Glass | `#A8CBD3` | Restrained ambient accents |
-| Current Blue | `#5E94A5` | Interactive and metadata accents |
-| Ocean Blue | `#175B73` | Strong brand contrast |
-| Deep Ocean | `#0B3446` | About/depth section field |
-| Ocean Ink | `#102C37` | Primary light-surface typography |
-| Muted Ink | `#58717A` | Secondary copy and metadata |
+| Foam White | `#F7FBFF` | Primary light canvas |
+| Ice Blue | `#E7F5FC` | Alternating light section atmosphere |
+| Soft Aqua | `#A9DCF2` | Quiet ambient light and glass edge accent |
+| Tidal Blue | `#4DAAD8` | Rules and restrained interactive accents |
+| Ocean Blue | `#1677A8` | Primary interactive color and metadata accent |
+| Deep Water | `#064564` | About/depth and footer contrast fields |
+| Ocean Ink | `#102C3B` | Primary light-surface typography |
+| Muted Ink | `#3D5F70` | Secondary copy and meaningful metadata |
+| Warm Sand | `#E8CDA7` | Optional, sparingly used warm counter-accent |
 | White Foam | `#FFFFFF` | Type on deep fields and glass highlights |
 
 Purple-heavy gradients, neon cyan, and saturated synthetic “AI” color transitions are outside the system.
@@ -37,12 +37,16 @@ Purple-heavy gradients, neon cyan, and saturated synthetic “AI” color transi
 
 Glass is a selective material, not a universal card treatment. Use it for the hero sequence stage, occasional metadata rails, or a contact detail where translucency clarifies layering. A glass surface needs a reason: it must connect media, depth, and typography. Avoid grids of glass cards, floating dashboard panels, and glass on every section.
 
+Phase 2 defines a milky white surface at approximately 72% opacity, a thin white/ice edge, an inner top highlight, a low ocean-colored shadow, and restrained `1.1rem` backdrop blur. The current floating header validates the material; later phases may reuse the shared primitive selectively.
+
 ## Texture rules
 
 - Film grain is fine, low-contrast, and global or section-scoped; it must not dirty text or reduce media clarity.
 - Water-caustic light is abstract, soft, and very subtle. It is light behavior, not a literal ocean illustration.
 - Texture must degrade to a stable still state under reduced motion.
 - No fish, coral, shells, bubbles, water droplets, or literal ocean props.
+
+Phase 2 uses one lightweight inline SVG noise tile and static layered radial gradients. Neither texture animates; both remain stable under reduced motion and must stay low enough in contrast that text and media are unaffected.
 
 ## Section atmosphere
 

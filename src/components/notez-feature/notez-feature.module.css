@@ -1,7 +1,8 @@
 .section {
   padding-block: var(--section-space);
   overflow: clip;
-  border-bottom: 1px solid var(--color-ink-700);
+  border-bottom: 1px solid var(--color-line);
+  background: var(--color-foam);
 }
 
 .layout {
@@ -19,16 +20,18 @@
 .backingPlane {
   position: absolute;
   inset: 1rem -1rem -1rem 1rem;
-  border: 1px solid rgb(197 82 82 / 35%);
-  background: var(--color-ink-900);
+  border: 1px solid rgb(77 170 216 / 35%);
+  background: var(--color-ice);
 }
 
 .media {
   position: relative;
   z-index: 1;
   padding: clamp(0.65rem, 1.2vw, 1rem);
-  border: 1px solid var(--color-ink-700);
-  background: var(--color-ink-850);
+  border: 1px solid var(--glass-border);
+  border-radius: var(--radius-md);
+  background: var(--glass-background);
+  box-shadow: var(--glass-shadow);
 }
 
 .section[data-notez-motion="preparing"] [data-notez-backing],
@@ -68,7 +71,7 @@
 .frameTop span:first-child {
   width: 0.45rem;
   height: 0.45rem;
-  background: var(--color-red-500);
+  background: var(--color-tidal);
 }
 
 .imageWrap {
@@ -92,8 +95,8 @@
   display: inline-flex;
   margin-bottom: var(--space-6);
   padding: 0.35rem 0.55rem;
-  border: 1px solid var(--color-red-500);
-  color: var(--color-red-300);
+  border: 1px solid var(--color-tidal);
+  color: var(--color-ocean);
   font-family: var(--font-mono);
   font-size: 0.62rem;
   letter-spacing: 0.07em;

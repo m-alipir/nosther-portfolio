@@ -4,18 +4,27 @@
   top: 0;
   left: 0;
   width: 100%;
-  border-bottom: 1px solid color-mix(in srgb, var(--color-ink-700) 78%, transparent);
-  background: color-mix(in srgb, var(--color-ink-950) 92%, transparent);
+  padding-top: var(--space-3);
+  pointer-events: none;
 }
 
 .inner {
+  position: relative;
+  z-index: calc(var(--z-menu) + 1);
   display: grid;
-  width: min(100%, var(--container));
-  min-height: 4.75rem;
+  width: min(calc(100% - 2rem), calc(var(--container) - 2rem));
+  min-height: 4rem;
   align-items: center;
   margin-inline: auto;
-  padding-inline: var(--gutter);
-  grid-template-columns: minmax(16rem, 1fr) auto minmax(16rem, 1fr);
+  padding-inline: clamp(1rem, 2vw, 1.5rem);
+  border: 1px solid var(--glass-border);
+  border-radius: var(--radius-md);
+  background: var(--glass-background);
+  box-shadow: var(--glass-shadow);
+  pointer-events: auto;
+  backdrop-filter: blur(var(--glass-blur)) saturate(112%);
+  -webkit-backdrop-filter: blur(var(--glass-blur)) saturate(112%);
+  grid-template-columns: minmax(14rem, 1fr) auto minmax(14rem, 1fr);
   gap: clamp(var(--space-4), 1.8vw, var(--space-8));
 }
 
@@ -25,21 +34,22 @@
   align-items: baseline;
   justify-self: start;
   gap: var(--space-3);
+  color: var(--color-ocean-ink);
   white-space: nowrap;
 }
 
 .brand strong {
   font-family: var(--font-display);
-  font-size: 1.35rem;
-  font-weight: 850;
-  letter-spacing: -0.04em;
+  font-size: 1.22rem;
+  font-weight: 780;
+  letter-spacing: -0.045em;
 }
 
 .brand span {
-  color: var(--color-paper-500);
+  color: var(--color-muted);
   font-family: var(--font-mono);
-  font-size: 0.58rem;
-  letter-spacing: 0.05em;
+  font-size: 0.57rem;
+  letter-spacing: 0.045em;
 }
 
 .desktopNav {
@@ -47,19 +57,22 @@
   align-items: center;
   justify-content: center;
   justify-self: center;
-  gap: clamp(1rem, 2.2vw, 2rem);
+  gap: clamp(1rem, 2vw, 1.85rem);
 }
 
 .desktopNav a {
-  color: var(--color-paper-300);
+  color: var(--color-muted-strong);
   font-family: var(--font-mono);
-  font-size: 0.67rem;
-  letter-spacing: 0.08em;
+  font-size: 0.65rem;
+  font-weight: 550;
+  letter-spacing: 0.075em;
   text-transform: uppercase;
+  transition: color var(--duration-fast) ease;
 }
 
-.desktopNav a:hover {
-  color: var(--color-paper-100);
+.desktopNav a:hover,
+.desktopNav a:focus-visible {
+  color: var(--color-ocean);
 }
 
 .actions {
@@ -71,35 +84,48 @@
 
 .contactButton {
   display: inline-flex;
-  width: 6.75rem;
-  min-height: 2.55rem;
+  width: 6.6rem;
+  min-height: 2.45rem;
   align-items: center;
   justify-content: center;
   padding-inline: 0.9rem;
-  border: 1px solid var(--color-red-500);
-  background: var(--color-red-600);
+  border: 1px solid var(--color-ocean);
+  border-radius: var(--radius-sm);
+  background: var(--color-ocean);
+  color: var(--color-white);
   font-family: var(--font-mono);
-  font-size: 0.66rem;
-  letter-spacing: 0.08em;
+  font-size: 0.64rem;
+  font-weight: 600;
+  letter-spacing: 0.075em;
   text-transform: uppercase;
   white-space: nowrap;
+  transition:
+    background-color var(--duration-fast) ease,
+    border-color var(--duration-fast) ease;
+}
+
+.contactButton:hover,
+.contactButton:focus-visible {
+  border-color: var(--color-deep);
+  background: var(--color-deep);
 }
 
 .menuButton {
   display: none;
-  width: 2.75rem;
-  height: 2.75rem;
+  width: 2.55rem;
+  height: 2.55rem;
   place-content: center;
   gap: 0.35rem;
-  border: 1px solid var(--color-ink-700);
-  border-radius: 0;
-  background: var(--color-ink-950);
+  border: 1px solid var(--color-line);
+  border-radius: var(--radius-sm);
+  background: color-mix(in srgb, var(--color-white) 68%, transparent);
+  color: var(--color-ocean-ink);
   cursor: pointer;
 }
 
 .menuButton span {
   display: block;
-  width: 1.15rem;
+  width: 1.1rem;
   height: 1px;
   background: currentColor;
 }
@@ -107,10 +133,15 @@
 .mobileNav {
   position: fixed;
   z-index: var(--z-menu);
-  inset: 4.75rem 0 0;
+  inset: 0;
   display: none;
   overflow-y: auto;
-  background: var(--color-ink-950);
+  padding-top: 5.25rem;
+  background:
+    var(--texture-caustic),
+    var(--color-ice);
+  color: var(--color-ocean-ink);
+  pointer-events: auto;
 }
 
 .mobileLinks {
@@ -118,24 +149,24 @@
   min-height: 100%;
   flex-direction: column;
   justify-content: center;
-  padding: var(--space-16) var(--gutter);
+  padding: var(--space-12) var(--gutter) var(--space-16);
 }
 
 .mobileLinks a {
   display: grid;
   padding: var(--space-5) 0;
-  border-bottom: 1px solid var(--color-ink-700);
+  border-bottom: 1px solid var(--color-line);
   font-family: var(--font-display);
-  font-size: clamp(2.2rem, 11vw, 4.5rem);
-  font-weight: 800;
-  letter-spacing: -0.04em;
-  line-height: 0.95;
+  font-size: clamp(2.1rem, 10vw, 4.25rem);
+  font-weight: 740;
+  letter-spacing: -0.045em;
+  line-height: 0.98;
   grid-template-columns: 2.5rem 1fr;
 }
 
 .mobileLinks span {
   padding-top: 0.35em;
-  color: var(--color-red-300);
+  color: var(--color-ocean);
   font-family: var(--font-mono);
   font-size: 0.65rem;
   letter-spacing: 0;
@@ -157,6 +188,17 @@
 }
 
 @media (max-width: 39.99rem) {
+  .header {
+    padding-top: var(--space-2);
+  }
+
+  .inner {
+    width: calc(100% - 1rem);
+    min-height: 3.75rem;
+    gap: var(--space-3);
+    padding-inline: var(--space-3);
+  }
+
   .contactButton {
     display: none;
   }
@@ -171,12 +213,12 @@
   .brand span {
     display: block;
     max-width: 24ch;
-    font-size: 0.625rem;
+    font-size: 0.58rem;
     line-height: 1.2;
   }
 
-  .inner {
-    gap: var(--space-3);
+  .mobileNav {
+    padding-top: 4.75rem;
   }
 }
 

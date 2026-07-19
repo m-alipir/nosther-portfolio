@@ -1,7 +1,11 @@
 .section {
   padding-block: var(--section-space);
-  border-bottom: 1px solid var(--color-ink-700);
-  background: var(--color-ink-900);
+  border-bottom: 1px solid rgb(169 220 242 / 18%);
+  background:
+    radial-gradient(ellipse at 14% 20%, rgb(77 170 216 / 16%), transparent 34%),
+    radial-gradient(ellipse at 88% 82%, rgb(169 220 242 / 8%), transparent 30%),
+    var(--color-deep);
+  color: var(--color-foam);
 }
 
 .layout {
@@ -22,11 +26,12 @@
   width: 100%;
   overflow: hidden;
   place-items: center;
-  border: 1px solid var(--color-ink-700);
+  border: 1px solid rgb(169 220 242 / 30%);
   border-radius: 50%;
   background:
-    linear-gradient(145deg, transparent 0 70%, rgb(197 82 82 / 13%) 70%),
-    var(--color-ink-850);
+    linear-gradient(145deg, transparent 0 70%, rgb(77 170 216 / 15%) 70%),
+    rgb(3 49 72 / 70%);
+  box-shadow: inset 0 1px 0 rgb(255 255 255 / 12%);
   aspect-ratio: 1;
   isolation: isolate;
 }
@@ -55,7 +60,7 @@
   position: absolute;
   z-index: 2;
   inset: var(--space-5);
-  border: 1px solid rgb(200 195 187 / 12%);
+  border: 1px solid rgb(231 245 252 / 16%);
   border-radius: 50%;
   content: "";
   pointer-events: none;
@@ -68,7 +73,7 @@
 }
 
 .initials {
-  color: var(--color-paper-100);
+  color: var(--color-foam);
   font-family: var(--font-display);
   font-size: clamp(7rem, 17vw, 14rem);
   font-weight: 850;
@@ -82,7 +87,7 @@
   right: var(--space-5);
   bottom: var(--space-5);
   left: var(--space-5);
-  color: var(--color-paper-500);
+  color: rgb(231 245 252 / 68%);
   font-family: var(--font-mono);
   font-size: 0.62rem;
   letter-spacing: 0.06em;
@@ -96,8 +101,24 @@
 .copy p:not(:global(.eyebrow)) {
   max-width: 46rem;
   margin: var(--space-8) 0;
-  color: var(--color-paper-300);
+  color: rgb(231 245 252 / 84%);
   font-size: var(--text-lead);
+}
+
+.section :global(.eyebrow) {
+  color: var(--color-aqua);
+}
+
+.section :global(.button-secondary) {
+  border-color: rgb(231 245 252 / 38%);
+  background: rgb(255 255 255 / 6%);
+  color: var(--color-white);
+}
+
+.section :global(.button-secondary):hover {
+  border-color: var(--color-aqua);
+  background: rgb(255 255 255 / 12%);
+  color: var(--color-white);
 }
 
 @media (max-width: 55.99rem) {

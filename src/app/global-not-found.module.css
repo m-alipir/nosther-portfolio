@@ -1,7 +1,7 @@
 .page {
   align-items: center;
-  background: #0a0a0b;
-  color: #f1eee8;
+  background: #f7fbff;
+  color: #102c3b;
   display: flex;
   min-height: 100svh;
   padding: clamp(1.25rem, 5vw, 5rem);
@@ -12,7 +12,7 @@
 }
 
 .mark {
-  color: #c55252;
+  color: #1677a8;
   font-family: var(--font-mono);
   font-size: 0.8rem;
   letter-spacing: 0.16em;
@@ -29,7 +29,7 @@
 }
 
 .copy {
-  color: #c8c3bb;
+  color: #3d5f70;
   font-size: clamp(1rem, 2vw, 1.25rem);
   margin: 0;
   max-width: 38rem;
@@ -43,7 +43,7 @@
 }
 
 .link {
-  border: 1px solid #2a292b;
+  border: 1px solid #c9e2ee;
   display: inline-flex;
   font-family: var(--font-mono);
   font-size: 0.78rem;
@@ -53,6 +53,6 @@
 }
 
 .link:first-child {
-  background: #c55252;
-  border-color: #c55252;
+  background: #1677a8;
+  border-color: #1677a8;
 }

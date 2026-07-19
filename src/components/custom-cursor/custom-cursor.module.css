@@ -23,7 +23,7 @@
 .dot {
   width: 0.38rem;
   height: 0.38rem;
-  background: var(--color-red-300);
+  background: var(--color-ocean);
 }
 
 .follower {
@@ -31,9 +31,9 @@
   width: 2rem;
   height: 2rem;
   place-items: center;
-  border: 1px solid color-mix(in srgb, var(--color-red-300) 72%, transparent);
-  background: rgb(10 10 11 / 4%);
-  color: var(--color-paper-100);
+  border: 1px solid color-mix(in srgb, var(--color-ocean) 58%, transparent);
+  background: rgb(247 251 255 / 18%);
+  color: var(--color-white);
   transition:
     width var(--duration-medium) var(--ease-standard),
     height var(--duration-medium) var(--ease-standard),
@@ -55,16 +55,16 @@
 .cursor[data-state="interactive"] .follower {
   width: 2.65rem;
   height: 2.65rem;
-  border-color: color-mix(in srgb, var(--color-paper-300) 68%, transparent);
-  background: rgb(10 10 11 / 8%);
+  border-color: color-mix(in srgb, var(--color-ocean) 58%, transparent);
+  background: rgb(247 251 255 / 28%);
 }
 
 .cursor[data-state="project"] .follower,
 .cursor[data-state="copy"] .follower {
   width: 4.25rem;
   height: 4.25rem;
-  border-color: var(--color-red-300);
-  background: rgb(10 10 11 / 78%);
+  border-color: var(--color-aqua);
+  background: rgb(6 69 100 / 88%);
 }
 
 .cursor[data-state="project"] .dot,

@@ -38,6 +38,8 @@ Each phase is a separate review gate. A phase begins only when its listed depend
 
 ## Phase 2 — Global visual system
 
+**Checkpoint status (2026-07-19):** implemented and verified. The semantic palette, type/spacing/container scale, shared surface/glass/texture primitives, floating header, deep About field, light Contact close, and minimal deep footer are established without layout or motion architecture changes.
+
 **Objective:** Establish the light-first Tidal Glass Editorial foundation without rebuilding section composition or adding new motion.
 
 **Files likely affected:** `src/app/globals.css`, shared primitives/tokens if introduced, header/footer CSS Modules, possibly font imports; `design.md` only for approved refinements.
@@ -50,7 +52,7 @@ Each phase is a separate review gate. A phase begins only when its listed depend
 
 **Verification commands:** `npm run lint`, `npm run typecheck`, `npm run build`; visual checks at 1366x768, 1440x900, 1920x1080, tablet, mobile; TR/EN; keyboard focus; reduced motion.
 
-**Required user decisions:** Final palette calibration, typography choice, grain/caustic intensity, glass material approval, any licensed font budget.
+**Resolved decisions:** use the approved ocean palette; retain the current local font stack; use static low-opacity grain/caustic layers; keep glass milky, thin-edged, and selective; add no font dependency or licensed-font risk.
 
 ## Phase 3 — Static hero
 
