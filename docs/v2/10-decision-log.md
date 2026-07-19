@@ -131,3 +131,20 @@ The five content/media decisions are closed in D-011 through D-015. Palette cali
 - Playback: only the dominant BeamNG performance preview may mount. It requires a viewport wider than 767px plus the established fine-hover, reduced-motion, save-data, codec, visibility, and intersection checks. Narrow mobile is explicitly poster-only; secondary surfaces never mount video.
 - Scope: the existing hero intro/replay and whole-stage scroll lifecycle remains unchanged. No GSAP choreography, later-section layout, project-card architecture, navigation, route, SEO, or security implementation is redesigned in Phase 3.
 - Accessibility: the stage has a localized group label, every media surface has a meaningful localized image description, decorative sequence cues are hidden, frames are non-focusable, and CSS-backed labeled fallbacks remain visible if a poster fails.
+
+## D-020 — Phase 4 Selected Work hierarchy
+
+- Date: 2026-07-19
+- Status: accepted implementation checkpoint
+- Decision: encode the approved Assetto / BeamNG Performance / BeamNG Cargo hierarchy with explicit featured ranks and render it as three different static compositions. Place AC Rally and the two automotive studies in a separate smaller evidence rail.
+- Data: add only editorial class/rank, source title, localized contribution list, exact disclosure, and localized poster description. Keep layout measurements in CSS and keep project source paths/destinations unchanged.
+- Playback: retain the single `ProjectCard` preview coordinator and existing fine-hover/reduced-motion/save-data/codec policy; add no second system. All Selected Work images are lazy and failed posters receive a labeled CSS fallback.
+- Scope: About, Capabilities, Experiments, Contact, Footer, site-wide motion, hero, routes, SEO, security, dependencies, deployment, and `main` remain unchanged.
+
+## D-021 — Future About brand portrait
+
+- Date: 2026-07-19
+- Status: accepted asset decision; implementation deferred to Phase 5
+- Decision: `public/media/portrait/Logo-V2.png` is the future primary N0STHER identity portrait / brand portrait. It is a blue illustrated brand mark and must not be described as a photograph of Ali. `Logo.png` remains secondary and is not the main About visual.
+- Audit: valid PNG, 1024×1024, square, RGBA container with fully opaque sampled alpha, 1,019,018 bytes (0.972 MiB), SHA-256 `EC7FB3E1C0347EDE4A2FB81CE340D0713F3EE72CBA26E4CBE3705604F3A67BF1`.
+- Delivery: preserve the source file; Phase 5 should use responsive WebP/AVIF derivatives or the existing optimized image pipeline. Phase 4 tracks and documents the asset but does not implement About.

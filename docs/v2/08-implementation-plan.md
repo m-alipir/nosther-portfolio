@@ -74,6 +74,8 @@ Each phase is a separate review gate. A phase begins only when its listed depend
 
 ## Phase 4 — Selected Work
 
+**Checkpoint status (2026-07-19):** implemented and verified. The approved top three use explicit typed ranks and distinct flagship, comparison, and narrative compositions; AC Rally and disclosed automotive studies follow in a smaller evidence rail; the existing preview coordinator and policy remain singular.
+
 **Objective:** Recompose portfolio proof around flagships and supporting work while preserving tested preview behavior.
 
 **Files likely affected:** `selected-work.tsx/.module.css`, `project-card.tsx/.module.css`, project content/types, section-specific motion temporarily simplified or disabled during static approval.
@@ -86,7 +88,7 @@ Each phase is a separate review gate. A phase begins only when its listed depend
 
 **Verification commands:** standard commands; focused browser tests for hover/focus switching, blur/visibility reset, touch/coarse pointer, reduced motion, failed source; viewport and locale screenshots.
 
-**Required user decisions:** Final project order, flagship scale, inclusion/exclusion of each current project, approved evidence wording.
+**Resolved decisions:** Assetto is the dominant flagship; BeamNG Performance is the major text-first comparison composition; BeamNG Cargo is the compact narrative composition. AC Rally remains supporting self-produced evidence. Automotive edits remain smaller, carry the exact bilingual disclosure, and claim editing/VFX only. `Logo-V2.png` is approved and tracked for future About use without implementing About in this phase.
 
 ## Phase 5 — Supporting sections
 
@@ -94,7 +96,7 @@ Each phase is a separate review gate. A phase begins only when its listed depend
 
 **Files likely affected:** `services`, `about`, `notez-feature`, `contact`, `footer`, `site-header` components/CSS and dictionaries/content.
 
-**Dependencies:** Phase 2 system; verified About/contact/experiment content; approved identity-led About direction; capability mapping.
+**Dependencies:** Phase 2 system; verified About/contact/experiment content; approved `Logo-V2.png` identity-led About direction; capability mapping.
 
 **Risks:** Experiments competing with portfolio; deep section contrast failures; long TR copy; clipboard/social link regressions; mobile menu changes.
 

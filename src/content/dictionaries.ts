@@ -47,6 +47,15 @@ export interface Dictionary {
     roleLabel: string;
     yearLabel: string;
     toolsLabel: string;
+    sourceTitleLabel: string;
+    contributionLabel: string;
+    flagshipLabel: string;
+    majorLabel: string;
+    narrativeLabel: string;
+    supportingLabel: string;
+    supportingTitle: string;
+    supportingIntro: string;
+    posterFallback: string;
   };
   services: {
     eyebrow: string;
@@ -138,6 +147,16 @@ const en: Dictionary = {
     roleLabel: "Role",
     yearLabel: "Year",
     toolsLabel: "Tools",
+    sourceTitleLabel: "Original source title",
+    contributionLabel: "Contribution",
+    flagshipLabel: "Flagship project",
+    majorLabel: "Major project",
+    narrativeLabel: "Narrative project",
+    supportingLabel: "Supporting work",
+    supportingTitle: "More production and motion evidence.",
+    supportingIntro:
+      "A self-produced rally episode followed by smaller automotive editing and visual-effects studies.",
+    posterFallback: "Project poster unavailable",
   },
   services: {
     eyebrow: "Services",
@@ -227,11 +246,21 @@ const tr: Dictionary = {
     eyebrow: "Seçili İşler",
     title: "Dikkati korumak için kurgulanan işler.",
     intro:
-      "Bağımsız üretilmiş uzun format rehberler ve eğlence içerikleri; kişisel motion ve görsel efekt çalışmalarıyla destekleniyor.",
+      "Bağımsız üretilmiş uzun format rehberler ve eğlence içerikleri; kişisel hareketli grafik ve görsel efekt çalışmalarıyla destekleniyor.",
     externalAction: "YouTube’da İzle",
     roleLabel: "Rol",
     yearLabel: "Yıl",
     toolsLabel: "Araçlar",
+    sourceTitleLabel: "Orijinal kaynak başlığı",
+    contributionLabel: "Katkı",
+    flagshipLabel: "Amiral proje",
+    majorLabel: "Öne çıkan proje",
+    narrativeLabel: "Anlatı projesi",
+    supportingLabel: "Destekleyici işler",
+    supportingTitle: "Ek prodüksiyon ve hareketli grafik kanıtları.",
+    supportingIntro:
+      "Bağımsız üretilmiş bir rally bölümü ve ardından daha küçük otomotiv kurgu ve görsel efekt çalışmaları.",
+    posterFallback: "Proje posteri kullanılamıyor",
   },
   services: {
     eyebrow: "Hizmetler",

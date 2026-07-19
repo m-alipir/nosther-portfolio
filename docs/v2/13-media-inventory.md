@@ -20,6 +20,7 @@ Metadata was extracted with local `ffprobe`. Sizes use KiB/MiB. All MP4 previews
 | `public/media/projects/youtube-04-preview.mp4` | BeamNG cargo gameplay preview | Landscape, 1280×720, 16:9, 23.976 fps | 5.94 MiB, 15.933 s, H.264 ~3.13 Mb/s | Poster available | Truck-loading story, multiple camera views, in-game driving, captioned/comedic beats | Repo credit includes audio; silent preview cannot verify it for public copy | Flagship #3; approved hero detail/secondary source |
 | `public/media/notez/notez-cover.png` | NoteZ product screenshot | Landscape, 1182×734, ~1.61:1 | 103.3 KiB, PNG RGBA | No preview | Turkish productivity dashboard with task/status UI | Ali's linked NoteZ project; repository public | Experiments only; not primary hero or flagship |
 | `public/media/portrait/Logo.png` | N0STHER identity image | Square, 1254×1254, 1:1 | 1.37 MiB, PNG RGB | No preview | Dark/red circular N monogram logo | Existing brand-owned repository asset | Secondary identity only; not suitable as About portrait or Tidal Glass hero |
+| `public/media/portrait/Logo-V2.png` | Approved N0STHER brand portrait | Square, 1024×1024, 1:1 | 0.972 MiB, PNG RGBA; fully opaque sampled alpha | No preview | Blue illustrated N0STHER monogram/brand composition; not photographic | User-approved project asset | Future primary About identity visual; serve responsive derivatives, preserve master |
 
 ## Preview totals and performance
 

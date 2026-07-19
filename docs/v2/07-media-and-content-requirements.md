@@ -10,7 +10,8 @@
 | BeamNG cargo episode | `youtube-04-poster.webp` + preview | Flagship 3; approved hero detail/secondary source. |
 | Automotive edits | Horizontal and vertical poster/preview pairs | Supporting motion/VFX evidence only; third-party footage; excluded from hero and top three. |
 | NoteZ | `notez-cover.png` | Real secondary Experiments screenshot. |
-| About identity | `portrait/Logo.png` | Secondary N0STHER identity mark, not a portrait. |
+| About identity | `portrait/Logo-V2.png` | Approved future primary N0STHER identity portrait / brand portrait; illustrated mark, not a photograph. |
+| Older identity | `portrait/Logo.png` | Secondary identity mark only; do not use as the main About visual. |
 
 All six previews are H.264 video-only with matching posters; none contains audio. Detailed metadata is in [13-media-inventory.md](13-media-inventory.md).
 
@@ -40,10 +41,19 @@ Phase 3 must select real frames, record crop provenance, create optimized poster
 - Use outcomes only when verified; publication on N0STHER is the only current public outcome claim.
 - Retain automotive edits under supporting work with the approved disclosure and unresolved source/license note.
 
+## Phase 4 Selected Work result
+
+- Explicit typed `featuredRank` values fix Assetto, BeamNG Performance, and BeamNG Cargo at 1–3 independently of CSS or incidental card layout.
+- `editorialClass`, original `sourceTitle`, localized contribution lists, exact `disclosure`, and localized `posterAlt` fields map visible proof without adding presentation measurements to content.
+- AC Rally and the two automotive edits sit after the flagship trio in a smaller supporting evidence rail. Automotive contribution remains editing/VFX only.
+- All posters are lazy below the hero. Existing pointer/focus preview assignment, one-active coordinator, touch/reduced-motion policy, cleanup, and error return are preserved.
+- Source mapping and exact disclosure placement are recorded in [25-selected-work-source-map.md](25-selected-work-source-map.md).
+
 ## About, Experiments, and Contact
 
-- Build an identity-led About without requiring photography; allow a future real image without a complete restructure.
-- Never label `Logo.png` as a portrait and never substitute AI/stock editor photography.
+- Build an identity-led About around approved `Logo-V2.png` without claiming photography; allow a future real image without a complete restructure.
+- Treat `Logo-V2.png` as the primary N0STHER identity portrait / brand portrait and describe it as an illustrated brand asset, not a photograph of Ali.
+- Keep `Logo.png` secondary and never use it as the main About visual. Never substitute AI/stock editor photography.
 - Keep NoteZ secondary to portfolio evidence.
 - Keep `https://nosther.site` and `contact@nosther.site` as approved source values.
 - DNS/MX and email delivery do not block Phase 2/3, but must pass before final Preview acceptance or launch.

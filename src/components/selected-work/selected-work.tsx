@@ -15,7 +15,7 @@ interface SelectedWorkProps {
   locale: Locale;
 }
 
-type WorkCardKind = "featured" | "standard" | "portrait" | "wide";
+type WorkCardKind = "flagship" | "major" | "narrative" | "supporting";
 
 interface WorkCardTiming {
   end: string;
@@ -37,20 +37,21 @@ interface WorkMotionProfile {
   titleY: number;
 }
 
-function getCardKind(index: number): WorkCardKind {
-  if (index === 0) return "featured";
-  if (index === 4) return "portrait";
-  if (index === 5) return "wide";
-  return "standard";
+function getCardKind(card: HTMLElement): WorkCardKind {
+  const layout = card.dataset.projectLayout;
+  if (layout === "flagship" || layout === "major" || layout === "narrative") {
+    return layout;
+  }
+  return "supporting";
 }
 
 const desktopProfile: WorkMotionProfile = {
-  cardGroups: [[0], [1, 2], [3], [4], [5]],
+  cardGroups: [[0], [1], [2], [3], [4, 5]],
   cardTimings: {
-    featured: { end: "center 56%", scrub: 0.86, start: "top 88%" },
-    portrait: { end: "center 60%", scrub: 0.84, start: "top 90%" },
-    standard: { end: "center 58%", scrub: 0.76, start: "top 89%" },
-    wide: { end: "center 56%", scrub: 0.8, start: "top 88%" },
+    flagship: { end: "center 56%", scrub: 0.86, start: "top 88%" },
+    major: { end: "center 58%", scrub: 0.76, start: "top 89%" },
+    narrative: { end: "center 59%", scrub: 0.76, start: "top 89%" },
+    supporting: { end: "center 60%", scrub: 0.8, start: "top 90%" },
   },
   headingEnd: "top 52%",
   headingStart: "top 84%",
@@ -66,10 +67,10 @@ const desktopProfile: WorkMotionProfile = {
 const tabletProfile: WorkMotionProfile = {
   ...desktopProfile,
   cardTimings: {
-    featured: { end: "center 60%", scrub: 0.74, start: "top 88%" },
-    portrait: { end: "center 64%", scrub: 0.76, start: "top 90%" },
-    standard: { end: "center 62%", scrub: 0.68, start: "top 89%" },
-    wide: { end: "center 60%", scrub: 0.72, start: "top 88%" },
+    flagship: { end: "center 60%", scrub: 0.74, start: "top 88%" },
+    major: { end: "center 62%", scrub: 0.68, start: "top 89%" },
+    narrative: { end: "center 63%", scrub: 0.7, start: "top 89%" },
+    supporting: { end: "center 64%", scrub: 0.76, start: "top 90%" },
   },
   headingEnd: "top 56%",
   headingStart: "top 85%",
@@ -85,10 +86,10 @@ const mobileProfile: WorkMotionProfile = {
   ...tabletProfile,
   cardGroups: [[0], [1], [2], [3], [4], [5]],
   cardTimings: {
-    featured: { end: "center 64%", scrub: 0.64, start: "top 89%" },
-    portrait: { end: "center 66%", scrub: 0.68, start: "top 90%" },
-    standard: { end: "center 65%", scrub: 0.6, start: "top 90%" },
-    wide: { end: "center 64%", scrub: 0.64, start: "top 89%" },
+    flagship: { end: "center 64%", scrub: 0.64, start: "top 89%" },
+    major: { end: "center 65%", scrub: 0.6, start: "top 90%" },
+    narrative: { end: "center 65%", scrub: 0.62, start: "top 90%" },
+    supporting: { end: "center 66%", scrub: 0.68, start: "top 90%" },
   },
   headingEnd: "top 58%",
   headingStart: "top 85%",
@@ -103,6 +104,12 @@ const mobileProfile: WorkMotionProfile = {
 
 export function SelectedWork({ dictionary, locale }: SelectedWorkProps) {
   const rootRef = useRef<HTMLElement>(null);
+  const featuredProjects = projects
+    .filter((project) => project.featuredRank !== null)
+    .sort((a, b) => (a.featuredRank ?? 0) - (b.featuredRank ?? 0));
+  const supportingProjects = projects.filter(
+    (project) => project.editorialClass === "supporting",
+  );
   useProjectCardTilt(rootRef);
 
   useLayoutEffect(() => {
@@ -221,10 +228,7 @@ export function SelectedWork({ dictionary, locale }: SelectedWorkProps) {
                     return;
                   }
 
-                  const triggerIndex = Number(
-                    triggerCard.dataset.projectIndex ?? 0,
-                  );
-                  const timing = profile.cardTimings[getCardKind(triggerIndex)];
+                  const timing = profile.cardTimings[getCardKind(triggerCard)];
 
                   const syncRevealState = (progress: number) => {
                     const state =
@@ -252,7 +256,6 @@ export function SelectedWork({ dictionary, locale }: SelectedWorkProps) {
                   });
 
                   groupCards.forEach((card, groupIndex) => {
-                    const index = Number(card.dataset.projectIndex ?? 0);
                     const media = card.querySelector<HTMLElement>(
                       "[data-project-media]",
                     );
@@ -268,10 +271,19 @@ export function SelectedWork({ dictionary, locale }: SelectedWorkProps) {
                     const secondaryContent = [
                       card.querySelector<HTMLElement>("[data-project-meta]"),
                       card.querySelector<HTMLElement>("[data-project-details]"),
+                      card.querySelector<HTMLElement>(
+                        "[data-project-source-title]",
+                      ),
+                      card.querySelector<HTMLElement>(
+                        "[data-project-contributions]",
+                      ),
                       card.querySelector<HTMLElement>("[data-project-tags]"),
+                      card.querySelector<HTMLElement>(
+                        "[data-project-disclosure]",
+                      ),
                       card.querySelector<HTMLElement>("[data-project-action]"),
                     ].filter((target): target is HTMLElement => Boolean(target));
-                    const isFeatured = index === 0;
+                    const isFeatured = card.dataset.projectRank === "1";
                     const offset = groupIndex * (profile.isMobile ? 0 : 0.07);
 
                     if (profile.isMobile) {
@@ -454,16 +466,53 @@ export function SelectedWork({ dictionary, locale }: SelectedWorkProps) {
           </p>
         </div>
 
-        <div className={styles.grid}>
-          {projects.map((project, index) => (
-            <ProjectCard
-              key={project.id}
-              project={project}
-              locale={locale}
-              dictionary={dictionary}
-              index={index}
-            />
-          ))}
+        <div className={styles.featuredFlow}>
+          {featuredProjects.map((project) => {
+            const index = projects.indexOf(project);
+            return (
+              <ProjectCard
+                key={project.id}
+                project={project}
+                locale={locale}
+                dictionary={dictionary}
+                index={index}
+                projectNumber={`0${project.featuredRank}`}
+              />
+            );
+          })}
+        </div>
+
+        <div
+          className={styles.supportingArea}
+          role="group"
+          aria-labelledby="supporting-work-title"
+        >
+          <div className={styles.supportingHeading}>
+            <div>
+              <p className={styles.supportingLabel}>
+                {dictionary.work.supportingLabel}
+              </p>
+              <h3 id="supporting-work-title">
+                {dictionary.work.supportingTitle}
+              </h3>
+            </div>
+            <p>{dictionary.work.supportingIntro}</p>
+          </div>
+          <div className={styles.supportingGrid}>
+            {supportingProjects.map((project, supportingIndex) => {
+              const index = projects.indexOf(project);
+              return (
+                <ProjectCard
+                  key={project.id}
+                  project={project}
+                  locale={locale}
+                  dictionary={dictionary}
+                  index={index}
+                  projectNumber={`S0${supportingIndex + 1}`}
+                />
+              );
+            })}
+          </div>
         </div>
       </div>
     </section>

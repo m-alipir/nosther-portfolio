@@ -14,7 +14,11 @@ Approved evidence:
 
 No statistics, client implications, outcomes, awards, or availability claims may be invented.
 
-`public/media/portrait/Logo.png` is a 1254×1254 N0STHER identity mark, not a portrait of Ali. It may remain a secondary identity asset and must not receive portrait semantics. AI-generated and stock editor portraits are prohibited.
+`public/media/portrait/Logo-V2.png` is the approved future primary N0STHER identity portrait / brand portrait. Visual inspection confirms a square blue illustrated N0STHER mark; it contains no photographic portrait of Ali and must not receive photographic semantics. Technical audit: PNG, 1024×1024, RGBA container, sampled alpha min/max 255 (fully opaque), 1,019,018 bytes / 0.972 MiB, SHA-256 `EC7FB3E1C0347EDE4A2FB81CE340D0713F3EE72CBA26E4CBE3705604F3A67BF1`.
+
+The square composition is suitable for responsive About crops. Preserve the master PNG; for delivery, create responsive WebP/AVIF derivatives or use the existing optimized image pipeline because the source is heavy for repeated small displays. Do not unnecessarily rewrite the source. `public/media/portrait/Logo.png` remains an older secondary identity mark and must not be the main About visual. AI-generated and stock editor portraits remain prohibited.
+
+Phase 4 registers and tracks `Logo-V2.png` only. About layout, copy, semantics, and media rendering remain deferred to Phase 5.
 
 ## Contact and social status
 

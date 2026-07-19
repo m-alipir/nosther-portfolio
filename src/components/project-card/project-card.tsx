@@ -13,6 +13,7 @@ interface ProjectCardProps {
   locale: Locale;
   dictionary: Dictionary;
   index: number;
+  projectNumber: string;
 }
 
 interface ActivePreview {
@@ -46,6 +47,7 @@ export function ProjectCard({
   locale,
   dictionary,
   index,
+  projectNumber,
 }: ProjectCardProps) {
   const title = project.title[locale];
   const videoRef = useRef<HTMLVideoElement>(null);
@@ -54,6 +56,7 @@ export function ProjectCard({
   const allowVideo = useVideoPlaybackPolicy(true);
   const [sourceRequested, setSourceRequested] = useState(false);
   const [isPlaying, setIsPlaying] = useState(false);
+  const [posterFailed, setPosterFailed] = useState(false);
   const [videoFailed, setVideoFailed] = useState(false);
   const hasPreview = Boolean(project.previewVideoPath);
   const platform = project.platform[locale];
@@ -61,13 +64,40 @@ export function ProjectCard({
   const hasDetails = Boolean(
     role || project.year || project.tools.length > 0,
   );
+  const editorialLabel =
+    project.featuredRank === 1
+      ? dictionary.work.flagshipLabel
+      : project.featuredRank === 2
+        ? dictionary.work.majorLabel
+        : project.featuredRank === 3
+          ? dictionary.work.narrativeLabel
+          : dictionary.work.supportingLabel;
+  const layoutKind =
+    project.featuredRank === 1
+      ? "flagship"
+      : project.featuredRank === 2
+        ? "major"
+        : project.featuredRank === 3
+          ? "narrative"
+          : project.orientation === "portrait"
+            ? "supporting-portrait"
+            : project.disclosure
+              ? "supporting-study"
+              : "supporting-editorial";
+  const ProjectHeading =
+    project.editorialClass === "supporting" ? "h4" : "h3";
 
   const cardClassName = [
     styles.card,
-    index === 0 ? styles.featured : "",
-    index === 3 ? styles.landscapeLead : "",
+    project.featuredRank === 1 ? styles.flagship : "",
+    project.featuredRank === 2 ? styles.major : "",
+    project.featuredRank === 3 ? styles.narrative : "",
+    project.editorialClass === "supporting" ? styles.supporting : "",
+    project.editorialClass === "supporting" && !project.disclosure
+      ? styles.supportingEditorial
+      : "",
+    project.disclosure ? styles.study : "",
     project.orientation === "portrait" ? styles.portrait : "",
-    index === 5 ? styles.wide : "",
   ]
     .filter(Boolean)
     .join(" ");
@@ -196,18 +226,35 @@ export function ProjectCard({
   }, [stopPreview]);
 
   const media = (
-    <div className={styles.media} data-project-media>
+    <div
+      className={styles.media}
+      data-project-media
+      data-poster-failed={posterFailed ? "true" : "false"}
+    >
       <div className={styles.mediaVisual} data-project-media-visual>
+        <span
+          className={styles.posterFallback}
+          aria-hidden={posterFailed ? undefined : true}
+          role={posterFailed ? "img" : undefined}
+          aria-label={posterFailed ? project.posterAlt[locale] : undefined}
+        >
+          <span>{projectNumber}</span>
+          {dictionary.work.posterFallback}
+        </span>
         <Image
-          alt=""
+          alt={posterFailed ? "" : project.posterAlt[locale]}
           src={project.posterPath}
           fill
-          loading={index === 0 ? "eager" : "lazy"}
+          loading="lazy"
           sizes={
-            index === 0
-              ? "(max-width: 768px) 100vw, 85vw"
-              : "(max-width: 768px) 100vw, 50vw"
+            project.featuredRank === 1
+              ? "(max-width: 767px) 100vw, (max-width: 1199px) 92vw, 64vw"
+              : project.editorialClass === "featured"
+                ? "(max-width: 767px) 100vw, (max-width: 1199px) 92vw, 58vw"
+                : "(max-width: 767px) 100vw, (max-width: 1199px) 50vw, 33vw"
           }
+          onLoad={() => setPosterFailed(false)}
+          onError={() => setPosterFailed(true)}
         />
         {hasPreview && !videoFailed ? (
           <video
@@ -258,12 +305,35 @@ export function ProjectCard({
 
   const body = (
     <div className={styles.body} data-project-body>
-      <div className={styles.meta} data-project-meta>
+      <div className={styles.editorialMeta} data-project-meta>
+        <span className={styles.projectNumber}>{projectNumber}</span>
+        <span>{editorialLabel}</span>
+      </div>
+      <div className={styles.meta}>
         <span>{project.format[locale]}</span>
+        <span aria-hidden="true">·</span>
         <span>{platform}</span>
       </div>
-      <h3 data-project-title>{title}</h3>
+      <ProjectHeading id={`${project.id}-title`} data-project-title>
+        {title}
+      </ProjectHeading>
       <p data-project-description>{project.description[locale]}</p>
+
+      {project.sourceTitle ? (
+        <p className={styles.sourceTitle} data-project-source-title>
+          <span>{dictionary.work.sourceTitleLabel}</span>
+          <cite lang="tr">{project.sourceTitle}</cite>
+        </p>
+      ) : null}
+
+      <div className={styles.contributions} data-project-contributions>
+        <span>{dictionary.work.contributionLabel}</span>
+        <ul>
+          {project.contributions.map((contribution) => (
+            <li key={contribution.en}>{contribution[locale]}</li>
+          ))}
+        </ul>
+      </div>
 
       {hasDetails ? (
         <dl className={styles.details} data-project-details>
@@ -294,6 +364,12 @@ export function ProjectCard({
         ))}
       </div>
 
+      {project.disclosure ? (
+        <p className={styles.disclosure} data-project-disclosure>
+          {project.disclosure[locale]}
+        </p>
+      ) : null}
+
       {project.externalUrl ? (
         <span className={styles.action} data-project-action>
           {dictionary.work.externalAction}
@@ -315,7 +391,9 @@ export function ProjectCard({
         aria-label={title}
         data-project-card
         data-project-index={index}
-        data-project-featured={index === 0 ? "true" : undefined}
+        data-project-featured={project.featuredRank ? "true" : undefined}
+        data-project-rank={project.featuredRank ?? undefined}
+        data-project-layout={layoutKind}
         data-cursor-project
         data-preview-policy={allowVideo ? "enabled" : "poster-only"}
         data-preview-source={sourceRequested ? "requested" : "idle"}
@@ -334,16 +412,20 @@ export function ProjectCard({
   return (
     <article
       className={cardClassName}
-      aria-label={title}
+      aria-labelledby={`${project.id}-title`}
+      tabIndex={hasPreview ? 0 : undefined}
       data-project-card
       data-project-index={index}
-      data-project-featured={index === 0 ? "true" : undefined}
-      data-cursor-project
+      data-project-featured={project.featuredRank ? "true" : undefined}
+      data-project-rank={project.featuredRank ?? undefined}
+      data-project-layout={layoutKind}
       data-preview-policy={allowVideo ? "enabled" : "poster-only"}
       data-preview-source={sourceRequested ? "requested" : "idle"}
       onPointerEnter={requestPreview}
       onPointerMove={maintainPointerIntent}
       onPointerLeave={stopPreview}
+      onFocus={requestPreview}
+      onBlur={stopPreview}
     >
       {media}
       {body}

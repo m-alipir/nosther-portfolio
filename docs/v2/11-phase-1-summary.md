@@ -28,7 +28,7 @@ Visible claims are limited to full video production, recording, screen/game capt
 
 ## About and contact
 
-The initial V2 About direction is identity-led and does not require photography. `public/media/portrait/Logo.png` is a secondary N0STHER identity asset, never a portrait of Ali. The future layout should accept a real photograph later without structural replacement.
+The initial V2 About direction is identity-led and does not require photography. `public/media/portrait/Logo.png` is a secondary N0STHER identity asset, never a portrait of Ali. Phase 4 later approved `Logo-V2.png` as the future primary illustrated identity portrait / brand portrait; it is not a photograph. The future layout should still accept a real photograph later without structural replacement.
 
 The approved source values remain `https://nosther.site` and `contact@nosther.site`. Missing web/mail DNS does not block Phase 2 or Phase 3, but it blocks final Preview acceptance and production launch until deployment DNS, MX, and real send/receive tests pass.
 

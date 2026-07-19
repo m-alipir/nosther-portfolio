@@ -13,7 +13,7 @@ The site consistently identifies `ALI` and “Creator behind N0STHER.” The pri
 | Selected Work | Four published N0STHER YouTube projects plus vertical/horizontal automotive personal edits | Real links/media exist. Portfolio range is narrower than the stated service range. |
 | Services | Long-form, short-form, motion/social | Useful foundation, but tutorial/educational, audio cleanup, sound design, titles/VFX are not all explicit at list level. |
 | NoteZ | In-development productivity experiment and GitHub link | Credible secondary experiment; currently receives a prominent full section. V2 should subordinate it to editing evidence. |
-| About | ALI/N0STHER, broad positioning, rhythm/clarity philosophy, YouTube CTA | Clear and non-metric. The image path is named `Logo.png`; confirm that it is the approved portrait/identity asset. |
+| About | ALI/N0STHER, broad positioning, rhythm/clarity philosophy, YouTube CTA | Clear and non-metric. Phase 4 approves `Logo-V2.png` as the future primary illustrated brand portrait; it is not a photograph. `Logo.png` remains secondary. |
 | Contact | Verified-looking domain email, email copy, YouTube/GitHub/LinkedIn | Direct and useful. Destinations should be re-verified before release. |
 | Footer | Identity, dynamic year, rights | Complete. |
 | SEO | Localized titles/descriptions, OG copy, canonical/hreflang | Good bilingual base. “Brands” vs “digital brands” varies slightly but is not contradictory. |

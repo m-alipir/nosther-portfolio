@@ -95,9 +95,15 @@ It must not become a text-left/cards-right split, three unrelated floating cards
 
 Selected Work is the portfolio’s evidence core. Lead with one or two flagship edits at generous scale, then establish supporting rhythm through asymmetry, orientation changes, and project-specific metadata. Preserve hover/focus previews and touch/reduced-motion posters. Avoid a bento-grid-heavy appearance and repeated generic descriptions.
 
+Phase 4 implements the approved proof hierarchy as one static editorial sequence. Assetto is a media-first flagship, BeamNG Performance is a text-first comparison composition, and BeamNG Cargo is a narrower right-offset narrative composition. A separate 6/3/3 desktop evidence rail places AC Rally ahead of two smaller automotive motion/VFX studies. Numbering, original source titles, contributions, roles, years, tools, and exact third-party disclosures make the proof project-specific. Overall card shells, equal columns, excessive radius, and glass repetition are excluded.
+
+The existing project preview coordinator remains singular: video sources are assigned on eligible pointer/focus intent, one preview plays at a time, and touch/reduced-motion/error states remain poster-led. Responsive layouts may reduce asymmetry, but the top-three order and distinct second-project text-first relationship remain visible.
+
 ## About and Experiments
 
 About carries the deep-ocean contrast field and should feel personal, credible, and editorial. Use an approved real portrait or intentionally approved identity asset. NoteZ/Experiments remains visible but clearly secondary to video-editing work; it must not interrupt the portfolio proof hierarchy.
+
+The approved future primary identity visual is `public/media/portrait/Logo-V2.png`: a square blue illustrated N0STHER brand portrait, not a photograph of Ali. Preserve the master and serve responsive derivatives when About is implemented. The older `Logo.png` may remain secondary but is not the main About visual.
 
 ## Contact
 
