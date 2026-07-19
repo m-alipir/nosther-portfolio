@@ -3,7 +3,7 @@
 import { useLayoutEffect, useRef } from "react";
 
 import type { Dictionary } from "@/content/dictionaries";
-import { HeroMedia } from "@/components/hero/hero-media";
+import { HeroSequenceStage } from "@/components/hero/hero-sequence-stage";
 import { ensureGsapRegistered } from "@/lib/motion/gsap-client";
 import {
   consumeHeroIntroLocaleTransition,
@@ -288,8 +288,17 @@ export function Hero({ dictionary }: { dictionary: Dictionary }) {
           <p className="eyebrow" data-hero-eyebrow>
             {dictionary.hero.eyebrow}
           </p>
-          <h1 id="hero-title" className={styles.title} data-hero-title>
-            {dictionary.hero.title}
+          <h1
+            id="hero-title"
+            className={styles.title}
+            aria-label={dictionary.hero.title}
+            data-hero-title
+          >
+            {dictionary.hero.titleLines.map((line) => (
+              <span key={line} aria-hidden="true">
+                {line}
+              </span>
+            ))}
           </h1>
           <p className={styles.lead} data-hero-lead>
             {dictionary.hero.lead}
@@ -310,7 +319,7 @@ export function Hero({ dictionary }: { dictionary: Dictionary }) {
         </div>
 
         <div className={styles.mediaStage} data-hero-media-stage>
-          <HeroMedia copy={dictionary.hero} />
+          <HeroSequenceStage copy={dictionary.hero.stage} />
         </div>
 
         <a className={styles.scrollCue} href="#work" data-hero-scroll-cue>

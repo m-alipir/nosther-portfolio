@@ -86,3 +86,7 @@ Capture stable viewport images after fonts/media and relevant intro state settle
 ## Phase 2 checkpoint
 
 Phase 2 evidence and exact results are recorded in [19-phase-2-visual-verification.md](19-phase-2-visual-verification.md). Exact viewport captures are ignored under `artifacts/v2-phase-2/`. The selected browser exposed viewport control but no reduced-motion, coarse-pointer, or touch emulation; Phase 2 therefore records interactive fine-pointer checks plus static verification of the existing reduced-motion/touch safeguards rather than claiming unavailable emulation.
+
+## Phase 3 checkpoint
+
+Phase 3 source provenance, motion deferrals, and exact verification results are recorded in [21-hero-media-source-map.md](21-hero-media-source-map.md), [22-phase-3-visual-verification.md](22-phase-3-visual-verification.md), and [23-phase-3-motion-deferrals.md](23-phase-3-motion-deferrals.md). Ignored captures under `artifacts/v2-phase-3/` cover the required EN/TR desktop, tablet, mobile, poster-only, and controlled media-error states. The browser still exposes no reduced-motion or coarse-pointer emulation; Phase 3 therefore verifies the complete poster-first source path, an explicit narrow-mobile poster policy, and the existing reduced-motion/fine-hover policy rather than claiming unavailable runtime emulation.

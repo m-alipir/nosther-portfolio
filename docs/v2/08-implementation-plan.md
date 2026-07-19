@@ -56,6 +56,8 @@ Each phase is a separate review gate. A phase begins only when its listed depend
 
 ## Phase 3 — Static hero
 
+**Checkpoint status (2026-07-19):** implemented and verified. The V1 split hero and temporary automotive source are replaced by the static Cinematic Sequence Stage using approved Set 3, three traceable optimized posters, one playback-eligible dominant surface, localized line breaks/metadata, resilient poster fallbacks, and responsive three-to-two-surface adaptation without new GSAP.
+
 **Objective:** Build and approve the static Cinematic Sequence Stage using real media. No GSAP until the static composition is approved.
 
 **Files likely affected:** a new V2 hero component/CSS Module, `src/components/hero/**`, hero media content/types, locale dictionaries; existing playback policy reused where possible.
@@ -68,7 +70,7 @@ Each phase is a separate review gate. A phase begins only when its listed depend
 
 **Verification commands:** standard lint/typecheck/build; screenshot comparison at all three desktop targets, then tablet/mobile; TR/EN; keyboard order; touch/reduced-motion poster state; media error simulation.
 
-**Required user decisions:** Select final three frames/crops, approve desktop still composition, approve TR/EN line breaks, decide which one surface may play and under what trigger.
+**Resolved decisions:** BeamNG performance at 5.3s is the dominant wide frame and sole preview-eligible surface; Assetto at 13.7s is a clearly labeled cutaway; BeamNG cargo at 8.7s is the detail insert. Desktop/tablet use all three surfaces, narrow mobile omits the insert and is poster-only. TR/EN have explicit typed headline lines and localized sequence metadata.
 
 ## Phase 4 — Selected Work
 

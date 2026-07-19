@@ -20,12 +20,23 @@ export interface Dictionary {
   hero: {
     eyebrow: string;
     title: string;
+    titleLines: string[];
     lead: string;
     workCta: string;
     contactCta: string;
-    mediaLabel: string;
-    mediaTitle: string;
-    mediaDescription: string;
+    stage: {
+      ariaLabel: string;
+      reelLabel: string;
+      wideLabel: string;
+      wideTitle: string;
+      wideAlt: string;
+      cutawayLabel: string;
+      cutawayTitle: string;
+      cutawayAlt: string;
+      detailLabel: string;
+      detailTitle: string;
+      detailAlt: string;
+    };
     scrollCue: string;
   };
   work: {
@@ -95,14 +106,27 @@ const en: Dictionary = {
   hero: {
     eyebrow: "Independent Video Editor",
     title: "VIDEO EDITING FOR CREATORS & BRANDS",
+    titleLines: ["VIDEO EDITING", "FOR CREATORS", "& BRANDS"],
     lead:
       "Long-form stories, short-form cuts, and motion-led social content—edited with pace, clarity, and intent.",
     workCta: "View Work",
     contactCta: "Contact",
-    mediaLabel: "Hero montage",
-    mediaTitle: "Cinematic automotive edit",
-    mediaDescription:
-      "A cinematic pacing and visual-effects study. Edited using third-party footage; editing and visual effects by Ali.",
+    stage: {
+      ariaLabel: "Cinematic sequence assembled from three self-produced N0STHER projects",
+      reelLabel: "Selected reel · Full production",
+      wideLabel: "Long-form edit · Tutorial structure",
+      wideTitle: "BeamNG Performance Settings Guide",
+      wideAlt:
+        "Split-screen BeamNG gameplay comparing Vulkan at 110 FPS with DirectX 11 at 65 FPS.",
+      cutawayLabel: "Cutaway · In-game verification",
+      cutawayTitle: "Assetto Corsa Setup Guide",
+      cutawayAlt:
+        "Portrait cutaway from the Assetto Corsa setup guide showing an in-game verification drive.",
+      detailLabel: "Insert · Narrative beat",
+      detailTitle: "BeamNG Cargo Run",
+      detailAlt:
+        "Cockpit-view insert from the BeamNG cargo run approaching a loading area.",
+    },
     scrollCue: "Selected work below",
   },
   work: {
@@ -176,14 +200,27 @@ const tr: Dictionary = {
   hero: {
     eyebrow: "Bağımsız Video Editörü",
     title: "İÇERİK ÜRETİCİLERİ VE MARKALAR İÇİN VİDEO KURGU",
+    titleLines: ["İÇERİK ÜRETİCİLERİ", "VE MARKALAR İÇİN", "VİDEO KURGU"],
     lead:
       "Uzun anlatılar, kısa format videolar ve hareket odaklı sosyal içerikler—tempo, netlik ve amaç gözetilerek kurgulanır.",
     workCta: "İşleri Gör",
     contactCta: "İletişim",
-    mediaLabel: "Hero montajı",
-    mediaTitle: "Sinematik otomotiv editi",
-    mediaDescription:
-      "Sinematik tempo ve görsel efekt çalışması. Üçüncü taraf görüntüler kullanılarak kurgulandı; kurgu ve görsel efektler Ali tarafından hazırlandı.",
+    stage: {
+      ariaLabel: "Bağımsız üretilmiş üç N0STHER projesinden oluşturulan sinematik kurgu sekansı",
+      reelLabel: "Seçili kurgu · Tüm prodüksiyon",
+      wideLabel: "Uzun format · Rehber yapısı",
+      wideTitle: "BeamNG Performans Ayarları Rehberi",
+      wideAlt:
+        "Vulkan'da 110 FPS ile DirectX 11'de 65 FPS'i karşılaştıran bölünmüş ekran BeamNG oynanışı.",
+      cutawayLabel: "Kesit · Oyun içi kontrol",
+      cutawayTitle: "Assetto Corsa Kurulum Rehberi",
+      cutawayAlt:
+        "Assetto Corsa kurulum rehberinden oyun içi doğrulama sürüşünü gösteren dikey kesit.",
+      detailLabel: "Detay · Anlatı vuruşu",
+      detailTitle: "BeamNG Yük Taşıma",
+      detailAlt:
+        "BeamNG yük taşıma videosundan yükleme alanına yaklaşan kokpit görünümü detayı.",
+    },
     scrollCue: "Seçili işler aşağıda",
   },
   work: {

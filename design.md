@@ -83,7 +83,9 @@ Primary visual QA targets are 1366x768, 1440x900, and 1920x1080. The hero must f
 
 ## Hero: Cinematic Sequence Stage
 
-The future hero is not the current Lovable hero. It must use one dominant wide showreel frame, one narrow portrait cutaway, and one smaller detail or motion frame as a unified editorial sequence. A restrained sequence track, playhead, and timecode should connect typography to media. Selective frosted glass, subtle grain, and caustic light may establish depth. All frames must use real portfolio media and form a compelling still composition before GSAP is added.
+Phase 3 implements the static Cinematic Sequence Stage as one editorial object: a dominant BeamNG performance-comparison frame, an attached portrait cutaway from the Assetto setup guide, and a BeamNG cargo cockpit insert. A shared sequence rail, source timecodes, playhead, restrained production labels, glass edges, grain, and caustic light connect typography to media without imitating editing software. Desktop keeps all three surfaces; narrow mobile keeps the dominant frame and cutaway and becomes explicitly poster-only. Only the dominant source may preview, and only above the mobile breakpoint when the established fine-hover, reduced-motion, save-data, codec, visibility, and intersection policies allow it.
+
+The three derived posters are real frames from self-produced N0STHER previews, recorded in `docs/v2/21-hero-media-source-map.md`. The composition is complete as a still. Phase 3 adds no GSAP; the existing intro/replay lifecycle and whole-stage scroll hooks remain unchanged pending the Phase 6 motion review.
 
 The reference validates overlap, hierarchy, and sequence metadata as useful ingredients. It does not approve the reference's specific automotive stock frame, portrait inset, caustic tile, or exact text-left/media-right arrangement. V2 must create a stronger connection between the typography and the three real-media frames while avoiding three independent floating cards.
 

@@ -122,3 +122,12 @@ The five content/media decisions are closed in D-011 through D-015. Palette cali
 - Decision: use the exact approved foam/ice/aqua/tidal/ocean/deep/ink palette, retain the existing local Archivo/Instrument Sans/IBM Plex Mono stack, cap the shared container at `92rem`, use responsive gutters up to `4.5rem`, and establish static CSS grain/caustic plus selective milky glass.
 - Scope: header, footer, global primitives, inherited colors, borders, section atmosphere, and typography/proportion corrections only. No JSX structure, section order, content schema, playback policy, GSAP timeline, or hero/project composition was changed.
 - Accessibility evidence: core foreground/background pairs meet WCAG AA in calculated contrast checks; the 320px viewport has no content-width overflow; Turkish hero scaling is localized to prevent crowded diacritics.
+
+## D-019 — Phase 3 Cinematic Sequence Stage
+
+- Date: 2026-07-19
+- Status: accepted implementation checkpoint
+- Decision: implement approved Set 3 as one static editorial sequence using a BeamNG performance comparison at 5.3s, an Assetto guide cutaway at 13.7s, and a BeamNG cargo insert at 8.7s. Store traceable optimized WebP derivatives under `public/media/hero/` and typed source metadata in `src/content/media.ts`.
+- Playback: only the dominant BeamNG performance preview may mount. It requires a viewport wider than 767px plus the established fine-hover, reduced-motion, save-data, codec, visibility, and intersection checks. Narrow mobile is explicitly poster-only; secondary surfaces never mount video.
+- Scope: the existing hero intro/replay and whole-stage scroll lifecycle remains unchanged. No GSAP choreography, later-section layout, project-card architecture, navigation, route, SEO, or security implementation is redesigned in Phase 3.
+- Accessibility: the stage has a localized group label, every media surface has a meaningful localized image description, decorative sequence cues are hidden, frames are non-focusable, and CSS-backed labeled fallbacks remain visible if a poster fails.
