@@ -14,7 +14,9 @@
 /source-assets/
 
 # local project material and reports
-/docs/
+/docs/*
+!/docs/v2/
+!/docs/v2/**
 /references/
 /.agents/
 /.codex/
