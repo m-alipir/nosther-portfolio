@@ -102,14 +102,14 @@ const en: Dictionary = {
     mediaLabel: "Hero montage",
     mediaTitle: "Cinematic automotive edit",
     mediaDescription:
-      "A cinematic automotive edit created from third-party footage, focused on pacing, motion, and music synchronization.",
+      "A cinematic pacing and visual-effects study. Edited using third-party footage; editing and visual effects by Ali.",
     scrollCue: "Selected work below",
   },
   work: {
     eyebrow: "Selected Work",
     title: "Edits built to hold attention.",
     intro:
-      "A selection of long-form YouTube work and automotive edits across vertical and horizontal formats.",
+      "Self-produced long-form tutorials and entertainment work, supported by personal motion and visual-effects studies.",
     externalAction: "Watch on YouTube",
     roleLabel: "Role",
     yearLabel: "Year",
@@ -134,7 +134,7 @@ const en: Dictionary = {
     body:
       "I edit video for creators and digital brands. Gaming and automotive projects are part of my visual world, but the work is not limited to one category. I care about rhythm, clarity, and making every cut serve the idea.",
     action: "Visit N0STHER on YouTube",
-    mediaLabel: "Portrait of ALI",
+    mediaLabel: "N0STHER identity mark",
   },
   contact: {
     eyebrow: "Start a conversation",
@@ -183,14 +183,14 @@ const tr: Dictionary = {
     mediaLabel: "Hero montajı",
     mediaTitle: "Sinematik otomotiv editi",
     mediaDescription:
-      "Üçüncü taraf görüntülerle hazırlanan; tempo, hareket ve müzik senkronuna odaklanan sinematik otomotiv editi.",
+      "Sinematik tempo ve görsel efekt çalışması. Üçüncü taraf görüntüler kullanılarak kurgulandı; kurgu ve görsel efektler Ali tarafından hazırlandı.",
     scrollCue: "Seçili işler aşağıda",
   },
   work: {
     eyebrow: "Seçili İşler",
     title: "Dikkati korumak için kurgulanan işler.",
     intro:
-      "Uzun format YouTube çalışmalarıyla dikey ve yatay formatlardaki otomotiv editlerinden bir seçki.",
+      "Bağımsız üretilmiş uzun format rehberler ve eğlence içerikleri; kişisel motion ve görsel efekt çalışmalarıyla destekleniyor.",
     externalAction: "YouTube’da İzle",
     roleLabel: "Rol",
     yearLabel: "Yıl",
@@ -215,7 +215,7 @@ const tr: Dictionary = {
     body:
       "İçerik üreticileri ve dijital markalar için video kurguluyorum. Gaming ve automotive projeler görsel dünyamın bir parçası; fakat çalışmalarım tek bir kategoriyle sınırlı değil. Ritime, netliğe ve her kesmenin fikre hizmet etmesine önem veriyorum.",
     action: "N0STHER YouTube kanalına git",
-    mediaLabel: "ALI portresi",
+    mediaLabel: "N0STHER kimlik işareti",
   },
   contact: {
     eyebrow: "Bir konuşma başlatalım",

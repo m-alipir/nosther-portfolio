@@ -61,17 +61,56 @@
 - Status: permanent invariant
 - Decision: metrics, client outcomes, testimonials, contribution claims, licensing, availability, and project results require verifiable input. Unknowns remain explicit gaps.
 
-## Open decisions before Phase 1/3
+## Phase 1 decisions
 
-- Which current projects are flagships, supporting work, or removed?
-- What exactly did ALI do on each project?
-- Which real media forms the three hero frames, and what are its rights/source notes?
-- Should original Turkish YouTube titles remain with translated editorial titles in EN?
-- Is `public/media/portrait/Logo.png` the approved About asset?
-- Is the current starting palette calibration accepted after comparison with the preserved reference and real portfolio media?
+The five content/media decisions are closed in D-011 through D-015. Palette calibration remains a Phase 2 visual decision, not a Phase 1 blocker.
 
 ## D-010 — Existing CI is part of the baseline
 
 - Date: 2026-07-19
 - Status: accepted correction
 - Decision: `.github/workflows/ci.yml` is the committed CI source of truth. It verifies locked install, lint, typecheck, production build, and high-severity dependency audit on pull requests and pushes to `main`, using Node 22 and cancel-in-progress concurrency per ref.
+
+## D-011 — Phase 1 flagship order
+
+- Date: 2026-07-19
+- Status: accepted
+- Decision: order the initial flagships as Assetto Corsa Content Manager & Mod Setup Guide, BeamNG Performance Settings Guide, then BeamNG Cargo Run Without Fuel. Automotive edits are supporting work.
+- Reason: prioritize verifiable self-produced credibility over artificial category variety.
+
+## D-012 — Hero planning default
+
+- Date: 2026-07-19
+- Status: accepted planning default; implementation pending Phase 3
+- Decision: Candidate Set 3 uses BeamNG settings as the dominant wide source, a portrait crop/cutaway from the same Assetto guide project, and BeamNG cargo as the secondary detail source.
+- Constraint: the Assetto portrait is a derived crop, not separate vertical work. Automotive footage is excluded. Broader non-gaming work is optional and does not block implementation.
+
+## D-013 — About asset classification
+
+- Date: 2026-07-19
+- Status: accepted
+- Decision: initial About is identity-led without photography. `public/media/portrait/Logo.png` is a secondary N0STHER identity mark, never a portrait. A real photograph may be added later without requiring a complete section restructure.
+
+## D-014 — Preview audio evidence
+
+- Date: 2026-07-19
+- Status: accepted contribution policy
+- Decision: retain only visually or repository-verifiable production, recording, screen/game capture, editing, instructional structure, captions/callouts, comparison graphics, and visibly supported motion/VFX claims. Omit detailed audio claims until full exports, timelines, or source projects verify them.
+
+## D-015 — Contact verification
+
+- Date: 2026-07-19
+- Status: accepted source values; infrastructure follow-up open
+- Decision: retain `https://nosther.site`, `contact@nosther.site`, and existing social URLs. Missing web/mail DNS does not block Phase 2/3, but blocks final Preview acceptance and production launch until deployment DNS, MX, and send/receive tests pass.
+
+## D-016 — Automotive evidence boundary
+
+- Date: 2026-07-19
+- Status: accepted
+- Decision: automotive edits remain supporting motion/VFX work, are excluded from hero and the top three, and carry the approved bilingual third-party-footage disclosure. Source and licensing details remain unresolved factual follow-up.
+
+## D-017 — Typed content scope
+
+- Date: 2026-07-19
+- Status: accepted
+- Decision: update safe existing localized project/dictionary fields and editorial array order during Phase 1. Defer explicit source-title, classification/rank, disclosure, evidence, and multi-surface hero fields until their relevant component/schema phase rather than overloading unrelated fields.

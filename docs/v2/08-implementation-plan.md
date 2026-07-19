@@ -20,19 +20,21 @@ Each phase is a separate review gate. A phase begins only when its listed depend
 
 ## Phase 1 — Real content and media mapping
 
+**Checkpoint status (2026-07-19):** approved. Typed project/dictionary copy and documentation record the verified direction; no visual implementation or media derivation was performed.
+
 **Objective:** Replace generic/temporary planning inputs with verified real portfolio content and a media map.
 
 **Files likely affected:** `src/content/projects.ts`, `media.ts`, `services.ts`, `dictionaries.ts`, `types.ts`; new optimized files under `public/media`; docs content/media decision updates.
 
-**Dependencies:** Owner contribution details, media ownership/licensing, flagship choices, bilingual copy, approved portrait, hero candidates.
+**Dependencies:** Approved flagship order, conservative contribution policy, bilingual copy, About direction, and hero planning set. All are resolved for implementation planning.
 
 **Risks:** Unsupported claims; Turkish-only EN fields; oversized media; exposing unlicensed footage; letting current array order dictate editorial importance.
 
-**Acceptance criteria:** Flagship order and evidence approved; every visible project has specific TR/EN copy and verified metadata; three coordinated hero candidates exist with posters/fallbacks; capability claims map to proof; no placeholder content.
+**Acceptance criteria:** Flagship order and evidence approved; visible projects have specific TR/EN copy and conservative metadata; the hero source set is approved for later crop/asset work; capability claims map to proof; automotive disclosure is explicit; no placeholder content.
 
 **Verification commands:** `npm run lint`, `npm run typecheck`, `npm run build`; media-path existence/size audit; manual TR/EN content review.
 
-**Required user decisions:** Flagship projects; exact contribution/role; media licensing; original-title vs translated-title treatment; approved portrait; NoteZ prominence; which capabilities lack sufficient proof and should be deferred.
+**Resolved decisions:** Assetto, BeamNG settings, then BeamNG cargo are the flagship trio; Set 3 is the hero planning default; audio claims are omitted; automotive is disclosed supporting work; About is identity-led without photography; NoteZ remains secondary. Remaining factual follow-ups are non-blocking except domain/email readiness at final Preview/launch.
 
 ## Phase 2 — Global visual system
 
@@ -56,7 +58,7 @@ Each phase is a separate review gate. A phase begins only when its listed depend
 
 **Files likely affected:** a new V2 hero component/CSS Module, `src/components/hero/**`, hero media content/types, locale dictionaries; existing playback policy reused where possible.
 
-**Dependencies:** Phase 1 hero media and copy; Phase 2 primitives; approved fallback posters and timecode metadata.
+**Dependencies:** Phase 1 hero source set and copy; Phase 2 primitives. Exact frames, derived crop, fallback posters, and timecode metadata are produced and approved within this static phase.
 
 **Risks:** Repeating the unapproved split hero; random collage; multiple simultaneous videos; TR overflow; 90–100svh failure at 1366x768; accessibility loss; placeholder UI cues.
 
@@ -88,7 +90,7 @@ Each phase is a separate review gate. A phase begins only when its listed depend
 
 **Files likely affected:** `services`, `about`, `notez-feature`, `contact`, `footer`, `site-header` components/CSS and dictionaries/content.
 
-**Dependencies:** Phase 2 system; verified About/contact/experiment content; approved portrait; capability mapping.
+**Dependencies:** Phase 2 system; verified About/contact/experiment content; approved identity-led About direction; capability mapping.
 
 **Risks:** Experiments competing with portfolio; deep section contrast failures; long TR copy; clipboard/social link regressions; mobile menu changes.
 
@@ -96,7 +98,7 @@ Each phase is a separate review gate. A phase begins only when its listed depend
 
 **Verification commands:** standard commands; TR/EN content/overflow review; keyboard/mobile menu/clipboard/live-region tests; link verification; viewport screenshots.
 
-**Required user decisions:** Final About portrait/copy, NoteZ placement, capability labels, contact copy, verified availability wording if any.
+**Required user decisions:** Final About copy, capability labels, and contact presentation. Photography remains optional; verified availability wording is omitted unless later supplied.
 
 ## Phase 6 — Motion and interaction
 
