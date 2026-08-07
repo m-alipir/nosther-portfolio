@@ -4,8 +4,32 @@ import { useLayoutEffect } from "react";
 
 import type { Locale } from "@/content/types";
 import { ensureGsapRegistered } from "@/lib/motion/gsap-client";
+import { lineWidthStagger } from "@/lib/motion/line-stagger";
 
 type MotionTools = Awaited<ReturnType<typeof ensureGsapRegistered>>;
+type RevealTimeline = ReturnType<MotionTools["gsap"]["timeline"]>;
+
+/**
+ * SplitText's `autoSplit` rebuilds the timeline whenever it re-splits — on
+ * font load, on resize, and after lazy media shifts the layout. A fresh
+ * `fromTo` re-applies its hidden start state, so copy the reader has already
+ * seen snaps away and replays. Once a reveal has finished, later rebuilds are
+ * parked at the end instead.
+ */
+function keepRevealed(
+  timeline: RevealTimeline,
+  state: { done: boolean },
+): RevealTimeline {
+  timeline.eventCallback("onComplete", () => {
+    state.done = true;
+  });
+
+  if (state.done) {
+    timeline.progress(1);
+  }
+
+  return timeline;
+}
 
 interface SectionMotionProfile {
   end: string;
@@ -68,72 +92,115 @@ function setupServicesMotion(root: HTMLElement, tools: MotionTools) {
       useActiveState: boolean,
     ) => {
       responsiveMotion?.add(query, () => {
+        const revealState = { done: false };
         const splitTitle = SplitText.create(title, {
           type: "lines",
           mask: "lines",
           aria: "auto",
           autoSplit: true,
-          onSplit: (split) =>
-            gsap
-              .timeline({
-                defaults: { ease: "power2.out" },
-                scrollTrigger: {
-                  trigger: heading,
-                  start: profile.start,
-                  end: profile.end,
-                  scrub: profile.scrub,
-                  invalidateOnRefresh: true,
-                },
-              })
-              .fromTo(
-                eyebrow,
-                { autoAlpha: 0, y: profile.isMobile ? 9 : 14 },
-                { autoAlpha: 1, duration: 0.28, y: 0 },
-                0,
-              )
-              .fromTo(
-                split.lines,
-                { autoAlpha: 0, yPercent: profile.titleY },
-                {
-                  autoAlpha: 1,
-                  duration: 0.68,
-                  stagger: profile.isMobile ? 0.04 : 0.065,
-                  yPercent: 0,
-                },
-                0.12,
-              ),
+          // A staggered fromTo only renders the first target's start state
+          // immediately, so the rest stayed visible until the timeline ran.
+          // Start states are therefore set explicitly.
+          onSplit: (split) => {
+            gsap.set(split.lines, { autoAlpha: 0, yPercent: profile.titleY });
+            return keepRevealed(
+              gsap
+                .timeline({
+                  defaults: { ease: "power2.out", immediateRender: true },
+                  scrollTrigger: {
+                    trigger: heading,
+                    start: profile.start,
+                    toggleActions: "play none none reverse",
+                    invalidateOnRefresh: true,
+                  },
+                })
+                .fromTo(
+                  eyebrow,
+                  { autoAlpha: 0, y: profile.isMobile ? 9 : 14 },
+                  { autoAlpha: 1, duration: 0.28, y: 0 },
+                  0,
+                )
+                .to(
+                  split.lines,
+                  {
+                    autoAlpha: 1,
+                    duration: 0.68,
+                    stagger: lineWidthStagger(profile.isMobile ? 0.04 : 0.065),
+                    yPercent: 0,
+                  },
+                  0.12,
+                ),
+              revealState,
+            );
+          },
         });
 
+        // Rows used to fade in as one block. They now read left to right:
+        // the index slides in from the margin, the service name rises line by
+        // line out of its own mask, and the description follows last.
+        const rowSplits: Array<ReturnType<typeof SplitText.create>> = [];
+
         rows.forEach((row) => {
-          const number = row.querySelector<HTMLElement>("[data-service-number]");
+          const number = row.querySelector<HTMLElement>(
+            "[data-service-number]",
+          );
           const copy = row.querySelector<HTMLElement>("[data-service-copy]");
           if (!number || !copy) {
             return;
           }
 
-          gsap
-            .timeline({
-              defaults: { ease: "power2.out" },
-              scrollTrigger: {
-                trigger: row,
-                start: profile.start,
-                end: profile.end,
-                scrub: profile.scrub,
-                invalidateOnRefresh: true,
+          const rowTitle = copy.querySelector<HTMLElement>("h3");
+          const rowBody = copy.querySelector<HTMLElement>("p");
+          const rowSplit = rowTitle
+            ? SplitText.create(rowTitle, {
+                type: "lines",
+                mask: "lines",
+                aria: "auto",
+              })
+            : undefined;
+
+          if (rowSplit) {
+            rowSplits.push(rowSplit);
+          }
+
+          const timeline = gsap.timeline({
+            defaults: { ease: "power3.out", immediateRender: true },
+            scrollTrigger: {
+              trigger: row,
+              start: profile.start,
+              toggleActions: "play none none reverse",
+              invalidateOnRefresh: true,
+            },
+          });
+
+          timeline.fromTo(
+            number,
+            { autoAlpha: 0, x: profile.isMobile ? -10 : -22 },
+            { autoAlpha: 1, duration: 0.52, x: 0 },
+            0,
+          );
+
+          if (rowSplit) {
+            gsap.set(rowSplit.lines, { yPercent: 108 });
+            timeline.to(
+              rowSplit.lines,
+              {
+                duration: profile.isMobile ? 0.58 : 0.72,
+                stagger: lineWidthStagger(profile.isMobile ? 0.05 : 0.075),
+                yPercent: 0,
               },
-            })
-            .fromTo(
-              number,
-              { autoAlpha: 0, y: profile.travel * 0.65 },
-              { autoAlpha: 1, duration: 0.48, y: 0 },
-              0,
-            )
-            .fromTo(
-              copy,
-              { autoAlpha: 0, y: profile.travel },
-              { autoAlpha: 1, duration: 0.72, y: 0 },
-              0.12,
+              0.08,
             );
+          }
+
+          if (rowBody) {
+            timeline.fromTo(
+              rowBody,
+              { autoAlpha: 0, y: profile.travel * 0.8 },
+              { autoAlpha: 1, duration: 0.52, y: 0 },
+              rowSplit ? 0.3 : 0.12,
+            );
+          }
         });
 
         if (useActiveState) {
@@ -170,6 +237,7 @@ function setupServicesMotion(root: HTMLElement, tools: MotionTools) {
 
         return () => {
           splitTitle.revert();
+          rowSplits.forEach((split) => split.revert());
           rows.forEach((row) => {
             row.removeAttribute("data-service-active");
           });
@@ -196,173 +264,11 @@ function setupServicesMotion(root: HTMLElement, tools: MotionTools) {
   };
 }
 
-function setupNotezMotion(root: HTMLElement, tools: MotionTools) {
-  const { gsap, SplitText } = tools;
-  const mediaStage = root.querySelector<HTMLElement>("[data-notez-media-stage]");
-  const backing = root.querySelector<HTMLElement>("[data-notez-backing]");
-  const image = root.querySelector<HTMLElement>("[data-notez-image]");
-  const frame = root.querySelector<HTMLElement>("[data-notez-frame]");
-  const copy = root.querySelector<HTMLElement>("[data-notez-layer='copy']");
-  const eyebrow = root.querySelector<HTMLElement>("[data-notez-eyebrow]");
-  const status = root.querySelector<HTMLElement>("[data-notez-status]");
-  const title = root.querySelector<HTMLElement>("[data-notez-title]");
-  const body = root.querySelector<HTMLElement>("[data-notez-body]");
-  const action = root.querySelector<HTMLElement>("[data-notez-action]");
-
-  if (
-    !mediaStage ||
-    !backing ||
-    !image ||
-    !frame ||
-    !copy ||
-    !eyebrow ||
-    !status ||
-    !title ||
-    !body ||
-    !action
-  ) {
-    root.dataset.notezMotion = "ready";
-    return () => undefined;
-  }
-
-  let responsiveMotion: ReturnType<typeof gsap.matchMedia> | undefined;
-
-  const context = gsap.context(() => {
-    responsiveMotion = gsap.matchMedia();
-
-    const addProfile = (
-      query: string,
-      profile: SectionMotionProfile,
-      parallax: { copyFrom: number; copyTo: number; mediaFrom: number; mediaTo: number } | null,
-    ) => {
-      responsiveMotion?.add(query, () => {
-        const splitTitle = SplitText.create(title, {
-          type: "lines",
-          mask: "lines",
-          aria: "auto",
-          autoSplit: true,
-          onSplit: (split) =>
-            gsap
-              .timeline({
-                defaults: { ease: "power2.out" },
-                scrollTrigger: {
-                  trigger: root,
-                  start: profile.start,
-                  end: profile.end,
-                  scrub: profile.scrub,
-                  invalidateOnRefresh: true,
-                },
-              })
-              .fromTo(
-                backing,
-                { autoAlpha: 0, x: -8, y: 8 },
-                { autoAlpha: 1, duration: 0.34, x: 0, y: 0 },
-                0,
-              )
-              .fromTo(
-                eyebrow,
-                { autoAlpha: 0, y: profile.travel * 0.65 },
-                { autoAlpha: 1, duration: 0.3, y: 0 },
-                0.04,
-              )
-              .fromTo(
-                split.lines,
-                { autoAlpha: 0, yPercent: profile.titleY },
-                { autoAlpha: 1, duration: 0.5, yPercent: 0 },
-                0.16,
-              )
-              .fromTo(
-                [status, body, action],
-                { autoAlpha: 0, y: profile.travel },
-                {
-                  autoAlpha: 1,
-                  duration: 0.48,
-                  stagger: profile.isMobile ? 0.035 : 0.055,
-                  y: 0,
-                },
-                0.36,
-              )
-              .fromTo(
-                image,
-                {
-                  autoAlpha: 0,
-                  clipPath: `inset(0% 0% ${profile.isMobile ? 7 : 13}% 0%)`,
-                  scale: profile.isMobile ? 1.012 : 1.032,
-                  y: profile.travel,
-                },
-                {
-                  autoAlpha: 1,
-                  clipPath: "inset(0% 0% 0% 0%)",
-                  duration: 0.62,
-                  scale: 1,
-                  y: 0,
-                },
-                0.48,
-              )
-              .fromTo(
-                frame,
-                { autoAlpha: 0, y: 7 },
-                { autoAlpha: 1, duration: 0.34, y: 0 },
-                0.66,
-              ),
-        });
-
-        if (parallax) {
-          gsap
-            .timeline({
-              defaults: { duration: 1, ease: "none" },
-              scrollTrigger: {
-                trigger: root,
-                start: "top bottom",
-                end: "bottom top",
-                scrub: profile.scrub,
-                invalidateOnRefresh: true,
-              },
-            })
-            .fromTo(
-              mediaStage,
-              { y: parallax.mediaFrom },
-              { y: parallax.mediaTo },
-              0,
-            )
-            .fromTo(
-              copy,
-              { y: parallax.copyFrom },
-              { y: parallax.copyTo },
-              0,
-            );
-        }
-
-        root.dataset.notezMotion = "running";
-
-        return () => splitTitle.revert();
-      });
-    };
-
-    addProfile("(min-width: 1200px)", desktopProfile, {
-      copyFrom: 4,
-      copyTo: -8,
-      mediaFrom: -12,
-      mediaTo: 24,
-    });
-    addProfile(
-      "(min-width: 768px) and (max-width: 1199px)",
-      tabletProfile,
-      { copyFrom: 2, copyTo: -4, mediaFrom: -5, mediaTo: 10 },
-    );
-    addProfile("(max-width: 767px)", mobileProfile, null);
-  }, root);
-
-  return () => {
-    responsiveMotion?.revert();
-    context.revert();
-    root.dataset.notezMotion = "ready";
-  };
-}
-
 function setupAboutMotion(root: HTMLElement, tools: MotionTools) {
-  const { gsap, SplitText } = tools;
-  const mediaStage = root.querySelector<HTMLElement>("[data-about-media-stage]");
+  const { gsap } = tools;
+  const mediaStage = root.querySelector<HTMLElement>(
+    "[data-about-media-stage]",
+  );
   const media = root.querySelector<HTMLElement>("[data-about-media]");
   const copy = root.querySelector<HTMLElement>("[data-about-copy]");
   const eyebrow = root.querySelector<HTMLElement>("[data-about-eyebrow]");
@@ -370,7 +276,15 @@ function setupAboutMotion(root: HTMLElement, tools: MotionTools) {
   const body = root.querySelector<HTMLElement>("[data-about-body]");
   const action = root.querySelector<HTMLElement>("[data-about-action]");
 
-  if (!mediaStage || !media || !copy || !eyebrow || !title || !body || !action) {
+  if (
+    !mediaStage ||
+    !media ||
+    !copy ||
+    !eyebrow ||
+    !title ||
+    !body ||
+    !action
+  ) {
     root.dataset.aboutMotion = "ready";
     return () => undefined;
   }
@@ -386,71 +300,10 @@ function setupAboutMotion(root: HTMLElement, tools: MotionTools) {
       parallax: boolean,
     ) => {
       responsiveMotion?.add(query, () => {
-        const splitTitle = SplitText.create(title, {
-          type: "lines",
-          mask: "lines",
-          aria: "auto",
-          autoSplit: true,
-          onSplit: (split) =>
-            gsap
-              .timeline({
-                defaults: { ease: "power2.out" },
-                scrollTrigger: {
-                  trigger: root,
-                  start: profile.start,
-                  end: profile.end,
-                  scrub: profile.scrub,
-                  invalidateOnRefresh: true,
-                },
-              })
-              .fromTo(
-                eyebrow,
-                { autoAlpha: 0, y: profile.travel * 0.65 },
-                { autoAlpha: 1, duration: 0.28, y: 0 },
-                0,
-              )
-              .fromTo(
-                split.lines,
-                { autoAlpha: 0, yPercent: profile.titleY },
-                {
-                  autoAlpha: 1,
-                  duration: 0.62,
-                  stagger: profile.isMobile ? 0.04 : 0.06,
-                  yPercent: 0,
-                },
-                0.12,
-              )
-              .fromTo(
-                body,
-                { autoAlpha: 0, y: profile.travel },
-                { autoAlpha: 1, duration: 0.48, y: 0 },
-                0.42,
-              )
-              .fromTo(
-                action,
-                { autoAlpha: 0, y: profile.travel * 0.7 },
-                { autoAlpha: 1, duration: 0.38, y: 0 },
-                0.55,
-              )
-              .fromTo(
-                media,
-                {
-                  autoAlpha: 0,
-                  clipPath: `inset(0% 0% ${profile.isMobile ? 6 : 10}% 0%)`,
-                  scale: profile.isMobile ? 1.01 : 1.024,
-                  y: profile.isMobile ? 12 : 22,
-                },
-                {
-                  autoAlpha: 1,
-                  clipPath: "inset(0% 0% 0% 0%)",
-                  duration: 0.62,
-                  scale: 1,
-                  y: 0,
-                },
-                profile.isMobile ? 0.5 : 0.62,
-              ),
-        });
-
+        // The identity mark and the copy beside it are deliberately not
+        // revealed on scroll: this section is the calm one, and a logo that
+        // animates itself in reads as a widget rather than an object. Only the
+        // gentle parallax remains.
         if (parallax) {
           gsap
             .timeline({
@@ -469,7 +322,7 @@ function setupAboutMotion(root: HTMLElement, tools: MotionTools) {
 
         root.dataset.aboutMotion = "running";
 
-        return () => splitTitle.revert();
+        return () => undefined;
       });
     };
 
@@ -494,13 +347,10 @@ export function Phase2DMotion({ locale }: { locale: Locale }) {
     const servicesRoot = document.querySelector<HTMLElement>(
       "[data-motion-section='services']",
     );
-    const notezRoot = document.querySelector<HTMLElement>(
-      "[data-motion-section='notez']",
-    );
     const aboutRoot = document.querySelector<HTMLElement>(
       "[data-motion-section='about']",
     );
-    if (!servicesRoot || !notezRoot || !aboutRoot) {
+    if (!servicesRoot || !aboutRoot) {
       return;
     }
 
@@ -513,7 +363,6 @@ export function Phase2DMotion({ locale }: { locale: Locale }) {
 
     const markReady = () => {
       servicesRoot.dataset.servicesMotion = "ready";
-      notezRoot.dataset.notezMotion = "ready";
       aboutRoot.dataset.aboutMotion = "ready";
     };
 
@@ -532,7 +381,6 @@ export function Phase2DMotion({ locale }: { locale: Locale }) {
       }
 
       servicesRoot.dataset.servicesMotion = "preparing";
-      notezRoot.dataset.notezMotion = "preparing";
       aboutRoot.dataset.aboutMotion = "preparing";
 
       void Promise.all([ensureGsapRegistered(), document.fonts.ready])
@@ -550,7 +398,6 @@ export function Phase2DMotion({ locale }: { locale: Locale }) {
 
           try {
             disposers.push(setupServicesMotion(servicesRoot, tools));
-            disposers.push(setupNotezMotion(notezRoot, tools));
             disposers.push(setupAboutMotion(aboutRoot, tools));
             tools.ScrollTrigger.refresh();
             disposeAnimations = () => {

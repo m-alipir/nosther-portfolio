@@ -23,7 +23,7 @@ export function About({ dictionary }: { dictionary: Dictionary }) {
             <span className={styles.mediaLabel}>{dictionary.about.mediaLabel}</span>
             <Image
               className={styles.avatar}
-              src="/media/portrait/Logo.png"
+              src="/media/portrait/Logo-V2.png"
               alt=""
               fill
               loading="lazy"

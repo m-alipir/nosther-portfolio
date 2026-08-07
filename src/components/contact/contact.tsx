@@ -55,6 +55,10 @@ export function Contact({ dictionary }: { dictionary: Dictionary }) {
       aria-labelledby="contact-title"
       data-motion-section="contact"
     >
+      <svg className="atmosphere atmosphere--current" aria-hidden="true" focusable="false" preserveAspectRatio="none">
+        <rect width="100%" height="100%" filter="url(#fx-current)" />
+      </svg>
+
       <div className={"container " + styles.inner}>
         <p className="eyebrow">{dictionary.contact.eyebrow}</p>
         <h2 id="contact-title">{dictionary.contact.title}</h2>

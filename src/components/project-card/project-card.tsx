@@ -1,5 +1,6 @@
 "use client";
 
+import type React from "react";
 import Image from "next/image";
 import { useCallback, useEffect, useRef, useState } from "react";
 
@@ -53,6 +54,7 @@ export function ProjectCard({
   const videoRef = useRef<HTMLVideoElement>(null);
   const wantsPlaybackRef = useRef(false);
   const playbackAttemptRef = useRef(0);
+  const lastPointerRef = useRef<{ x: number; y: number } | null>(null);
   const allowVideo = useVideoPlaybackPolicy(true);
   const [sourceRequested, setSourceRequested] = useState(false);
   const [isPlaying, setIsPlaying] = useState(false);
@@ -178,22 +180,69 @@ export function ProjectCard({
     void startPreview();
   }, [allowVideo, hasPreview, sourceRequested, startPreview, videoFailed]);
 
-  const maintainPointerIntent = useCallback(() => {
-    if (!wantsPlaybackRef.current) {
-      requestPreview();
-      return;
-    }
+  const maintainPointerIntent = useCallback(
+    (event: React.PointerEvent) => {
+      lastPointerRef.current = { x: event.clientX, y: event.clientY };
 
-    if (videoRef.current?.paused) {
-      void startPreview();
-    }
-  }, [requestPreview, startPreview]);
+      if (!wantsPlaybackRef.current) {
+        requestPreview();
+        return;
+      }
+
+      if (videoRef.current?.paused) {
+        void startPreview();
+      }
+    },
+    [requestPreview, startPreview],
+  );
+
+  const trackPointerEnter = useCallback(
+    (event: React.PointerEvent) => {
+      lastPointerRef.current = { x: event.clientX, y: event.clientY };
+      requestPreview();
+    },
+    [requestPreview],
+  );
 
   useEffect(() => {
     if (sourceRequested && wantsPlaybackRef.current) {
       void startPreview();
     }
   }, [sourceRequested, startPreview]);
+
+  // The pointer stays put on screen while a wheel/trackpad scroll moves the
+  // page beneath it, and neither triggers a native pointerleave — Chrome
+  // only reconciles hover state once scrolling settles. Without this, a
+  // preview that scrolled out from under a stationary cursor kept playing
+  // until the browser caught up, which read as the hover state snapping
+  // back once you stopped scrolling.
+  useEffect(() => {
+    const handleScroll = () => {
+      if (!wantsPlaybackRef.current) {
+        return;
+      }
+
+      const video = videoRef.current;
+      const pointer = lastPointerRef.current;
+      if (!video || !pointer) {
+        return;
+      }
+
+      const bounds = video.getBoundingClientRect();
+      const stillOver =
+        pointer.x >= bounds.left &&
+        pointer.x <= bounds.right &&
+        pointer.y >= bounds.top &&
+        pointer.y <= bounds.bottom;
+
+      if (!stillOver) {
+        stopPreview();
+      }
+    };
+
+    window.addEventListener("scroll", handleScroll, { passive: true });
+    return () => window.removeEventListener("scroll", handleScroll);
+  }, [stopPreview]);
 
   useEffect(() => {
     if (!allowVideo) {
@@ -397,7 +446,7 @@ export function ProjectCard({
         data-cursor-project
         data-preview-policy={allowVideo ? "enabled" : "poster-only"}
         data-preview-source={sourceRequested ? "requested" : "idle"}
-        onPointerEnter={requestPreview}
+        onPointerEnter={trackPointerEnter}
         onPointerMove={maintainPointerIntent}
         onPointerLeave={stopPreview}
         onFocus={requestPreview}
@@ -421,7 +470,7 @@ export function ProjectCard({
       data-project-layout={layoutKind}
       data-preview-policy={allowVideo ? "enabled" : "poster-only"}
       data-preview-source={sourceRequested ? "requested" : "idle"}
-      onPointerEnter={requestPreview}
+      onPointerEnter={trackPointerEnter}
       onPointerMove={maintainPointerIntent}
       onPointerLeave={stopPreview}
       onFocus={requestPreview}

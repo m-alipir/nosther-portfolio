@@ -33,8 +33,6 @@ export function SmoothScrollProvider({ children }: { children: ReactNode }) {
 
         lenis.on("scroll", updateScrollTrigger);
         gsap.ticker.add(updateLenis);
-        gsap.ticker.lagSmoothing(0);
-
         dispose = () => {
           gsap.ticker.remove(updateLenis);
           lenis.off("scroll", updateScrollTrigger);

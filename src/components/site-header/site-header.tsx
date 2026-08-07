@@ -21,7 +21,6 @@ export function SiteHeader({ dictionary, locale }: SiteHeaderProps) {
   const links = [
     { href: "#work", label: dictionary.header.nav.work },
     { href: "#services", label: dictionary.header.nav.services },
-    { href: "#notez", label: dictionary.header.nav.notez },
     { href: "#about", label: dictionary.header.nav.about },
     { href: "#contact", label: dictionary.header.nav.contact },
   ];

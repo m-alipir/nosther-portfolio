@@ -1,640 +1,354 @@
+/* The reel is the subject: on desktop it takes the full content width and the
+   copy sits on top of it on a glass plate. The whole hero is sized to one
+   viewport and centred there on first load, so the reel is height-capped
+   rather than left to follow its aspect ratio. */
 .hero {
+  --coastal-shift-x: 0px;
+  --coastal-shift-y: 0px;
   position: relative;
-  min-height: clamp(43rem, 96svh, 64rem);
+  display: grid;
+  align-content: center;
+  min-height: 100svh;
   overflow: clip;
-  border-bottom: 1px solid var(--color-line);
+  padding-block: clamp(6rem, 11vh, 8rem) clamp(3rem, 7vh, 4.5rem);
   background:
-    var(--texture-caustic),
-    var(--color-foam);
+    radial-gradient(ellipse at 74% 12%, rgb(255 255 255 / 88%), transparent 34%),
+    radial-gradient(ellipse at 10% 84%, rgb(224 196 158 / 18%), transparent 26%),
+    linear-gradient(148deg, var(--color-foam) 0%, var(--color-ice) 44%, var(--color-aqua) 100%);
   isolation: isolate;
 }
 
-.hero::after {
+/* Broad, soft light fields. These are the only elements the pointer parallax
+   moves, so the reel and the copy never reflow. */
+.hero::before {
   position: absolute;
-  z-index: 0;
-  inset: 0;
-  background-image: var(--texture-grain);
-  background-size: 11rem 11rem;
+  inset: -10%;
+  background:
+    conic-gradient(from 218deg at 14% 62%, transparent 0 24deg, rgb(255 255 255 / 44%) 30deg 36deg, transparent 43deg),
+    linear-gradient(116deg, transparent 33%, rgb(255 255 255 / 32%) 43%, transparent 54%);
   content: "";
-  opacity: 0.016;
+  filter: blur(2.4rem);
+  transform: translate3d(calc(var(--coastal-shift-x) * .7), calc(var(--coastal-shift-y) * .7), 0);
   pointer-events: none;
 }
 
-.grid {
+.shell {
   position: relative;
   z-index: 1;
-  display: grid;
-  min-height: clamp(43rem, 96svh, 64rem);
-  align-items: center;
-  padding-top: clamp(6.75rem, 7.5vw, 8.25rem);
-  padding-bottom: clamp(1.75rem, 3vw, 3rem);
-  grid-template-columns: repeat(12, minmax(0, 1fr));
-  column-gap: var(--grid-gap);
+  width: var(--shell);
+  margin-inline: auto;
 }
 
-.copy {
-  position: relative;
-  z-index: calc(var(--z-content) + 2);
-  min-width: 0;
-  align-self: center;
-  padding-block: clamp(2rem, 6vh, 4.5rem);
-  grid-column: 1 / span 7;
-  grid-row: 1;
-}
+/* perspective lives here so only the copy plate gets 3D depth — the footage
+   behind it stays flat, full-strength, in focus. */
+.stage { position: relative; perspective: 1500px; }
 
-.copy::before {
+/* Rotation target for the cursor tilt (see use-hero-tilt.ts). A separate
+   wrapper around .copy rather than tilting .copy itself: .copy already
+   carries its own GSAP transform for the intro reveal, and two systems
+   writing to the same element's `transform` would stomp each other. Nested
+   transforms compose safely instead — the child keeps its own transform,
+   the wrapper's rotation is purely visual on top of it. */
+.tiltStage {
   position: absolute;
-  z-index: -1;
-  inset: -8% -10% -8% -6%;
-  background: linear-gradient(
-    90deg,
-    rgb(247 251 255 / 96%) 0 48%,
-    rgb(247 251 255 / 70%) 66%,
-    transparent
-  );
-  content: "";
-  filter: blur(0.4rem);
-  pointer-events: none;
+  z-index: 7;
+  bottom: clamp(1.5rem, 3.5vw, 3rem);
+  left: clamp(1.5rem, 3.5vw, 3rem);
+  width: clamp(20rem, 44%, 33rem);
+  transform-style: preserve-3d;
+  transition: transform 500ms cubic-bezier(.2, .7, .3, 1);
 }
 
-.title {
-  max-width: 14ch;
-  margin: 0;
-  font-family: var(--font-display);
-  font-size: clamp(3.65rem, 4.9vw, 6.15rem);
-  font-weight: 850;
-  letter-spacing: -0.064em;
-  line-height: 0.89;
-  text-wrap: balance;
+@media (min-width: 100rem) { .tiltStage { width: clamp(20rem, 42%, 40rem); } }
+@media (min-width: 120rem) { .tiltStage { width: clamp(20rem, 40%, 47rem); } }
+@media (min-width: 160rem) { .tiltStage { width: clamp(20rem, 38%, 56rem); } }
+
+@media (prefers-reduced-motion: reduce) {
+  .tiltStage { transition: none; }
 }
 
-.title span {
-  display: block;
-}
-
-:global(html[lang="tr"]) .title {
-  max-width: 17ch;
-  font-size: clamp(3.15rem, 4.15vw, 5.2rem);
-  letter-spacing: -0.058em;
-  line-height: 0.92;
-}
-
-.lead {
-  max-width: 34rem;
-  margin: var(--space-6) 0 0;
-  color: var(--color-muted-strong);
-  font-size: clamp(1rem, 1.1vw, 1.18rem);
-  line-height: 1.52;
-}
-
-.actions {
-  display: flex;
-  flex-wrap: wrap;
-  gap: var(--space-3);
-  margin-top: var(--space-6);
-}
-
-.mediaStage {
+.reelFrame {
   position: relative;
-  z-index: var(--z-media);
-  width: 100%;
-  min-width: 0;
-  align-self: center;
-  grid-column: 4 / -1;
-  grid-row: 1;
-}
-
-.sequenceStage {
-  position: relative;
-  width: 100%;
-  min-height: clamp(31rem, 46vw, 43rem);
+  overflow: hidden;
+  /* An explicit height rather than aspect-ratio + max-height: with a capped
+     height the aspect ratio also shrinks the width, which left dead space
+     beside the reel. The footage is object-fit: cover, so a wider-than-16:9
+     crop on short viewports is fine. The rem cap is deliberately generous so
+     that on tall panels the viewport term wins and the reel actually grows. */
+  height: min(68svh, 56rem);
+  background: var(--color-deep);
+  box-shadow: 0 3rem 7rem -1.5rem rgb(3 47 67 / 34%);
+  clip-path: polygon(0 1.6%, 100% 0, 100% 98.4%, 0 100%);
   isolation: isolate;
 }
 
-.sequenceStage::before {
-  position: absolute;
-  z-index: -2;
-  top: 47%;
-  right: 1.5%;
-  left: 0;
-  height: 1px;
-  background: linear-gradient(
-    90deg,
-    transparent,
-    var(--color-aqua) 12% 80%,
-    transparent
-  );
-  content: "";
-}
+.scene { position: absolute; inset: 0; }
+.scene img, .video { object-fit: cover; }
+.scene img { z-index: 1; }
 
-.sequenceStage::after {
-  position: absolute;
-  z-index: -3;
-  top: 5%;
-  right: 2%;
-  width: 76%;
-  height: 78%;
-  border-radius: 50%;
-  background: radial-gradient(
-    ellipse,
-    rgb(169 220 242 / 34%),
-    rgb(77 170 216 / 11%) 43%,
-    transparent 72%
-  );
-  content: "";
-  filter: blur(2rem);
-  pointer-events: none;
-}
-
-.sequenceHeader {
-  position: absolute;
-  z-index: 7;
-  top: 0;
-  right: 9%;
-  left: 2%;
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  gap: var(--space-4);
-  color: var(--color-ocean);
-  font-family: var(--font-mono);
-  font-size: 0.62rem;
-  letter-spacing: 0.1em;
-  text-transform: uppercase;
-}
-
-.sequenceHeader::after {
-  position: absolute;
-  top: calc(100% + 0.5rem);
-  right: 0;
-  left: 0;
-  height: 1px;
-  background: var(--color-line);
-  content: "";
-}
-
-.dominantFrame,
-.cutawayFrame,
-.detailFrame {
-  position: absolute;
-  margin: 0;
-  overflow: hidden;
-  border: 1px solid var(--glass-border);
-  border-radius: var(--radius-md);
-  background: var(--glass-background);
-  box-shadow:
-    inset 0 1px 0 rgb(255 255 255 / 82%),
-    0 1.35rem 3.8rem rgb(6 69 100 / 16%);
-  backdrop-filter: blur(var(--glass-blur));
-}
-
-.dominantFrame {
-  z-index: 2;
-  top: 10%;
-  right: 7%;
-  width: 69%;
-}
-
-.cutawayFrame {
-  z-index: 4;
-  bottom: 9%;
-  left: 13%;
-  width: 21%;
-}
-
-.detailFrame {
-  z-index: 5;
-  top: 2.5%;
-  right: 0;
-  width: 24%;
-}
-
-.frameMeta {
-  display: flex;
-  min-width: 0;
-  height: 1.8rem;
-  align-items: center;
-  justify-content: space-between;
-  gap: var(--space-2);
-  padding-inline: var(--space-3);
-  border-bottom: 1px solid color-mix(in srgb, var(--color-line) 82%, transparent);
-  color: var(--color-muted-strong);
-  font-family: var(--font-mono);
-  font-size: clamp(0.5rem, 0.55vw, 0.61rem);
-  letter-spacing: 0.065em;
-  text-transform: uppercase;
-}
-
-.frameMeta span:first-child {
-  overflow: hidden;
-  text-overflow: ellipsis;
-  white-space: nowrap;
-}
-
-.frameMeta span:last-child {
-  flex: none;
-  color: var(--color-ocean);
-}
-
-.frameVisual {
-  position: relative;
-  overflow: hidden;
-  background:
-    linear-gradient(145deg, rgb(169 220 242 / 20%), transparent 55%),
-    var(--color-deep);
-}
-
-.dominantFrame .frameVisual {
-  aspect-ratio: 16 / 9;
-}
-
-.cutawayFrame .frameVisual {
-  aspect-ratio: 2 / 3;
-}
-
-.detailFrame .frameVisual {
-  aspect-ratio: 4 / 3;
-}
-
-.frameVisual img,
-.heroVideo {
-  object-fit: cover;
-}
-
-.frameVisual img {
-  filter: saturate(0.86) contrast(1.02);
-}
-
-.dominantFrame .frameVisual::after,
-.cutawayFrame .frameVisual::after,
-.detailFrame .frameVisual::after {
-  position: absolute;
-  z-index: 4;
-  inset: 0;
-  border: 1px solid rgb(255 255 255 / 22%);
-  background: linear-gradient(135deg, rgb(255 255 255 / 12%), transparent 22%);
-  content: "";
-  pointer-events: none;
-}
-
-.heroVideo {
+.video {
   position: absolute;
   z-index: 2;
   inset: 0;
   width: 100%;
   height: 100%;
   opacity: 0;
-  pointer-events: none;
-  transition: opacity var(--duration-fast) ease;
+  transition: opacity .5s ease;
 }
 
-.heroVideo[data-playing="true"] {
-  opacity: 1;
-}
+.video[data-playing="true"] { opacity: 1; }
 
-.playhead {
+/* Grade plus a top catch-light. The frame is clipped, so edge definition
+   comes from gradient stops rather than a border, which would be cut.
+   The third stop is the footage-side scrim the copy plate sits on: darkening
+   the footage under the plate is what lets the plate itself stay a lighter,
+   more legibly "glass" fill rather than doing the contrast work as a flat
+   dark tint. */
+.reelFrame::after {
   position: absolute;
-  z-index: 5;
-  top: 0;
-  bottom: 0;
-  left: 62%;
-  width: 1px;
-  background: rgb(247 251 255 / 72%);
-  box-shadow: 0 0 1.5rem rgb(169 220 242 / 52%);
-  pointer-events: none;
-}
-
-.playhead::before {
-  position: absolute;
-  top: 0;
-  left: 50%;
-  width: 0.45rem;
-  height: 0.45rem;
-  border-radius: 50%;
-  background: var(--color-foam);
-  box-shadow: 0 0 0 1px var(--color-ocean);
-  content: "";
-  transform: translate(-50%, -50%);
-}
-
-.dominantFrame figcaption,
-.cutawayFrame figcaption,
-.detailFrame figcaption {
-  overflow: hidden;
-  padding: 0.58rem var(--space-3) 0.64rem;
-  color: var(--color-ocean-ink);
-  font-size: clamp(0.64rem, 0.68vw, 0.76rem);
-  font-weight: 650;
-  letter-spacing: -0.01em;
-  line-height: 1.25;
-  text-overflow: ellipsis;
-  white-space: nowrap;
-}
-
-.frameFallback {
-  position: absolute;
+  z-index: 4;
   inset: 0;
-  display: flex;
-  align-items: flex-start;
-  flex-direction: column;
-  justify-content: flex-end;
-  gap: var(--space-2);
-  padding: var(--space-4);
   background:
-    linear-gradient(145deg, rgb(169 220 242 / 18%), transparent 45%),
-    var(--color-deep);
-  color: var(--color-foam);
+    linear-gradient(180deg, rgb(255 255 255 / 26%) 0 1px, transparent 1px),
+    linear-gradient(180deg, rgb(1 22 33 / 26%), transparent 26% 54%, rgb(1 19 29 / 66%)),
+    linear-gradient(96deg, rgb(1 25 37 / 56%), transparent 56%);
+  content: "";
+  pointer-events: none;
 }
 
-.frameFallback span {
-  color: var(--color-aqua);
+.reelLabel {
+  position: absolute;
+  z-index: 6;
+  top: clamp(1.1rem, 2vw, 1.75rem);
+  right: clamp(1.1rem, 2vw, 1.75rem);
+  color: rgb(234 249 252 / 74%);
   font-family: var(--font-mono);
-  font-size: 0.55rem;
-  letter-spacing: 0.08em;
+  font-size: .55rem;
+  letter-spacing: .14em;
   text-transform: uppercase;
 }
 
-.frameFallback strong {
-  font-family: var(--font-display);
-  font-size: clamp(0.85rem, 1.4vw, 1.4rem);
-  line-height: 1.05;
-}
-
-.sequenceTrack {
+.sceneFallback {
   position: absolute;
-  z-index: 1;
-  right: 8%;
-  bottom: 0;
-  left: 0;
+  z-index: 0;
+  inset: 0;
   display: grid;
-  height: 2.8rem;
+  gap: .5rem;
+  place-content: center;
+  color: rgb(225 247 252 / 58%);
+  text-align: center;
+}
+
+.sceneFallback span { font-family: var(--font-mono); font-size: .6rem; letter-spacing: .12em; text-transform: uppercase; }
+.sceneFallback strong { font-family: var(--font-display); font-size: 1.9rem; letter-spacing: -.04em; }
+
+/* Copy plate over the footage. Deep glass because the ground is dark video;
+   the material comes from the shared tokens, so there is no border.
+   container-type turns this into the measuring stick for .title's font-size
+   below: the headline is sized off the plate's own width (cqi) rather than
+   the viewport, so growing the plate on large screens and never overflowing
+   it on small ones are the same rule instead of two clamps that can drift
+   out of sync — which is what let "SHAPED IN" wrap at 1920px: the type scale
+   had a large-screen breakpoint the plate's old fixed 33rem cap did not. */
+.copy {
+  container-type: inline-size;
+  overflow: hidden;
+  position: relative;
+  display: grid;
+  justify-items: start;
+  width: 100%;
+  padding: clamp(1.5rem, 2.4vw, 2.4rem);
+  background: var(--glass-deep-fill);
+  box-shadow: var(--glass-deep-edge), var(--glass-deep-cast);
+  color: var(--color-foam);
+  -webkit-backdrop-filter: var(--glass-deep-filter);
+  backdrop-filter: var(--glass-deep-filter);
+}
+
+.eyebrow {
+  display: flex;
   align-items: center;
-  grid-template-columns: auto 1.5fr 0.7fr 1fr 1px 0.9fr auto;
-  gap: 0.24rem;
-  color: var(--color-muted);
+  gap: .75rem;
+  margin: 0 0 clamp(.9rem, 1.6vw, 1.25rem);
+  color: rgb(214 245 253 / 70%);
   font-family: var(--font-mono);
-  font-size: 0.52rem;
-  letter-spacing: 0.08em;
+  font-size: .58rem;
+  letter-spacing: .16em;
+  text-transform: uppercase;
 }
 
-.trackSegment {
-  height: 0.5rem;
-  border-top: 1px solid var(--color-tidal);
-  background: rgb(77 170 216 / 12%);
+.eyebrow strong { color: #fff; font-weight: 600; }
+.eyebrow span { width: clamp(1.25rem, 2.5vw, 2.25rem); height: 1px; background: currentColor; opacity: .45; }
+
+/* Sized off the plate's own inline size (cqi), not the viewport: whatever
+   the plate's width clamp resolves to, the widest line ("STORIES" en /
+   "ŞEKİLLENİR." tr, both set-weight) is calibrated to fill it with headroom,
+   so a line can never wrap regardless of viewport, zoom, or DPI. The rem
+   bounds are just a floor/ceiling, not the controlling term.
+   Step 4 of the locked type scale (≥96px, the range this almost always
+   renders at) — already the closest of any module to the target values. */
+.title {
+  margin: 0 0 0 -0.052em;
+  font-family: var(--font-display);
+  font-size: clamp(2.5rem, 14.5cqi, 9.5rem);
+  font-weight: var(--d4-weight);
+  letter-spacing: var(--d4-track);
+  line-height: var(--d4-lead);
 }
 
-.trackSegment:nth-of-type(3) {
-  height: 1rem;
+/* The mask carries padding so the marks on İ, Â and Ş are never clipped mid
+   animation, and a matching negative margin keeps the layout tight. This
+   headroom is independent of line-height — it's a fixed fraction of the
+   font size added to the mask box itself, not the glyph's position within
+   its line box — so it holds even at the tighter step-4 leading above. */
+.titleLine {
+  display: block;
+  overflow: hidden;
+  margin-top: -.16em;
+  padding-top: .16em;
 }
 
-.trackSegment:nth-of-type(4) {
-  height: 0.72rem;
+.titleLineInner { display: block; }
+
+/* Middle line sits further right, so the three lines read as a staggered
+   editorial stack rather than a solid block. Weight 400 rather than 300:
+   at most one 400 line per headline reads as intentional contrast against
+   the surrounding 840-weight lines, not a rendering error. */
+.titleLine:nth-child(2) { padding-left: clamp(1.25rem, 3.4vw, 3rem); }
+.titleLine:nth-child(2) .titleLineInner {
+  font-weight: 400;
+  letter-spacing: -.025em;
 }
 
-.trackMarker {
-  height: 1.75rem;
-  background: var(--color-ocean);
+.meta {
+  display: grid;
+  justify-items: start;
+  gap: clamp(1.1rem, 1.8vw, 1.5rem);
+  margin-top: clamp(1.1rem, 2vw, 1.6rem);
 }
 
-.trackLabel {
-  color: var(--color-ocean);
+.lead {
+  max-width: 34ch;
+  margin: 0;
+  color: rgb(226 245 251 / 78%);
+  font-size: var(--text-lead);
+  line-height: 1.5;
+}
+
+.actions { display: flex; flex-wrap: wrap; gap: .7rem; }
+
+.actions :global(.button-secondary) {
+  border-color: rgb(231 245 252 / 32%);
+  background: rgb(255 255 255 / 8%);
+  color: #fff;
+}
+
+.actions :global(.button-secondary):hover {
+  border-color: var(--color-aqua);
+  background: rgb(255 255 255 / 15%);
+}
+
+/* One specular sweep across the plate, played once by the intro timeline
+   (see hero.tsx) rather than looping — a looping shimmer on every visit
+   would read as a UI affordance instead of a one-time optical event. */
+.sweep {
+  position: absolute;
+  z-index: 5;
+  inset: 0;
+  overflow: hidden;
+  pointer-events: none;
+}
+
+.sweepBand {
+  position: absolute;
+  top: -30%;
+  bottom: -30%;
+  left: 0;
+  display: block;
+  width: 40%;
+  background: linear-gradient(100deg, transparent, rgb(255 255 255 / 22%) 50%, transparent);
+  transform: translateX(-140%);
+  mix-blend-mode: plus-lighter;
+}
+
+.disclosure {
+  margin: .9rem 0 0;
+  color: rgb(3 47 67 / 56%);
+  font-family: var(--font-mono);
+  font-size: .54rem;
+  letter-spacing: .09em;
+  text-transform: uppercase;
 }
 
 .scrollCue {
   position: absolute;
-  z-index: calc(var(--z-content) + 3);
-  bottom: clamp(1.75rem, 3vw, 3rem);
-  left: var(--gutter);
+  z-index: 2;
+  right: max(calc((100vw - var(--shell)) / 2), 1.25rem);
+  bottom: clamp(1.1rem, 3vh, 2rem);
   display: flex;
   align-items: center;
-  gap: var(--space-3);
-  color: var(--color-muted);
+  gap: .7rem;
+  color: rgb(3 47 67 / 62%);
   font-family: var(--font-mono);
-  font-size: 0.62rem;
-  letter-spacing: 0.08em;
+  font-size: .55rem;
+  letter-spacing: .14em;
   text-transform: uppercase;
 }
 
-.scrollCue span {
-  width: 2.5rem;
-  height: 1px;
-  background: var(--color-tidal);
-}
+.scrollCue span { width: 2.25rem; height: 1px; background: currentColor; }
 
-.hero[data-hero-motion="preparing"] [data-hero-eyebrow],
-.hero[data-hero-motion="preparing"] [data-hero-title],
-.hero[data-hero-motion="preparing"] [data-hero-lead],
-.hero[data-hero-motion="preparing"] [data-hero-actions],
-.hero[data-hero-motion="preparing"] [data-hero-media],
-.hero[data-hero-motion="preparing"] [data-hero-scroll-cue] {
-  opacity: 0;
-}
+.hero[data-hero-motion="preparing"] :is([data-hero-eyebrow], [data-hero-title], [data-hero-lead], [data-hero-actions], [data-hero-media], [data-hero-scroll-cue]) { opacity: 0; }
+.hero[data-hero-motion="preparing"] [data-hero-media] { clip-path: inset(5% 0); transform: scale(.976); }
 
-.hero[data-hero-motion="preparing"] [data-hero-media] {
-  clip-path: inset(8% 0);
-  transform: scale(0.965);
-}
-
-.hero[data-hero-motion="preparing"] [data-hero-eyebrow],
-.hero[data-hero-motion="preparing"] [data-hero-title],
-.hero[data-hero-motion="preparing"] [data-hero-lead],
-.hero[data-hero-motion="preparing"] [data-hero-actions] {
-  transform: translateY(1.25rem);
-}
-
-.hero[data-hero-motion="preparing"] [data-hero-scroll-cue] {
-  transform: translateY(0.75rem);
-}
-
-.hero[data-hero-motion="preparing"] .heroVideo,
-.hero[data-hero-motion="running"] .heroVideo {
-  opacity: 0;
-}
-
-@media (min-width: 75rem) and (max-height: 50rem) {
-  .grid {
-    padding-top: 6.4rem;
-    padding-bottom: 1.5rem;
+/* Below the overlay breakpoint the copy drops out of the footage so the text
+   never has to win a contrast fight on a small screen. */
+@media (max-width: 63.99rem) {
+  .hero { min-height: 0; padding-block: 7rem 4rem; }
+  .reelFrame { height: auto; aspect-ratio: 16 / 10; clip-path: none; }
+  /* Tilt is a fine-pointer, wide-screen flourish — below this breakpoint the
+     plate goes back to flowing in place, and 3D is switched off rather than
+     just unused, so there's no stray compositing layer on mobile. */
+  .stage { perspective: none; }
+  .tiltStage {
+    position: static;
+    z-index: auto;
+    width: auto;
+    margin-top: -2.5rem;
+    margin-inline: clamp(.75rem, 3vw, 1.5rem) 0;
+    transform: none;
+    transform-style: flat;
+    transition: none;
   }
-
-  .title {
-    font-size: clamp(3.65rem, 5vw, 5rem);
-  }
-
-  :global(html[lang="tr"]) .title {
-    font-size: clamp(3.25rem, 4.25vw, 4.4rem);
-  }
-
-  .lead,
-  .actions {
-    margin-top: var(--space-4);
-  }
-
-  .sequenceStage {
-    min-height: 35.5rem;
-  }
-
-  .scrollCue {
-    bottom: 1.5rem;
-  }
-}
-
-@media (min-width: 160rem) {
-  .mediaStage {
-    max-width: 86rem;
-    justify-self: end;
-  }
-}
-
-@media (max-width: 74.99rem) {
-  .hero,
-  .grid {
-    min-height: 0;
-  }
-
-  .grid {
-    align-items: start;
-    padding-top: 7.5rem;
-    padding-bottom: 5rem;
-    grid-template-columns: repeat(8, minmax(0, 1fr));
-    row-gap: var(--space-10);
-  }
-
-  .copy,
-  .mediaStage {
-    grid-column: 1 / -1;
-  }
-
-  .copy {
-    max-width: 62rem;
-    padding-block: 0;
-    grid-row: auto;
-  }
-
-  .copy::before {
-    display: none;
-  }
-
-  .title {
-    max-width: 14ch;
-    font-size: clamp(3.5rem, 7vw, 5.2rem);
-  }
-
-  :global(html[lang="tr"]) .title {
-    max-width: 17ch;
-    font-size: clamp(3.15rem, 6vw, 4.7rem);
-  }
-
-  .mediaStage {
-    grid-row: auto;
-  }
-
-  .sequenceStage {
-    min-height: clamp(34rem, 68vw, 42rem);
-  }
-
-  .dominantFrame {
-    right: 4%;
-    width: 73%;
-  }
-
-  .cutawayFrame {
-    left: 3%;
-    width: 23%;
-  }
-
-  .detailFrame {
-    width: 25%;
-  }
-
-  .scrollCue {
-    display: none;
-  }
+  .disclosure { margin-top: 1.1rem; }
+  .scrollCue { display: none; }
 }
 
 @media (max-width: 47.99rem) {
-  .grid {
-    padding-top: 6.75rem;
-    padding-bottom: 4rem;
-    grid-template-columns: 1fr;
-    row-gap: 0;
-  }
+  .hero { padding-block: 6.5rem 3.5rem; }
+  .reelFrame { aspect-ratio: 4 / 3; }
+  .tiltStage { margin-inline: 0; }
+  .title { font-size: clamp(2.5rem, 10.5vw, 3.6rem); }
+  .lead { max-width: 100%; }
+  .actions :global(.button) { flex: 1 1 11rem; }
+}
 
-  .title {
-    max-width: 14ch;
-    font-size: clamp(2.25rem, 10.5vw, 3.25rem);
-    line-height: 0.91;
-  }
+@media (max-width: 21.99rem) {
+  .title { font-size: clamp(2.05rem, 9.5vw, 2.4rem); }
+  .actions :global(.button) { flex: 1 1 100%; }
+}
 
-  :global(html[lang="tr"]) .title {
-    max-width: none;
-    font-size: clamp(1.8rem, 8.3vw, 3rem);
-    letter-spacing: -0.05em;
-    line-height: 0.95;
-  }
-
-  .lead {
-    margin-top: var(--space-5);
-    font-size: 1rem;
-  }
-
-  .actions {
-    margin-top: var(--space-5);
-  }
-
-  .mediaStage {
-    margin-top: var(--space-8);
-  }
-
-  .sequenceStage {
-    min-height: clamp(21.5rem, 108vw, 27rem);
-  }
-
-  .sequenceHeader {
-    right: 0;
-    left: 0;
-  }
-
-  .dominantFrame {
-    top: 11%;
-    right: 0;
-    width: 94%;
-  }
-
-  .cutawayFrame {
-    bottom: 8%;
-    left: 1%;
-    width: 31%;
-  }
-
-  .detailFrame {
-    display: none;
-  }
-
-  .frameMeta {
-    height: 1.55rem;
-    padding-inline: var(--space-2);
-    font-size: 0.48rem;
-  }
-
-  .dominantFrame figcaption,
-  .cutawayFrame figcaption {
-    padding: 0.45rem var(--space-2) 0.5rem;
-    font-size: 0.6rem;
-  }
-
-  .sequenceTrack {
-    right: 0;
-    height: 2rem;
-  }
-
-  .frameFallback {
-    padding: var(--space-3);
-  }
+/* Turkish headline words are longer; let them shrink rather than overflow. */
+@media (max-width: 47.99rem) {
+  :global(html[lang="tr"]) .title { font-size: clamp(1.95rem, 8.4vw, 2.9rem); letter-spacing: -.045em; }
 }
 
 @media (prefers-reduced-motion: reduce) {
-  .heroVideo {
-    display: none;
+  .hero :is([data-hero-eyebrow], [data-hero-title], [data-hero-lead], [data-hero-actions], [data-hero-media], [data-hero-scroll-cue]) {
+    opacity: 1;
+    clip-path: none;
+    transform: none;
   }
+
+  .video { transition: none; }
+  .sweep { display: none; }
 }

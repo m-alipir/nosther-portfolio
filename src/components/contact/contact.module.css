@@ -1,114 +1,25 @@
-.section {
-  padding-block: var(--section-space);
-  background:
-    radial-gradient(ellipse at 18% 16%, rgb(169 220 242 / 28%), transparent 34%),
-    var(--color-foam);
-}
-
-.inner {
-  position: relative;
-}
-
-.inner::before {
-  display: block;
-  width: min(10rem, 25vw);
-  height: 2px;
-  margin-bottom: var(--space-12);
-  background: var(--color-tidal);
-  content: "";
-}
-
-.inner h2 {
-  max-width: 12ch;
-  margin: 0;
-  overflow-wrap: anywhere;
-  font-family: var(--font-display);
-  font-size: clamp(3.1rem, 6vw, 7.5rem);
-  font-weight: 850;
-  letter-spacing: -0.065em;
-  line-height: 0.92;
-  text-wrap: balance;
-}
-
-.body {
-  max-width: 42rem;
-  margin: var(--space-8) 0 0;
-  color: var(--color-muted-strong);
-  font-size: var(--text-lead);
-}
-
-.emailRow {
-  position: relative;
-  display: flex;
-  align-items: center;
-  flex-wrap: wrap;
-  gap: var(--space-4);
-  margin-top: clamp(2.5rem, 6vw, 5rem);
-}
-
-.email {
-  padding-bottom: 0.2rem;
-  border-bottom: 1px solid var(--color-tidal);
-  font-family: var(--font-display);
-  font-size: clamp(1.45rem, 4vw, 4rem);
-  font-weight: 700;
-  letter-spacing: -0.045em;
-  line-height: 1.1;
-  overflow-wrap: anywhere;
-}
-
-.copyButton {
-  min-height: 2.75rem;
-  padding: 0.65rem 0.8rem;
-  border: 1px solid var(--color-line);
-  border-radius: var(--radius-sm);
-  background: color-mix(in srgb, var(--color-white) 62%, transparent);
-  cursor: pointer;
-  font-family: var(--font-mono);
-  font-size: 0.62rem;
-  letter-spacing: 0.07em;
-  text-transform: uppercase;
-}
-
-.copyButton:hover {
-  border-color: var(--color-ocean);
-}
-
-.liveStatus {
-  position: absolute;
-  width: 1px;
-  height: 1px;
-  overflow: hidden;
-  clip: rect(0 0 0 0);
-  clip-path: inset(50%);
-  white-space: nowrap;
-}
-
-.socials {
-  display: flex;
-  flex-wrap: wrap;
-  gap: var(--space-6);
-  margin-top: var(--space-16);
-}
-
-.socials a {
-  display: inline-flex;
-  min-height: 2.75rem;
-  align-items: center;
-  gap: var(--space-2);
-  color: var(--color-muted-strong);
-  font-family: var(--font-mono);
-  font-size: 0.68rem;
-  letter-spacing: 0.07em;
-  text-transform: uppercase;
-}
-
-.socials a:hover {
-  color: var(--color-ocean);
-}
-
-@media (min-width: 160rem) {
-  .inner h2 {
-    font-size: clamp(7.5rem, 4vw, 9rem);
-  }
-}
+.section { position:relative; overflow:clip; padding-block:clamp(6rem,10vw,10rem); background:radial-gradient(ellipse at 76% 78%,rgb(232 205 167 / 34%),transparent 25%),radial-gradient(ellipse at 15% 55%,rgb(94 202 224 / 28%),transparent 30%),linear-gradient(180deg,var(--color-ocean-ink) 0%,var(--color-ocean) 13%,var(--color-aqua) 34%,var(--color-ice) 65%,var(--color-foam) 100%); isolation:isolate; }
+/* A specular band, not a blurred radial blob: two gradients doing what
+   filter:blur(1.4rem) was doing by rasterising the whole section into a
+   filter layer every frame. A plain multi-stop gradient reads the same as
+   soft light and costs nothing at scroll time. */
+.section::before { position:absolute; inset:0; background:linear-gradient(104deg,transparent 24%,rgb(255 255 255 / 56%) 40%,rgb(255 255 255 / 12%) 52%,transparent 66%); content:""; pointer-events:none; }
+.section::after { position:absolute; right:-5%; bottom:-12%; left:-5%; height:38%; background:radial-gradient(ellipse,rgb(255 255 255 / 62%),transparent 64%),var(--texture-speckle); content:""; opacity:.7; pointer-events:none; }
+/* One top cut, not four independently tilted edges — four angles reads as a
+   mistake, one reads as a deliberate crop. The fill and its cast shadow live
+   on ::after instead of directly on .inner: drop-shadow has to sit on a
+   layer that carries no text, or it rasterises the whole block into a filter
+   layer and costs subpixel antialiasing. Inset box-shadow (edge light) stays
+   on .inner itself — clip-path only cuts away an *outer* box-shadow, an
+   inset one still traces the cut edge correctly. */
+.inner { position:relative; z-index:1; width:var(--shell); max-width:none; padding:clamp(3rem,7vw,8rem); box-shadow:var(--glass-clear-edge); clip-path:polygon(0 2.4%,100% 0,100% 100%,0 100%); }
+.inner::after { position:absolute; z-index:-1; inset:0; clip-path:inherit; background:var(--glass-clear-fill); content:""; filter:var(--glass-clear-drop); -webkit-backdrop-filter:var(--glass-clear-filter); backdrop-filter:var(--glass-clear-filter); }
+.inner::before { display:block; width:clamp(7rem,16vw,18rem); height:1px; margin-bottom:clamp(3rem,6vw,6rem); background:linear-gradient(90deg,var(--color-sand),var(--color-tidal),transparent); content:""; }
+.inner h2 { max-width:18ch; margin:0 0 0 -.05em; overflow-wrap:anywhere; font-family:var(--font-display); font-size:clamp(2.8rem,5.4vw,5.8rem); font-weight:var(--d4-weight); letter-spacing:var(--d4-track); line-height:var(--d4-lead); text-wrap:balance; }
+.body { max-width:38rem; margin:2.5rem 0 0 40%; color:rgb(3 47 67 / 70%); font-size:var(--text-lead); }
+.emailRow { position:relative; display:flex; align-items:center; flex-wrap:wrap; gap:1rem; margin-top:clamp(4rem,8vw,8rem); }
+/* Step 2 of the locked type scale. */
+.email { padding-bottom:.25rem; border-bottom:1px solid var(--color-tidal); font-family:var(--font-display); font-size:clamp(1.5rem,3vw,3rem); font-weight:var(--d2-weight); letter-spacing:var(--d2-track); line-height:var(--d2-lead); overflow-wrap:anywhere; }
+.copyButton { min-height:2.75rem; padding:.7rem .9rem; border:1px solid transparent; background:var(--glass-clear-fill); box-shadow:var(--glass-clear-edge); -webkit-backdrop-filter:var(--glass-clear-filter); backdrop-filter:var(--glass-clear-filter); cursor:pointer; font-family:var(--font-mono); font-size:.62rem; letter-spacing:.08em; text-transform:uppercase; }
+.copyButton:hover{border-color:var(--color-ocean)}.liveStatus{position:absolute;width:1px;height:1px;overflow:hidden;clip-path:inset(50%);white-space:nowrap}.socials{display:flex;flex-wrap:wrap;gap:clamp(1.5rem,4vw,4rem);margin-top:clamp(4rem,7vw,7rem)}.socials a{display:inline-flex;min-height:2.75rem;align-items:center;gap:.4rem;color:rgb(3 47 67 / 68%);font-family:var(--font-mono);font-size:.68rem;letter-spacing:.08em;text-transform:uppercase}.socials a:hover{color:var(--color-ocean)}
+@media(max-width:55.99rem){.section{min-height:0;padding-block:7rem}.inner{width:92vw;padding:3.25rem 1.35rem;clip-path:none}.inner h2{font-size:clamp(2.6rem,11vw,3.6rem)}.body{margin:2rem 0 0}.email{font-size:clamp(1.35rem,6vw,2rem)}}

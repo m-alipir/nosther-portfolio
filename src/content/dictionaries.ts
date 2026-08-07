@@ -11,7 +11,6 @@ export interface Dictionary {
     nav: {
       work: string;
       services: string;
-      notez: string;
       about: string;
       contact: string;
     };
@@ -26,16 +25,10 @@ export interface Dictionary {
     contactCta: string;
     stage: {
       ariaLabel: string;
-      reelLabel: string;
-      wideLabel: string;
-      wideTitle: string;
-      wideAlt: string;
-      cutawayLabel: string;
-      cutawayTitle: string;
-      cutawayAlt: string;
-      detailLabel: string;
-      detailTitle: string;
-      detailAlt: string;
+      roleLabel: string;
+      editType: string;
+      mediaAlt: string;
+      disclosure: string;
     };
     scrollCue: string;
   };
@@ -56,18 +49,13 @@ export interface Dictionary {
     supportingTitle: string;
     supportingIntro: string;
     posterFallback: string;
+    carouselLabel: string;
+    carouselPrev: string;
+    carouselNext: string;
   };
   services: {
     eyebrow: string;
     title: string;
-  };
-  notez: {
-    eyebrow: string;
-    status: string;
-    title: string;
-    body: string;
-    action: string;
-    imageAlt: string;
   };
   about: {
     eyebrow: string;
@@ -106,7 +94,6 @@ const en: Dictionary = {
     nav: {
       work: "Work",
       services: "Services",
-      notez: "NoteZ",
       about: "About",
       contact: "Contact",
     },
@@ -114,27 +101,19 @@ const en: Dictionary = {
   },
   hero: {
     eyebrow: "Independent Video Editor",
-    title: "VIDEO EDITING FOR CREATORS & BRANDS",
-    titleLines: ["VIDEO EDITING", "FOR CREATORS", "& BRANDS"],
+    title: "STORIES SHAPED IN MOTION",
+    titleLines: ["STORIES", "SHAPED IN", "MOTION."],
     lead:
-      "Long-form stories, short-form cuts, and motion-led social content—edited with pace, clarity, and intent.",
+      "Video editing for creators and digital brands—shaped through story, rhythm, and attention.",
     workCta: "View Work",
     contactCta: "Contact",
     stage: {
-      ariaLabel: "Cinematic sequence assembled from three self-produced N0STHER projects",
-      reelLabel: "Selected reel · Full production",
-      wideLabel: "Long-form edit · Tutorial structure",
-      wideTitle: "BeamNG Performance Settings Guide",
-      wideAlt:
-        "Split-screen BeamNG gameplay comparing Vulkan at 110 FPS with DirectX 11 at 65 FPS.",
-      cutawayLabel: "Cutaway · In-game verification",
-      cutawayTitle: "Assetto Corsa Setup Guide",
-      cutawayAlt:
-        "Portrait cutaway from the Assetto Corsa setup guide showing an in-game verification drive.",
-      detailLabel: "Insert · Narrative beat",
-      detailTitle: "BeamNG Cargo Run",
-      detailAlt:
-        "Cockpit-view insert from the BeamNG cargo run approaching a loading area.",
+      ariaLabel: "Single automotive showreel edited by ALI",
+      roleLabel: "Edited by ALI",
+      editType: "Automotive edit · Visual effects",
+      mediaAlt:
+        "Cinematic horizontal automotive edit featuring a black performance car in motion.",
+      disclosure: "Edited using third-party footage.",
     },
     scrollCue: "Selected work below",
   },
@@ -157,19 +136,13 @@ const en: Dictionary = {
     supportingIntro:
       "A self-produced rally episode followed by smaller automotive editing and visual-effects studies.",
     posterFallback: "Project poster unavailable",
+    carouselLabel: "Featured projects",
+    carouselPrev: "Previous project",
+    carouselNext: "Next project",
   },
   services: {
     eyebrow: "Services",
     title: "Editing shaped around the platform and the story.",
-  },
-  notez: {
-    eyebrow: "Tools & Experiments",
-    status: "In Development",
-    title: "NoteZ",
-    body:
-      "A personal, desktop-first productivity tool for capturing tasks, organizing them, and surfacing reminders. It is a work in progress and a small window into how I think about creative workflows.",
-    action: "View on GitHub",
-    imageAlt: "NoteZ productivity dashboard showing daily and weekly task progress.",
   },
   about: {
     eyebrow: "About",
@@ -177,7 +150,7 @@ const en: Dictionary = {
     body:
       "I edit video for creators and digital brands. Gaming and automotive projects are part of my visual world, but the work is not limited to one category. I care about rhythm, clarity, and making every cut serve the idea.",
     action: "Visit N0STHER on YouTube",
-    mediaLabel: "N0STHER identity mark",
+    mediaLabel: "N0STHER logo",
   },
   contact: {
     eyebrow: "Start a conversation",
@@ -210,7 +183,6 @@ const tr: Dictionary = {
     nav: {
       work: "İşler",
       services: "Hizmetler",
-      notez: "NoteZ",
       about: "Hakkımda",
       contact: "İletişim",
     },
@@ -218,33 +190,25 @@ const tr: Dictionary = {
   },
   hero: {
     eyebrow: "Bağımsız Video Editörü",
-    title: "İÇERİK ÜRETİCİLERİ VE MARKALAR İÇİN VİDEO KURGU",
-    titleLines: ["İÇERİK ÜRETİCİLERİ", "VE MARKALAR İÇİN", "VİDEO KURGU"],
+    title: "HİKÂYELER HAREKETLE ŞEKİLLENİR",
+    titleLines: ["HİKÂYELER", "HAREKETLE", "ŞEKİLLENİR."],
     lead:
-      "Uzun anlatılar, kısa format videolar ve hareket odaklı sosyal içerikler—tempo, netlik ve amaç gözetilerek kurgulanır.",
+      "İçerik üreticileri ve dijital markalar için; anlatı, ritim ve dikkat odağında video kurgu.",
     workCta: "İşleri Gör",
     contactCta: "İletişim",
     stage: {
-      ariaLabel: "Bağımsız üretilmiş üç N0STHER projesinden oluşturulan sinematik kurgu sekansı",
-      reelLabel: "Seçili kurgu · Tüm prodüksiyon",
-      wideLabel: "Uzun format · Rehber yapısı",
-      wideTitle: "BeamNG Performans Ayarları Rehberi",
-      wideAlt:
-        "Vulkan'da 110 FPS ile DirectX 11'de 65 FPS'i karşılaştıran bölünmüş ekran BeamNG oynanışı.",
-      cutawayLabel: "Kesit · Oyun içi kontrol",
-      cutawayTitle: "Assetto Corsa Kurulum Rehberi",
-      cutawayAlt:
-        "Assetto Corsa kurulum rehberinden oyun içi doğrulama sürüşünü gösteren dikey kesit.",
-      detailLabel: "Detay · Anlatı vuruşu",
-      detailTitle: "BeamNG Yük Taşıma",
-      detailAlt:
-        "BeamNG yük taşıma videosundan yükleme alanına yaklaşan kokpit görünümü detayı.",
+      ariaLabel: "ALI tarafından kurgulanan tek kaynaklı otomotiv showreel’i",
+      roleLabel: "ALI tarafından kurgulandı",
+      editType: "Otomotiv kurgusu · Görsel efektler",
+      mediaAlt:
+        "Hareket hâlindeki siyah performans otomobilini gösteren yatay sinematik otomotiv kurgusu.",
+      disclosure: "Üçüncü taraf görüntüler kullanılarak kurgulandı.",
     },
     scrollCue: "Seçili işler aşağıda",
   },
   work: {
     eyebrow: "Seçili İşler",
-    title: "Dikkati korumak için kurgulanan işler.",
+    title: "Dikkati korumak için\nkurgulanan işler.",
     intro:
       "Bağımsız üretilmiş uzun format rehberler ve eğlence içerikleri; kişisel hareketli grafik ve görsel efekt çalışmalarıyla destekleniyor.",
     externalAction: "YouTube’da İzle",
@@ -261,19 +225,13 @@ const tr: Dictionary = {
     supportingIntro:
       "Bağımsız üretilmiş bir rally bölümü ve ardından daha küçük otomotiv kurgu ve görsel efekt çalışmaları.",
     posterFallback: "Proje posteri kullanılamıyor",
+    carouselLabel: "Öne çıkan projeler",
+    carouselPrev: "Önceki proje",
+    carouselNext: "Sonraki proje",
   },
   services: {
     eyebrow: "Hizmetler",
     title: "Platforma ve anlatıya göre şekillenen kurgu.",
-  },
-  notez: {
-    eyebrow: "Araçlar ve Deneyler",
-    status: "Geliştiriliyor",
-    title: "NoteZ",
-    body:
-      "Görevleri hızlıca kaydetmek, düzenlemek ve hatırlatıcıları doğru zamanda öne çıkarmak için geliştirdiğim masaüstü odaklı kişisel productivity aracı. Henüz geliştirme aşamasında ve yaratıcı iş akışlarına nasıl yaklaştığıma dair küçük bir pencere sunuyor.",
-    action: "GitHub’da Gör",
-    imageAlt: "Günlük ve haftalık görev ilerlemesini gösteren NoteZ productivity dashboard’u.",
   },
   about: {
     eyebrow: "Hakkımda",
@@ -281,7 +239,7 @@ const tr: Dictionary = {
     body:
       "İçerik üreticileri ve dijital markalar için video kurguluyorum. Gaming ve automotive projeler görsel dünyamın bir parçası; fakat çalışmalarım tek bir kategoriyle sınırlı değil. Ritime, netliğe ve her kesmenin fikre hizmet etmesine önem veriyorum.",
     action: "N0STHER YouTube kanalına git",
-    mediaLabel: "N0STHER kimlik işareti",
+    mediaLabel: "N0STHER logosu",
   },
   contact: {
     eyebrow: "Bir konuşma başlatalım",

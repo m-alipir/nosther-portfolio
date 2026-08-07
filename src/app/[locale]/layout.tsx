@@ -14,6 +14,7 @@ import {
   locales,
 } from "@/lib/i18n/config";
 import { SEO_COPY, SITE_NAME, SITE_ORIGIN } from "@/lib/seo/site";
+import { AtmosphereDefs } from "@/components/atmosphere/atmosphere-defs";
 import { ClientProviders } from "@/providers/client-providers";
 
 export function generateStaticParams() {
@@ -89,8 +90,20 @@ export default async function LocaleLayout({
   const dictionary = getDictionary(resolvedLocale);
 
   return (
-    <html lang={resolvedLocale}>
+    <html lang={resolvedLocale} suppressHydrationWarning>
+      <head>
+        <script
+          dangerouslySetInnerHTML={{
+            // The attribute drives the scroll lock, so a failed hydration
+            // would leave the page unscrollable. The timeout is an outer bound
+            // past the loader's max wait plus its exit; normally a no-op.
+            __html:
+              "try{if(sessionStorage.getItem('nosther_v2_loading_seen')==='true'){document.documentElement.dataset.loadingScreenSeen='true'}else{document.documentElement.dataset.loadingScreen='active'}}catch(e){document.documentElement.dataset.loadingScreen='active'}setTimeout(function(){document.documentElement.removeAttribute('data-loading-screen')},9000)",
+          }}
+        />
+      </head>
       <body>
+        <AtmosphereDefs />
         <ClientProviders cursorLabels={dictionary.cursor}>{children}</ClientProviders>
       </body>
     </html>

@@ -1,23 +1,279 @@
+/* One direction of travel, palette tokens only. This used to run
+   pale → paler → mid → deep → deeper in five raw-hex stops — the
+   pale-to-paler opening reversed the section's own arc before it had gone
+   anywhere, which read as flicker rather than descent once placed after the
+   monotonic sections around it. */
+/* The palette gradient stays, just semi-transparent now, sitting over a real
+   aerial wave photo instead of a flat color field — the photo's own teal/tan
+   tones already sit inside the site's hue family, so it reads as depth under
+   the gradient rather than a competing image. */
 .section {
   position: relative;
   overflow: clip;
-  padding-block: var(--section-space);
-  border-bottom: 1px solid var(--color-line);
+  padding-block: clamp(7rem, 12vw, 13rem);
   background:
-    radial-gradient(circle at 88% 22%, rgb(169 220 242 / 20%), transparent 24rem),
-    radial-gradient(circle at 8% 70%, rgb(77 170 216 / 8%), transparent 30rem),
-    var(--color-foam);
+    radial-gradient(circle at 88% 8%, rgb(255 255 255 / 82%), transparent 25%),
+    radial-gradient(ellipse at 8% 42%, rgb(85 190 224 / 18%), transparent 34%),
+    linear-gradient(180deg, rgb(220 230 233 / 82%) 0%, rgb(188 210 212 / 68%) 58%, rgb(78 124 138 / 78%) 100%),
+    url("/media/backgrounds/selected-work-aerial-wave.jpg");
+  background-repeat: no-repeat;
+  background-position: center, center, center, center;
+  background-size: auto, auto, auto, cover;
+  isolation: isolate;
+}
+
+.section::before {
+  position: absolute;
+  inset: 0;
+  background:
+    linear-gradient(115deg, transparent 18%, rgb(255 255 255 / 35%) 27%, transparent 39%),
+    radial-gradient(ellipse at 76% 32%, transparent 0 16%, rgb(255 255 255 / 32%) 18%, transparent 23%),
+    radial-gradient(circle at 80% 18%, rgb(255 255 255 / 16%) 0 1px, transparent 1.4px);
+  content: "";
+  opacity: 0.2;
+  pointer-events: none;
+}
+
+/* A specular band, not a blurred one: filter:blur(4rem) was rasterising this
+   into its own layer on every scroll frame to do what extra gradient stops
+   do for free, and its rotation just skewed the same softness sideways. */
+.section::after {
+  position: absolute;
+  z-index: 0;
+  inset: 45% -10% auto;
+  height: 32rem;
+  background: linear-gradient(106deg, transparent 18%, rgb(225 249 253 / 30%) 44%, rgb(225 249 253 / 15%) 58%, transparent 80%);
+  content: "";
+  pointer-events: none;
+}
+
+/* Narrower than --shell (the hero's own width) on purpose: the hero is a
+   full-bleed cinematic object, everything below it is editorial reading
+   content that wants more breathing room at the edges. */
+.section > :global(.container) {
+  position: relative;
+  z-index: 1;
+  width: min(84vw, 70rem);
+  max-width: none;
+  padding-inline: 0;
 }
 
 .heading {
   display: grid;
-  align-items: end;
-  grid-template-columns: minmax(0, 1.15fr) minmax(18rem, 0.65fr);
-  gap: var(--space-12);
+  min-height: 16rem;
+  align-items: start;
+  grid-template-columns: minmax(0, 8fr) minmax(18rem, 4fr);
+  gap: clamp(2rem, 7vw, 9rem);
+}
+
+/* The Turkish headline forces its own break (see work.title) rather than
+   relying on the column width to find a good wrap point — "Dikkati" alone on
+   its own line read as an accident, not a deliberate two-line headline. */
+/* The base .section-title sets text-wrap:balance, which was redistributing
+   this headline across 3 near-even lines instead of respecting the forced
+   break below — wrap turns that off so the \n in work.title is the only
+   thing deciding where lines split. */
+.heading :global(.section-title) {
+  max-width: 24ch;
+  white-space: pre-line;
+  font-size: clamp(2.3rem, 4.1vw, 4.3rem);
+  line-height: 0.82;
+  text-wrap: wrap;
 }
 
 .heading :global(.section-intro) {
+  max-width: 31rem;
+  margin-top: clamp(6rem, 11vw, 10rem);
+  color: rgb(3 47 67 / 76%);
+}
+
+/* The three featured projects were a tall vertical stack. They are now a
+   looping deck: the active card sits front and centre and the ones behind it
+   are pushed right, scaled back and blurred so the order reads as depth. */
+.featured { position: relative; }
+
+/* A fixed rem floor, not a vh-based one: min(46rem, 86svh) shrank the track
+   on short-but-wide monitors (a 1080p 24" screen has ~360px less viewport
+   height than a 1440p 27" one at the same content width, since --shell caps
+   out at the same 76rem either way), while the flagship card's own content
+   height stayed constant — so the track could end up shorter than what its
+   card actually needed and clip the card's bottom under overflow:clip. A
+   flat rem value keeps the floor constant regardless of screen height. */
+.featuredTrack {
+  position: relative;
+  min-height: 50rem;
+  overflow: clip;
+  overflow-clip-margin: 8rem;
+}
+
+.featuredTrack:focus-visible { outline: 3px solid var(--color-ocean); outline-offset: 6px; }
+
+.slide {
+  position: absolute;
+  inset: 0;
+  transform-origin: 50% 50%;
+  transition: transform 720ms var(--ease-standard);
+  will-change: transform;
+}
+
+.slide[data-depth="0"] {
+  z-index: 3;
+  opacity: 1;
+  transform: none;
+}
+
+.slide[data-depth="1"] {
+  z-index: 2;
+  opacity: 1;
+  transform: translateX(62%) scale(.95);
+}
+
+.slide[data-depth="2"] {
+  z-index: 1;
+  opacity: 1;
+  transform: translateX(74%) scale(.9);
+}
+
+/* Only the front card is reachable; the rest are decoration behind it. */
+.slide:not([data-depth="0"]) { pointer-events: none; }
+
+/* Depth used to come from defocusing the footage itself — on a video
+   editor's portfolio the one thing that should never look out of focus is
+   the work. The queued cards stay sharp; what pushes them back is the
+   site's own clear-glass veil laid over them, one step denser for the card
+   further away. */
+.slide:not([data-depth="0"])::after {
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(150deg, rgb(231 245 252 / 52%), rgb(169 220 242 / 44%));
+  content: "";
+  -webkit-backdrop-filter: saturate(.94) brightness(1.04);
+  backdrop-filter: saturate(.94) brightness(1.04);
+}
+
+.slide[data-depth="2"]::after {
+  background: linear-gradient(150deg, rgb(231 245 252 / 80%), rgb(169 220 242 / 72%));
+}
+
+.navPrev,
+.navNext {
+  position: absolute;
+  z-index: 5;
+  top: 50%;
+  display: grid;
+  width: 3rem;
+  height: 3rem;
+  place-items: center;
+  border: 0;
+  background: var(--glass-frosted-fill);
+  box-shadow: var(--glass-frosted-edge), var(--glass-frosted-cast);
+  color: var(--color-ocean-ink);
+  cursor: pointer;
+  font-size: 1.1rem;
+  -webkit-backdrop-filter: var(--glass-frosted-filter);
+  backdrop-filter: var(--glass-frosted-filter);
+  transform: translateY(-50%);
+  transition: opacity var(--duration-fast) ease, color var(--duration-fast) ease;
+}
+
+.navPrev { left: .75rem; }
+.navNext { right: .75rem; }
+
+.navPrev:hover:not(:disabled),
+.navNext:hover:not(:disabled) { color: var(--color-ocean); }
+
+.navPrev:disabled,
+.navNext:disabled { cursor: default; opacity: .32; }
+
+.featuredStatus {
+  margin: clamp(1.25rem, 2.5vw, 2rem) 0 0;
+  color: rgb(3 47 67 / 62%);
+  font-family: var(--font-mono);
+  font-size: .62rem;
+  letter-spacing: .16em;
+  text-align: right;
+}
+
+/* Once the shell gutters are wide enough, the arrows move out of the artwork. */
+@media (min-width: 78rem) {
+  .navPrev { left: -3.75rem; }
+  .navNext { right: -3.75rem; }
+}
+
+@media (max-width: 63.99rem) {
+  /* Too little room to park a card beside another, so the deck collapses to
+     a plain one-up and the depth cues are dropped. */
+  .featuredTrack { min-height: 0; }
+  .slide { position: relative; inset: auto; }
+  .slide:not([data-depth="0"]) { position: absolute; visibility: hidden; }
+  .slide[data-depth="1"], .slide[data-depth="2"] { transform: none; opacity: 0; }
+  .slide::after { display: none; }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .slide { transition: none; }
+}
+
+.supportingArea {
+  margin-top: clamp(6rem, 10vw, 10rem);
+  padding-top: clamp(2rem, 4vw, 4rem);
+  border-top: 1px solid rgb(226 248 253 / 34%);
+  color: var(--color-foam);
+}
+
+/* This block sits on the light part of the section's gradient, where the
+   copy is pale foam on near-white — a shadow alone can't buy back contrast
+   against a ground that light. It sits on the same glass plate the rest of
+   the site uses instead, which guarantees contrast independent of whatever
+   is behind it. */
+.supportingHeading {
+  display: grid;
+  align-items: end;
+  grid-template-columns: minmax(0, 8fr) minmax(18rem, 4fr);
+  gap: clamp(2rem, 6vw, 7rem);
+  margin-bottom: clamp(2.5rem, 5vw, 5rem);
+  padding: clamp(1.5rem, 3vw, 2.75rem) clamp(1.75rem, 3.4vw, 3rem);
+  border-radius: var(--radius-lg);
+  background: var(--glass-deep-fill);
+  box-shadow: var(--glass-deep-edge), var(--glass-deep-cast);
+  -webkit-backdrop-filter: var(--glass-deep-filter);
+  backdrop-filter: var(--glass-deep-filter);
+}
+
+.supportingLabel {
+  margin: 0 0 0.8rem;
+  color: var(--color-aqua);
+  font-family: var(--font-mono);
+  font-size: 0.65rem;
+  letter-spacing: 0.16em;
+  text-transform: uppercase;
+}
+
+/* Step 3 of the locked type scale. */
+.supportingHeading h3 {
+  max-width: 12ch;
+  margin: 0 0 0 -0.055em;
+  font-family: var(--font-display);
+  font-size: clamp(1.8rem, 3vw, 3rem);
+  font-weight: var(--d3-weight);
+  letter-spacing: var(--d3-track);
+  line-height: var(--d3-lead);
+}
+
+.supportingHeading > p {
+  max-width: 29rem;
   margin: 0;
+  color: rgb(235 250 253 / 82%);
+}
+
+/* Two columns rather than three, so each piece is actually watchable: the
+   landscape cards stack down the wide column and the vertical piece runs the
+   full height of the narrow one. */
+.supportingGrid {
+  display: grid;
+  grid-template-columns: 1.62fr 1fr;
+  gap: clamp(1rem, 2vw, 1.75rem);
+  align-items: start;
 }
 
 .section[data-work-motion="preparing"] [data-work-eyebrow],
@@ -27,98 +283,31 @@
   opacity: 0;
 }
 
-.section[data-work-motion="preparing"] [data-work-eyebrow],
-.section[data-work-motion="preparing"] [data-work-title],
-.section[data-work-motion="preparing"] [data-work-intro] {
-  transform: translateY(1.25rem);
-}
-
-.featuredFlow {
-  display: grid;
-  margin-top: clamp(3.5rem, 7vw, 6.5rem);
-  gap: clamp(4.5rem, 9vw, 8.5rem);
-}
-
-.supportingArea {
-  margin-top: clamp(6rem, 12vw, 10.5rem);
-  padding-top: clamp(2rem, 4vw, 3.5rem);
-  border-top: 1px solid var(--color-aqua);
-}
-
-.supportingHeading {
-  display: grid;
-  align-items: end;
-  grid-template-columns: minmax(0, 1fr) minmax(20rem, 0.7fr);
-  gap: var(--space-10);
-}
-
-.supportingLabel {
-  margin: 0 0 var(--space-5);
-  color: var(--color-ocean);
-  font-family: var(--font-mono);
-  font-size: 0.64rem;
-  letter-spacing: 0.08em;
-  text-transform: uppercase;
-}
-
-.supportingHeading h3 {
-  max-width: 16ch;
-  margin: 0;
-  font-family: var(--font-display);
-  font-size: clamp(2rem, 3.5vw, 4.2rem);
-  font-weight: 700;
-  letter-spacing: -0.05em;
-  line-height: 0.98;
-  text-wrap: balance;
-}
-
-.supportingHeading > p {
-  max-width: 35rem;
-  margin: 0;
-  color: var(--color-muted-strong);
-  line-height: 1.6;
-}
-
-.supportingGrid {
-  display: grid;
-  align-items: start;
-  margin-top: clamp(3rem, 5vw, 5rem);
-  grid-template-columns: repeat(12, minmax(0, 1fr));
-  gap: clamp(1rem, 2vw, 2rem);
-}
-
 @media (max-width: 74.99rem) {
-  .featuredFlow {
-    gap: clamp(4rem, 8vw, 6.5rem);
-  }
+  .heading,
+  .supportingHeading { grid-template-columns: 1fr 1fr; }
+  .heading :global(.section-title) { font-size: clamp(2.6rem, 5.4vw, 4rem); }
+}
 
-  .supportingGrid {
-    row-gap: var(--space-10);
+@media (max-width: 55.99rem) {
+  .section { padding-block: clamp(6rem, 20vw, 9rem); }
+  .section > :global(.container) { width: min(92vw, 52rem); }
+  .heading { min-height: 0; grid-template-columns: 1fr; gap: 2rem; margin-bottom: 6rem; }
+  .heading :global(.section-title) { font-size: clamp(2.4rem, 10vw, 3.4rem); }
+  .heading :global(.section-intro) { margin-top: 0; }
+  .supportingHeading { grid-template-columns: 1fr; gap: 1.5rem; }
+  .supportingGrid { display: flex; overflow-x: auto; align-items: flex-start; padding-bottom: 1rem; scroll-snap-type: x mandatory; }
+  .supportingGrid > * { flex: 0 0 min(74vw, 22rem); }
+}
+
+@media (max-width: 21.99rem) {
+  .heading :global(.section-title) {
+    max-width: 100%;
+    font-size: clamp(2rem, 9vw, 2.6rem);
+    overflow-wrap: anywhere;
   }
 }
 
-@media (max-width: 47.99rem) {
-  .heading,
-  .supportingHeading {
-    grid-template-columns: 1fr;
-    gap: var(--space-6);
-  }
-
-  .featuredFlow {
-    margin-top: var(--space-12);
-    gap: var(--space-12);
-  }
-
-  .supportingArea {
-    margin-top: var(--space-16);
-  }
-
-  .supportingHeading h3 {
-    font-size: clamp(2rem, 10vw, 3rem);
-  }
-
-  .supportingGrid {
-    margin-top: var(--space-10);
-    row-gap: var(--space-12);
-  }
+@media (prefers-reduced-motion: reduce) {
+  .section [data-work-eyebrow], .section [data-work-title], .section [data-work-intro], .section [data-project-card] { opacity: 1; clip-path: none; transform: none; }
 }

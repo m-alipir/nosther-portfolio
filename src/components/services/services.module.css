@@ -1,189 +1,179 @@
+/* A very quiet photo layer — mostly foam, the horizon shot only reads as a
+   faint textural hint rather than a visible image, matching the "neutral"
+   role this section plays between Selected Work's depth and About's dark
+   chapter. */
 .section {
-  padding-block: var(--section-space);
-  border-bottom: 1px solid var(--color-line);
+  position: relative;
+  overflow: clip;
+  padding-block: clamp(6rem, 9vw, 9rem);
   background:
-    radial-gradient(ellipse at 88% 20%, rgb(169 220 242 / 24%), transparent 34%),
-    var(--color-ice);
+    radial-gradient(ellipse at 76% 18%, rgb(255 255 255 / 92%), transparent 34%),
+    linear-gradient(128deg, rgb(241 245 246 / 92%) 0%, rgb(241 245 246 / 84%) 46%, rgb(220 230 233 / 80%) 100%),
+    url("/media/backgrounds/services-horizon-gradient.jpg");
+  background-repeat: no-repeat;
+  background-position: center;
+  background-size: auto, auto, cover;
+  isolation: isolate;
 }
 
+.section::before {
+  position: absolute;
+  inset: -15% -8%;
+  background:
+    conic-gradient(from 210deg at 15% 55%, transparent 0 24deg, rgb(255 255 255 / 68%) 32deg 39deg, transparent 46deg),
+    conic-gradient(from 192deg at 83% 70%, transparent 0 20deg, rgb(104 195 219 / 18%) 28deg 34deg, transparent 42deg);
+  content: "";
+  filter: blur(2.2rem);
+  pointer-events: none;
+}
+
+.section::after {
+  position: absolute;
+  inset: 0;
+  background-image: var(--texture-speckle);
+  content: "";
+  opacity: .022;
+  pointer-events: none;
+}
+
+/* Narrower than --shell (the hero's own width) on purpose: the hero is a
+   full-bleed cinematic object, everything below it is editorial reading
+   content that wants more breathing room at the edges. */
 .layout {
-  display: grid;
-  align-items: start;
-  grid-template-columns: repeat(12, minmax(0, 1fr));
-  gap: var(--grid-gap);
+  position: relative;
+  z-index: 1;
+  width: min(84vw, 70rem);
+  max-width: none;
+  padding-inline: 0;
 }
 
 .heading {
-  grid-column: 1 / span 5;
-}
-
-.section[data-services-motion="preparing"] [data-services-eyebrow],
-.section[data-services-motion="preparing"] [data-services-title],
-.section[data-services-motion="preparing"] [data-service-row] {
-  opacity: 0;
-}
-
-.section[data-services-motion="preparing"] [data-services-eyebrow],
-.section[data-services-motion="preparing"] [data-services-title],
-.section[data-services-motion="preparing"] [data-service-row] {
-  transform: translateY(1.25rem);
-}
-
-.list {
   display: grid;
-  margin: 0;
-  padding: 0;
-  list-style: none;
-  grid-column: 7 / -1;
+  align-items: end;
+  grid-template-columns: minmax(0, 9fr) minmax(10rem, 3fr);
+  margin-bottom: clamp(3rem, 6vw, 6rem);
 }
+
+.heading :global(.section-title) {
+  grid-column: 1;
+  grid-row: 2;
+  max-width: 11ch;
+  font-size: clamp(2.6rem, 4.6vw, 4.8rem);
+  line-height: .78;
+}
+
+.heading :global(.eyebrow) {
+  grid-column: 1;
+  grid-row: 1;
+}
+
+.heading::after {
+  grid-column: 2;
+  grid-row: 2;
+  justify-self: end;
+  width: clamp(7rem, 14vw, 16rem);
+  height: 1px;
+  margin-bottom: 1rem;
+  background: linear-gradient(90deg, transparent, var(--color-tidal));
+  content: "";
+}
+
+.list { margin: 0; padding: 0; list-style: none; }
 
 .item {
   position: relative;
   display: grid;
-  padding: clamp(1.75rem, 4vw, 3.5rem) 0;
-  border-top: 1px solid var(--color-line);
-  grid-template-columns: 3.5rem 1fr;
-  gap: var(--space-4);
+  min-height: clamp(10rem, 15vw, 14rem);
+  align-items: center;
+  grid-template-columns: 1fr minmax(0, 8fr) 2fr;
+  gap: clamp(1rem, 3vw, 3rem);
+  border-top: 1px solid rgb(6 69 100 / 20%);
+  transform: scale(.982);
+  transform-origin: left center;
+  transition:
+    transform 540ms var(--ease-standard),
+    opacity 420ms ease,
+    color 300ms ease;
 }
 
-.item:last-child {
-  border-bottom: 1px solid var(--color-line);
-}
+.item:last-child { border-bottom: 1px solid rgb(6 69 100 / 20%); }
 
-.number {
-  padding-top: 0.45rem;
-  color: var(--color-paper-500);
-  font-family: var(--font-mono);
-  font-size: 0.67rem;
-  letter-spacing: 0.08em;
-}
-
-.item h3 {
-  max-width: 14ch;
-  margin: 0;
-  font-family: var(--font-display);
-  font-size: var(--text-service);
-  font-weight: 750;
-  letter-spacing: -0.045em;
-  line-height: 1;
-}
-
-.item p {
-  max-width: 42rem;
-  margin: var(--space-5) 0 0;
-  color: var(--color-paper-300);
-}
-
-.rule {
+/* No left-to-right wipe any more. Every row always carries its plate: the
+   unfocused ones sit back, small and faint and flat, and the focused one
+   comes forward at full size with the real glass material. The resting plate
+   deliberately has no backdrop-filter so only one row blurs at a time. */
+.item::before {
   position: absolute;
-  bottom: -1px;
-  left: 0;
-  width: 100%;
-  height: 2px;
-  background: var(--color-tidal);
-  opacity: 0.45;
-  transform: scaleX(0.1);
-  transform-origin: left;
-}
-
-.section[data-services-motion="running"] .item {
-  opacity: 1;
+  z-index: -1;
+  inset: 5% -2.5%;
+  background: linear-gradient(96deg, rgb(255 255 255 / 20%), rgb(255 255 255 / 8%) 62%, rgb(168 216 238 / 10%));
+  content: "";
+  opacity: .3;
+  transform: scale(.982);
+  transform-origin: left center;
   transition:
-    border-color var(--duration-medium) var(--ease-standard),
-    opacity var(--duration-medium) var(--ease-standard);
+    opacity 460ms var(--ease-standard),
+    transform 560ms var(--ease-standard);
 }
 
-.section[data-services-motion="running"] .item h3,
-.section[data-services-motion="running"] .number {
-  transition: color var(--duration-medium) var(--ease-standard);
-}
+.item:hover, .item[data-service-active="true"] { transform: scale(1); }
 
-.section[data-services-motion="running"] .rule {
-  transition:
-    color var(--duration-medium) var(--ease-standard),
-    opacity var(--duration-medium) var(--ease-standard),
-    transform 520ms var(--ease-standard);
-}
-
-.section[data-services-motion="running"] .item[data-service-active="true"] {
+.item:hover::before,
+.item[data-service-active="true"]::before {
+  background: var(--glass-clear-fill);
+  box-shadow: var(--glass-clear-edge), var(--glass-clear-cast);
   opacity: 1;
+  transform: scale(1);
+  -webkit-backdrop-filter: var(--glass-clear-filter);
+  backdrop-filter: var(--glass-clear-filter);
 }
 
-.section[data-services-motion="running"]
-  .item[data-service-active="true"]
-  .number {
-  color: var(--color-red-300);
+/* The only accent mark on the active row: a 2px sand tick down the leading
+   edge, faded at both ends so it never reads as a full border. Sand appears
+   nowhere else in the component — this is its one job here. */
+.item:hover::after,
+.item[data-service-active="true"]::after {
+  position: absolute;
+  z-index: 1;
+  top: 5%;
+  bottom: 5%;
+  left: -2.5%;
+  width: 2px;
+  background: linear-gradient(180deg, rgb(232 205 167 / 0%), var(--color-sand) 45%, rgb(232 205 167 / 0%));
+  content: "";
+  pointer-events: none;
 }
+.number { align-self: start; padding-top: clamp(2.5rem, 5vw, 5rem); color: var(--color-tidal); font-family: var(--font-display); font-size: clamp(1.5rem, 2.6vw, 2.6rem); font-weight: 800; letter-spacing: -.08em; }
+/* Step 2 of the locked type scale (32–56px, this element's range). */
+.item h3 { max-width: 13ch; margin: 0 0 0 -.046em; font-family: var(--font-display); font-size: clamp(1.9rem, 3.4vw, 3.4rem); font-weight: var(--d2-weight); letter-spacing: var(--d2-track); line-height: var(--d2-lead); }
+.item p { max-width: 38rem; margin: 1.5rem 0 0; color: rgb(3 47 67 / 70%); font-size: clamp(.95rem, 1.2vw, 1.18rem); }
+.rule { justify-self: end; width: clamp(2rem, 6vw, 6rem); height: clamp(2rem, 6vw, 6rem); border: 1px solid rgb(6 69 100 / 24%); border-radius: 50%; background: radial-gradient(circle, var(--color-tidal) 0 7%, transparent 8%); }
 
-.section[data-services-motion="running"]
-  .item[data-service-active="true"]
-  .rule {
-  opacity: 1;
-  transform: scaleX(1);
-}
-
+.section[data-services-motion="preparing"] [data-services-eyebrow], .section[data-services-motion="preparing"] [data-services-title], .section[data-services-motion="preparing"] [data-service-row] { opacity: 0; }
+/* The active-row dimming only makes sense where something actually sets
+   data-service-active or can hover — that's desktop only (see services.tsx,
+   useActiveState is only passed true at >=1200px). Below that, touch has no
+   hover and nothing ever marks a row active, so every row inherited the
+   dimmed .42 opacity and stayed there permanently — every row in the list
+   was stuck half-faded on tablet and mobile. */
 @media (min-width: 75rem) {
-  .heading {
-    position: sticky;
-    top: clamp(7rem, 14vh, 10rem);
-  }
-
-  .section[data-services-motion="running"] .item {
-    opacity: 0.84;
-  }
-
-  .item {
-    min-height: clamp(15rem, 32svh, 22rem);
-    align-items: center;
-  }
-}
-
-@media (hover: hover) and (pointer: fine) and (prefers-reduced-motion: no-preference) {
-  .section[data-services-motion="running"] .item:hover {
-    opacity: 0.94;
-  }
-
-  .section[data-services-motion="running"] .item:hover .number {
-    color: var(--color-red-300);
-  }
-}
-
-@media (max-width: 63.99rem) {
-  .layout {
-    display: block;
-  }
-
-  .heading {
-    max-width: 48rem;
-  }
-
-  .list {
-    margin-top: var(--space-16);
-  }
-}
-
-@media (max-width: 35.99rem) {
-  .item {
-    grid-template-columns: 2.5rem 1fr;
-  }
+  .section[data-services-motion="running"] .item { opacity: .42; }
+  .section[data-services-motion="running"] .item:hover,
+  .section[data-services-motion="running"] .item[data-service-active="true"] { opacity: 1; }
 }
 
 @media (prefers-reduced-motion: reduce) {
-  .heading {
-    position: static;
-  }
-
-  .section .item,
-  .section .item h3,
-  .section .number {
-    opacity: 1;
-    transform: none;
-    transition: none;
-  }
-
-  .section .rule {
-    opacity: 0.45;
-    transform: scaleX(0.1);
-    transition: none;
-  }
+  .item, .item::before { transform: none; transition: none; }
 }
+
+@media (max-width: 55.99rem) {
+  .heading { grid-template-columns: 1fr; }
+  .heading :global(.section-title) { font-size: clamp(2.4rem, 10vw, 3.4rem); }
+  .heading::after { display: none; }
+  .item { min-height: 14rem; grid-template-columns: 4.5rem 1fr; }
+  .number { padding-top: 3rem; }
+  .item h3 { font-size: clamp(1.8rem, 7vw, 2.6rem); }
+  .rule { display: none; }
+}
+
+@media (prefers-reduced-motion: reduce) { .section [data-services-eyebrow], .section [data-services-title], .section [data-service-row] { opacity: 1; transform: none; } }

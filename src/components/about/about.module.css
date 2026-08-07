@@ -1,149 +1,23 @@
-.section {
-  padding-block: var(--section-space);
-  border-bottom: 1px solid rgb(169 220 242 / 18%);
-  background:
-    radial-gradient(ellipse at 14% 20%, rgb(77 170 216 / 16%), transparent 34%),
-    radial-gradient(ellipse at 88% 82%, rgb(169 220 242 / 8%), transparent 30%),
-    var(--color-deep);
-  color: var(--color-foam);
-}
-
-.layout {
-  display: grid;
-  align-items: center;
-  grid-template-columns: minmax(16rem, 5fr) minmax(0, 7fr);
-  gap: clamp(2rem, 8vw, 8rem);
-}
-
-.mediaStage {
-  width: 100%;
-  max-width: 30rem;
-}
-
-.media {
-  position: relative;
-  display: grid;
-  width: 100%;
-  overflow: hidden;
-  place-items: center;
-  border: 1px solid rgb(169 220 242 / 30%);
-  border-radius: 50%;
-  background:
-    linear-gradient(145deg, transparent 0 70%, rgb(77 170 216 / 15%) 70%),
-    rgb(3 49 72 / 70%);
-  box-shadow: inset 0 1px 0 rgb(255 255 255 / 12%);
-  aspect-ratio: 1;
-  isolation: isolate;
-}
-
-.section[data-about-motion="preparing"] [data-about-media],
-.section[data-about-motion="preparing"] [data-about-eyebrow],
-.section[data-about-motion="preparing"] [data-about-title],
-.section[data-about-motion="preparing"] [data-about-body],
-.section[data-about-motion="preparing"] [data-about-action] {
-  opacity: 0;
-}
-
-.section[data-about-motion="preparing"] [data-about-media] {
-  clip-path: inset(0 0 10% 0);
-  transform: translateY(1.5rem) scale(1.025);
-}
-
-.section[data-about-motion="preparing"] [data-about-eyebrow],
-.section[data-about-motion="preparing"] [data-about-title],
-.section[data-about-motion="preparing"] [data-about-body],
-.section[data-about-motion="preparing"] [data-about-action] {
-  transform: translateY(1.25rem);
-}
-
-.media::before {
-  position: absolute;
-  z-index: 2;
-  inset: var(--space-5);
-  border: 1px solid rgb(231 245 252 / 16%);
-  border-radius: 50%;
-  content: "";
-  pointer-events: none;
-}
-
-.avatar {
-  z-index: 1;
-  border-radius: inherit;
-  object-fit: contain;
-}
-
-.initials {
-  color: var(--color-foam);
-  font-family: var(--font-display);
-  font-size: clamp(7rem, 17vw, 14rem);
-  font-weight: 850;
-  letter-spacing: -0.1em;
-  line-height: 1;
-  opacity: 0.12;
-}
-
-.mediaLabel {
-  position: absolute;
-  right: var(--space-5);
-  bottom: var(--space-5);
-  left: var(--space-5);
-  color: rgb(231 245 252 / 68%);
-  font-family: var(--font-mono);
-  font-size: 0.62rem;
-  letter-spacing: 0.06em;
-  text-transform: uppercase;
-}
-
-.copy {
-  max-width: 48rem;
-}
-
-.copy p:not(:global(.eyebrow)) {
-  max-width: 46rem;
-  margin: var(--space-8) 0;
-  color: rgb(231 245 252 / 84%);
-  font-size: var(--text-lead);
-}
-
-.section :global(.eyebrow) {
-  color: var(--color-aqua);
-}
-
-.section :global(.button-secondary) {
-  border-color: rgb(231 245 252 / 38%);
-  background: rgb(255 255 255 / 6%);
-  color: var(--color-white);
-}
-
-.section :global(.button-secondary):hover {
-  border-color: var(--color-aqua);
-  background: rgb(255 255 255 / 12%);
-  color: var(--color-white);
-}
-
-@media (max-width: 55.99rem) {
-  .layout {
-    grid-template-columns: 1fr;
-  }
-
-  .mediaStage {
-    width: min(100%, 24rem);
-    order: 2;
-  }
-
-  .copy {
-    order: 1;
-  }
-}
-
-@media (prefers-reduced-motion: reduce) {
-  .section [data-about-media],
-  .section [data-about-eyebrow],
-  .section [data-about-title],
-  .section [data-about-body],
-  .section [data-about-action] {
-    opacity: 1;
-    clip-path: none;
-    transform: none;
-  }
-}
+/* multiply blends the (fully opaque) palette gradient with the aerial photo
+   beneath it: the gradient's own dark-to-light values darken the photo where
+   it's already deep and let it show through where it's aqua, so the chapter
+   stays moody and on-palette instead of the photo just sitting under a
+   translucent wash. */
+.section { position:relative; overflow:clip; padding-block:clamp(6rem,10vw,10rem); background:radial-gradient(circle at 19% 36%,rgb(66 188 221 / 44%),transparent 22%),radial-gradient(ellipse at 82% 68%,rgb(26 120 151 / 28%),transparent 28%),linear-gradient(170deg,var(--color-aqua) 0%,var(--color-ocean) 18%,var(--color-deep) 58%,var(--color-ocean-ink) 100%),url("/media/backgrounds/about-aerial-wave-sand.jpg"); background-repeat:no-repeat; background-position:center; background-size:auto,auto,auto,cover; background-blend-mode:normal,normal,multiply,normal; color:var(--color-foam); isolation:isolate; }
+.section::before { position:absolute; inset:-12%; background:linear-gradient(113deg,transparent 22%,rgb(172 235 246 / 15%) 36%,transparent 49%),conic-gradient(from 205deg at 13% 52%,transparent 0 25deg,rgb(130 220 239 / 18%) 32deg 38deg,transparent 45deg); content:""; filter:blur(2.5rem); pointer-events:none; }
+.layout { position:relative; z-index:1; display:grid; width:min(84vw,70rem); max-width:none; min-height:46rem; align-items:center; grid-template-columns:repeat(12,minmax(0,1fr)); padding-inline:0; }
+.mediaStage { position:relative; z-index:2; grid-column:1 / 8; grid-row:1; width:100%; }
+/* Clipped, so depth comes from drop-shadow rather than an outer box-shadow. */
+.mediaStage::before { position:absolute; z-index:-1; inset:-4% -8% 6% 4%; background:var(--glass-deep-fill); box-shadow:var(--glass-deep-edge); content:""; clip-path:polygon(6% 0,100% 12%,91% 100%,0 83%); filter:var(--glass-deep-drop); -webkit-backdrop-filter:var(--glass-deep-filter); backdrop-filter:var(--glass-deep-filter); }
+.media { position:relative; display:grid; width:100%; overflow:hidden; place-items:center; background:linear-gradient(145deg,rgb(18 105 134 / 40%),rgb(2 23 34 / 54%)); box-shadow:var(--glass-deep-edge),0 4rem 10rem rgb(0 9 14 / 54%); aspect-ratio:1; isolation:isolate; }
+.media::before { position:absolute; z-index:2; inset:1.25rem; border:1px solid rgb(213 246 252 / 14%); content:""; pointer-events:none; }
+/* The source file is a circular badge sitting on a pale square. Cropping it
+   to fill showed those corners, so the mark is clipped back to its own circle
+   and reads as an object on the glass instead of a pasted image. */
+.avatar { z-index:1; padding:19%; object-fit:contain; clip-path:circle(31% at 50% 50%); filter:saturate(.92) contrast(1.02) drop-shadow(0 1.5rem 3rem rgb(0 9 14 / 50%)); }
+.initials { position:absolute; z-index:2; top:-.08em; right:-.04em; color:rgb(211 247 253 / 12%); font-family:var(--font-display); font-size:clamp(6rem,15vw,15rem); font-weight:850; letter-spacing:-.12em; line-height:.8; }
+.mediaLabel { position:absolute; z-index:3; right:1.5rem; bottom:1.5rem; left:1.5rem; color:rgb(225 248 252 / 70%); font-family:var(--font-mono); font-size:.62rem; letter-spacing:.1em; text-transform:uppercase; }
+.copy { position:relative; z-index:3; grid-column:7 / 13; grid-row:1; align-self:end; margin-bottom:8%; padding:clamp(2.3rem,5vw,5.5rem); background:var(--glass-deep-fill); box-shadow:var(--glass-deep-edge),var(--glass-deep-cast); -webkit-backdrop-filter:var(--glass-deep-filter); backdrop-filter:var(--glass-deep-filter); }
+.copy :global(.section-title){font-size:clamp(2.6rem,4.4vw,4.6rem)}.copy p:not(:global(.eyebrow)){max-width:44rem;margin:2.5rem 0;color:rgb(231 248 252 / 80%);font-size:var(--text-lead)}.section :global(.eyebrow){color:var(--color-aqua)}.section :global(.button-secondary){border-color:rgb(231 245 252 / 28%);background:rgb(255 255 255 / 7%);color:#fff}.section :global(.button-secondary):hover{border-color:var(--color-aqua);background:rgb(255 255 255 / 13%)}
+@media(max-width:55.99rem){.section{min-height:0;padding-block:8rem}.layout{display:flex;min-height:0;flex-direction:column;width:92vw}.mediaStage{width:92%;align-self:flex-start}.copy{width:92%;align-self:flex-end;margin:-3rem 0 0}.copy :global(.section-title){font-size:clamp(2.4rem,10vw,3.4rem)}}
+@media(prefers-reduced-motion:reduce){.section [data-about-media],.section [data-about-eyebrow],.section [data-about-title],.section [data-about-body],.section [data-about-action]{opacity:1;clip-path:none;transform:none}}

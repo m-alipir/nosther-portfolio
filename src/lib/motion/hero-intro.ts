@@ -1,4 +1,5 @@
 const LOCALE_SKIP_KEY = "nosther_skip_hero_intro";
+const INTRO_PLAYED_KEY = "nosther_v2_hero_intro_played";
 
 let hasPlayedHeroIntro = false;
 
@@ -21,9 +22,22 @@ export function consumeHeroIntroLocaleTransition() {
 }
 
 export function hasHeroIntroPlayed() {
-  return hasPlayedHeroIntro;
+  if (hasPlayedHeroIntro) {
+    return true;
+  }
+
+  try {
+    return window.sessionStorage.getItem(INTRO_PLAYED_KEY) === "true";
+  } catch {
+    return false;
+  }
 }
 
 export function markHeroIntroPlayed() {
   hasPlayedHeroIntro = true;
+  try {
+    window.sessionStorage.setItem(INTRO_PLAYED_KEY, "true");
+  } catch {
+    // In-memory state still prevents repeat intros when storage is unavailable.
+  }
 }

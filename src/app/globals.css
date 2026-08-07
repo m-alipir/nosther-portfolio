@@ -1,25 +1,30 @@
 :root {
   color-scheme: light;
 
-  --color-foam: #f7fbff;
-  --color-ice: #e7f5fc;
-  --color-aqua: #a9dcf2;
-  --color-tidal: #4daad8;
-  --color-ocean: #1677a8;
-  --color-deep: #064564;
-  --color-ocean-ink: #102c3b;
-  --color-sand: #e8cda7;
+  /* Tidewater / Deep Field — a submerged reading of the same coastal system:
+     one body of water at seven depths, every hue between 195° and 215° so
+     no section can drift out of the family. Driftwood is the sole warm
+     value and stays at hairline scale — an underline, a tag, a live
+     indicator — never a fill larger than a button. */
+  --color-foam: #f1f5f6;
+  --color-ice: #dce6e9;
+  --color-aqua: #bcd2d4;
+  --color-tidal: #8fb3b8;
+  --color-ocean: #4e7c8a;
+  --color-deep: #1d3946;
+  --color-ocean-ink: #0a1319;
+  --color-sand: #c9b79c;
   --color-white: #ffffff;
-  --color-muted: #536f7d;
-  --color-muted-strong: #3d5f70;
-  --color-line: #c9e2ee;
-  --color-success: #397b5b;
+  --color-muted: #6f8992;
+  --color-muted-strong: #3e6270;
+  --color-line: #a8c2c6;
+  --color-success: #5a9b7f;
 
   /* Transitional aliases keep the proven V1 modules coherent during phased restyling. */
   --color-ink-950: var(--color-foam);
   --color-ink-900: var(--color-ice);
-  --color-ink-850: #dceef6;
-  --color-ink-800: #d3e9f3;
+  --color-ink-850: #e5edee;
+  --color-ink-800: #d6e2e4;
   --color-ink-700: var(--color-line);
   --color-paper-100: var(--color-ocean-ink);
   --color-paper-300: var(--color-muted-strong);
@@ -31,14 +36,17 @@
   --font-display: "Archivo Variable", "Arial Black", sans-serif;
   --font-body: "Instrument Sans Variable", Arial, sans-serif;
   --font-mono: "IBM Plex Mono", "Cascadia Mono", monospace;
+  /* Loader wordmark: the display grotesque at a light weight and wide
+     tracking, which reads closer to Apple's wordmark treatment than a serif. */
+  --font-loader: var(--font-display);
 
-  --text-hero: clamp(3.1rem, 6.1vw, 7.4rem);
-  --text-section: clamp(2.35rem, 4vw, 4.9rem);
-  --text-project: clamp(1.45rem, 2.25vw, 2.5rem);
-  --text-service: clamp(1.65rem, 2.65vw, 2.75rem);
-  --text-lead: clamp(1.08rem, 1.35vw, 1.35rem);
-  --text-body: clamp(1rem, 0.35vw + 0.94rem, 1.1rem);
-  --text-meta: 0.72rem;
+  --text-hero: clamp(2.6rem, 4.6vw, 5.4rem);
+  --text-section: clamp(2rem, 3.1vw, 3.7rem);
+  --text-project: clamp(1.3rem, 1.8vw, 2rem);
+  --text-service: clamp(1.45rem, 2.1vw, 2.2rem);
+  --text-lead: clamp(1rem, 1.1vw, 1.18rem);
+  --text-body: clamp(0.95rem, 0.3vw + 0.9rem, 1.05rem);
+  --text-meta: 0.7rem;
 
   --space-1: 0.25rem;
   --space-2: 0.5rem;
@@ -54,8 +62,11 @@
   --space-24: 6rem;
   --section-space: clamp(5rem, 7.5vw, 7.5rem);
 
-  --container: 92rem;
-  --gutter: clamp(1.25rem, 4vw, 4.5rem);
+  --container: 76rem;
+  --gutter: clamp(1.25rem, 5vw, 5.5rem);
+  /* One shared content width. Sections previously each hard-coded
+     min(92vw, 112rem), which ran content almost edge to edge on a laptop. */
+  --shell: min(88vw, 76rem);
   --grid-gap: clamp(1rem, 1.75vw, 1.5rem);
   --reading-measure: 64ch;
 
@@ -64,17 +75,144 @@
   --radius-lg: 1.25rem;
   --radius-pill: 999px;
 
-  --glass-background: color-mix(in srgb, var(--color-white) 72%, transparent);
-  --glass-border: color-mix(in srgb, var(--color-white) 86%, var(--color-line));
-  --glass-shadow:
-    inset 0 1px 0 rgb(255 255 255 / 78%),
-    0 1.25rem 3.5rem rgb(6 69 100 / 10%);
-  --glass-blur: 1.1rem;
+  /* Display type scale. Weight, tracking and leading were previously chosen
+     per component (five different weight/tracking pairs across the modules
+     for headlines that read at similar sizes) rather than as a function of
+     size. Four steps, keyed to rendered size, migrated into every display
+     headline below — heavier and tighter as size increases. Archivo Variable
+     is already loaded, so every step is one axis value on the same font. */
+  --d1-weight: 780; --d1-track: -.028em; --d1-lead: 1.04; /* ≤ 32px  */
+  --d2-weight: 800; --d2-track: -.038em; --d2-lead: .94;  /* 32–56px */
+  --d3-weight: 820; --d3-track: -.046em; --d3-lead: .88;  /* 56–96px */
+  --d4-weight: 840; --d4-track: -.052em; --d4-lead: .84;  /* ≥ 96px  */
+
+  /* Optical glass — three weights, one build, recalibrated to the Tidewater
+     material spec:
+       Crystal (clear)   — 3px blur. Nearly invisible; only its lit edge
+                            says it's there. Nav bars, captions, thumbnails.
+       Shopfront (frosted) — 16px blur, saturation pushed so colour behind
+                            it intensifies rather than greys out. The
+                            workhorse weight, used on most panels.
+       Frosted slab (deep) — 34px blur, inner bloom. Only for panels that
+                            must obscure — dark grounds, long text, overlays.
+     Each surface is still four tokens rather than a stroke and a flat fill:
+     `fill` carries varying transmission plus one off-axis specular sweep,
+     `edge` supplies perimeter rim light from the inside (never a border),
+     `cast` gives depth, `filter` does the blur and the brightness lift that
+     stops a panel reading as a grey scrim. `drop` replaces `cast` on
+     clip-path surfaces, where box-shadow is clipped and cannot trace the
+     silhouette. Pseudo-elements consume the same tokens, so a clipped
+     ::before gets the material without needing a class. */
+  --glass-sheen: 118deg;
+
+  --glass-clear-fill:
+    linear-gradient(
+      var(--glass-sheen),
+      rgb(255 255 255 / 44%) 0%,
+      rgb(255 255 255 / 11%) 17%,
+      rgb(255 255 255 / 0%) 33%,
+      rgb(255 255 255 / 0%) 63%,
+      rgb(255 255 255 / 14%) 79%,
+      rgb(255 255 255 / 2%) 100%
+    ),
+    linear-gradient(
+      177deg,
+      rgb(255 255 255 / 16%) 0%,
+      rgb(248 251 251 / 34%) 44%,
+      rgb(188 210 212 / 38%) 79%,
+      rgb(143 179 184 / 28%) 100%
+    );
+  --glass-clear-edge:
+    inset 0 1px 0 rgb(255 255 255 / 72%),
+    inset 0 -1px 0 rgb(143 179 184 / 32%),
+    inset 1px 0 0 rgb(255 255 255 / 28%),
+    inset -1px 0 0 rgb(143 179 184 / 20%),
+    inset 0 0 2.6rem -1.35rem rgb(255 255 255 / 82%);
+  --glass-clear-cast:
+    0 1.4rem 3.4rem -1.2rem rgb(10 19 25 / 24%),
+    0 0.35rem 1rem -0.6rem rgb(10 19 25 / 15%);
+  --glass-clear-filter: blur(3px) saturate(130%) brightness(1.05);
+  --glass-clear-drop: drop-shadow(0 1.4rem 2.4rem rgb(10 19 25 / 22%));
+
+  --glass-frosted-fill:
+    linear-gradient(
+      var(--glass-sheen),
+      rgb(255 255 255 / 54%) 0%,
+      rgb(255 255 255 / 15%) 21%,
+      rgb(255 255 255 / 0%) 39%,
+      rgb(255 255 255 / 0%) 61%,
+      rgb(255 255 255 / 17%) 83%,
+      rgb(255 255 255 / 3%) 100%
+    ),
+    linear-gradient(
+      176deg,
+      rgb(255 255 255 / 62%) 0%,
+      rgb(248 251 251 / 76%) 41%,
+      rgb(200 224 227 / 78%) 76%,
+      rgb(160 195 200 / 66%) 100%
+    );
+  --glass-frosted-edge:
+    inset 0 1px 0 rgb(255 255 255 / 84%),
+    inset 0 -1px 0 rgb(143 179 184 / 32%),
+    inset 1px 0 0 rgb(255 255 255 / 34%),
+    inset -1px 0 0 rgb(143 179 184 / 22%),
+    inset 0 0 3rem -1.5rem rgb(255 255 255 / 90%);
+  --glass-frosted-cast:
+    0 2rem 4.5rem -1.4rem rgb(10 19 25 / 26%),
+    0 0.4rem 1.2rem -0.7rem rgb(10 19 25 / 16%);
+  --glass-frosted-filter: blur(16px) saturate(145%) brightness(1.06);
+  --glass-frosted-drop: drop-shadow(0 1.8rem 3rem rgb(10 19 25 / 24%));
+
+  --glass-deep-fill:
+    linear-gradient(
+      var(--glass-sheen),
+      rgb(188 210 212 / 20%) 0%,
+      rgb(188 210 212 / 5%) 19%,
+      rgb(188 210 212 / 0%) 37%,
+      rgb(188 210 212 / 0%) 65%,
+      rgb(143 179 184 / 9%) 85%,
+      rgb(143 179 184 / 0%) 100%
+    ),
+    linear-gradient(
+      174deg,
+      rgb(78 124 138 / 68%) 0%,
+      rgb(29 57 70 / 80%) 53%,
+      rgb(10 19 25 / 90%) 100%
+    );
+  --glass-deep-edge:
+    inset 0 1px 0 rgb(188 210 212 / 30%),
+    inset 0 -1px 0 rgb(10 19 25 / 55%),
+    inset 1px 0 0 rgb(188 210 212 / 13%),
+    inset -1px 0 0 rgb(10 19 25 / 30%),
+    inset 0 0 3rem -1.5rem rgb(188 210 212 / 36%);
+  --glass-deep-cast:
+    0 2rem 5rem -1.5rem rgb(4 8 11 / 46%),
+    0 0.4rem 1.2rem -0.7rem rgb(4 8 11 / 30%);
+  --glass-deep-filter: blur(34px) saturate(112%) brightness(1.03);
+  --glass-deep-drop: drop-shadow(0 2rem 3.4rem rgb(4 8 11 / 40%));
+
+  /* Opaque stand-ins used when backdrop-filter is unavailable. */
+  --glass-clear-solid: rgb(236 244 245 / 88%);
+  --glass-frosted-solid: rgb(240 246 247 / 94%);
+  --glass-deep-solid: rgb(17 33 40 / 92%);
+
+  --glass-background: var(--glass-frosted-fill);
+  --glass-shadow: var(--glass-frosted-edge), var(--glass-frosted-cast);
+
   --texture-caustic:
     radial-gradient(ellipse at 12% 8%, rgb(169 220 242 / 35%), transparent 34%),
     radial-gradient(ellipse at 88% 16%, rgb(77 170 216 / 16%), transparent 30%),
     radial-gradient(ellipse at 58% 76%, rgb(255 255 255 / 58%), transparent 38%);
-  --texture-grain: url("data:image/svg+xml,%3Csvg viewBox='0 0 180 180' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='.82' numOctaves='3' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)' opacity='.42'/%3E%3C/svg%3E");
+  /* Single-octave, fully desaturated noise written to the alpha channel.
+     Multi-octave coloured turbulence clumps into visible dirt, and the tile
+     is rendered 1:1 (never scaled up) so one noise texel stays one pixel. */
+  --texture-grain: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='128' height='128'%3E%3Cfilter id='n' color-interpolation-filters='sRGB'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='.9' numOctaves='1' stitchTiles='stitch'/%3E%3CfeColorMatrix type='matrix' values='0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 1 0 0 0 0'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E");
+  --texture-grain-size: 128px;
+  --texture-grain-opacity: 0.018;
+  --texture-speckle:
+    radial-gradient(circle at 14% 28%, rgb(255 255 255 / 30%) 0 1px, transparent 1.5px),
+    radial-gradient(circle at 72% 66%, rgb(77 170 216 / 11%) 0 1px, transparent 1.4px),
+    radial-gradient(circle at 42% 82%, rgb(255 255 255 / 22%) 0 0.8px, transparent 1.3px);
 
   --z-base: 0;
   --z-media: 10;
@@ -112,6 +250,31 @@ body {
   text-rendering: optimizeLegibility;
   -webkit-font-smoothing: antialiased;
 }
+
+html[data-loading-screen="active"],
+html[data-loading-screen="active"] body {
+  overflow: hidden;
+}
+
+/* One grain layer for the whole page, fixed to the viewport, rather than one
+   per section. A per-section tile re-anchors its phase at every section
+   boundary, and any blur sitting above it (a couple of sections had one, for
+   an unrelated ambient-light effect) smears that tile unevenly — both read
+   as visible texture rather than the barely-there film grain intended.
+   mix-blend-mode: multiply keeps it from lifting the palette's lightest
+   tones toward grey. */
+body::after {
+  position: fixed;
+  z-index: 150;
+  inset: 0;
+  background-image: var(--texture-grain);
+  background-size: var(--texture-grain-size) var(--texture-grain-size);
+  content: "";
+  mix-blend-mode: multiply;
+  opacity: var(--texture-grain-opacity);
+  pointer-events: none;
+}
+
 
 body,
 button,
@@ -189,17 +352,117 @@ video {
   color: inherit;
 }
 
+.glass-optical,
+.glass-frosted,
+.glass-deep,
 .glass-surface {
-  border: 1px solid var(--glass-border);
-  background: var(--glass-background);
-  box-shadow: var(--glass-shadow);
-  backdrop-filter: blur(var(--glass-blur)) saturate(112%);
-  -webkit-backdrop-filter: blur(var(--glass-blur)) saturate(112%);
+  position: relative;
+  isolation: isolate;
+}
+
+.glass-optical > *,
+.glass-frosted > *,
+.glass-deep > *,
+.glass-surface > * {
+  position: relative;
+  z-index: 1;
+}
+
+.glass-optical {
+  background: var(--glass-clear-fill);
+  box-shadow: var(--glass-clear-edge), var(--glass-clear-cast);
+  -webkit-backdrop-filter: var(--glass-clear-filter);
+  backdrop-filter: var(--glass-clear-filter);
+}
+
+.glass-frosted,
+.glass-surface {
+  background: var(--glass-frosted-fill);
+  box-shadow: var(--glass-frosted-edge), var(--glass-frosted-cast);
+  -webkit-backdrop-filter: var(--glass-frosted-filter);
+  backdrop-filter: var(--glass-frosted-filter);
+}
+
+.glass-deep {
+  background: var(--glass-deep-fill);
+  box-shadow: var(--glass-deep-edge), var(--glass-deep-cast);
+  -webkit-backdrop-filter: var(--glass-deep-filter);
+  backdrop-filter: var(--glass-deep-filter);
+}
+
+/* Without backdrop-filter the fills transmit nothing, so text loses its
+   ground. Fall back to an opaque plate rather than a washed-out panel. */
+@supports not ((backdrop-filter: blur(1px)) or (-webkit-backdrop-filter: blur(1px))) {
+  :root {
+    --glass-clear-fill: var(--glass-clear-solid);
+    --glass-frosted-fill: var(--glass-frosted-solid);
+    --glass-deep-fill: var(--glass-deep-solid);
+  }
+}
+
+/* Marks the handoff between two adjacent sections with the site's warm
+   accent — the only place sand appears directly on a section ground, always
+   as a 1px line fading out rather than a full border. Each section is
+   responsible for making its own ground read as one continuous arc; this is
+   just the seam between two such arcs. */
+[data-motion-section] + [data-motion-section] {
+  position: relative;
+}
+
+[data-motion-section] + [data-motion-section]::before {
+  position: absolute;
+  z-index: 2;
+  top: 0;
+  left: var(--gutter);
+  right: var(--gutter);
+  height: 1px;
+  background: linear-gradient(90deg, rgb(232 205 167 / 85%), transparent 42%);
+  content: "";
+  pointer-events: none;
 }
 
 .texture-caustic {
   background-image: var(--texture-caustic);
   background-repeat: no-repeat;
+}
+
+/* Procedural water-light atmosphere. Each layer is an oversized SVG rect
+   carrying one of the noise filters from AtmosphereDefs, drifting slowly
+   underneath the section's content — no photo assets, no per-frame
+   recompute (the feTurbulence noise is computed once; the motion is a
+   cheap CSS transform on top of it). Sized larger than its container so the
+   drift never exposes an edge. */
+.atmosphere {
+  position: absolute;
+  inset: -12%;
+  width: 124%;
+  height: 124%;
+  pointer-events: none;
+}
+
+.atmosphere--caustic { opacity: .34; animation: atmosphereDrift 38s ease-in-out infinite; mix-blend-mode: screen; }
+.atmosphere--caustic-fine { opacity: .16; animation: atmosphereDriftAlt 27s ease-in-out infinite; mix-blend-mode: screen; }
+.atmosphere--current { opacity: .42; animation: atmosphereDriftAlt 64s ease-in-out infinite; mix-blend-mode: soft-light; }
+.atmosphere--cloud { opacity: .4; animation: atmosphereDrift 46s ease-in-out infinite; mix-blend-mode: multiply; }
+.atmosphere--breathe { animation-name: atmosphereBreathe; animation-duration: 14s; animation-timing-function: ease-in-out; animation-iteration-count: infinite; }
+
+@keyframes atmosphereDrift {
+  0%, 100% { transform: translate3d(-2%, -1%, 0) scale(1.12); }
+  50% { transform: translate3d(2%, 1.5%, 0) scale(1.2); }
+}
+
+@keyframes atmosphereDriftAlt {
+  0%, 100% { transform: translate3d(1%, 2%, 0) scale(1.15) rotate(.4deg); }
+  50% { transform: translate3d(-1.5%, -2%, 0) scale(1.24) rotate(-.4deg); }
+}
+
+@keyframes atmosphereBreathe {
+  0%, 100% { opacity: .55; }
+  50% { opacity: .85; }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .atmosphere { animation: none; transform: none; }
 }
 
 .texture-grain {
@@ -212,13 +475,21 @@ video {
   z-index: 0;
   inset: 0;
   background-image: var(--texture-grain);
-  background-size: 11rem 11rem;
+  background-size: var(--texture-grain-size) var(--texture-grain-size);
   content: "";
-  opacity: 0.018;
+  opacity: var(--texture-grain-opacity);
   pointer-events: none;
 }
 
+/* Every eyebrow across the site carries the same sand tick, so the label
+   pattern reads as one system rather than stray uppercase text repeated per
+   component. Hero and the loading screen keep their own local eyebrow —
+   they sit on dark video/loader grounds where a currentColor tick already
+   does the same job. */
 .eyebrow {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
   margin: 0 0 var(--space-5);
   color: var(--color-ocean);
   font-family: var(--font-mono);
@@ -229,14 +500,26 @@ video {
   text-transform: uppercase;
 }
 
+.eyebrow::before {
+  flex: none;
+  display: block;
+  width: 1.6rem;
+  height: 1px;
+  background: linear-gradient(90deg, var(--color-sand), transparent);
+  content: "";
+}
+
+/* Step 3 of the locked type scale (56–96px range). margin-left cancels the
+   cap's optical side-bearing at the shell edge — without it, a headline this
+   size visibly indents from the rule above it. */
 .section-title {
   max-width: 15ch;
-  margin: 0;
+  margin: 0 0 0 -0.055em;
   font-family: var(--font-display);
   font-size: var(--text-section);
-  font-weight: 760;
-  letter-spacing: -0.045em;
-  line-height: 0.98;
+  font-weight: var(--d3-weight);
+  letter-spacing: var(--d3-track);
+  line-height: var(--d3-lead);
   text-wrap: balance;
 }
 
@@ -360,14 +643,40 @@ video {
   }
 }
 
+/* Large displays previously kept the 76rem shell and the 5.4rem headline, so a
+   27" panel showed the same block as a 23" one with far more dead margin. Each
+   step grows the shell and the type together while holding the side gutters at
+   roughly 8% of the viewport, which is the ratio the base scale already had. */
+@media (min-width: 100rem) {
+  :root {
+    --shell: min(87vw, 84rem);
+    --text-hero: clamp(5.4rem, 3.9vw, 6.2rem);
+    --text-section: clamp(3.7rem, 2.6vw, 4.2rem);
+    --text-lead: clamp(1.18rem, 0.85vw, 1.3rem);
+  }
+}
+
+@media (min-width: 120rem) {
+  :root {
+    --shell: min(86vw, 100rem);
+    --text-hero: clamp(6.2rem, 3.8vw, 7.4rem);
+    --text-section: clamp(4.2rem, 2.5vw, 5rem);
+    --text-project: clamp(2rem, 1.3vw, 2.5rem);
+    --text-service: clamp(2.2rem, 1.4vw, 2.7rem);
+    --text-lead: clamp(1.3rem, 0.8vw, 1.45rem);
+    --text-body: clamp(1.05rem, 0.6vw, 1.16rem);
+  }
+}
+
 @media (min-width: 160rem) {
   :root {
-    --text-hero: clamp(7.4rem, 4.2vw, 9rem);
-    --text-section: clamp(4.9rem, 2.7vw, 6rem);
-    --text-project: clamp(2.4rem, 1.35vw, 3rem);
-    --text-service: clamp(2.7rem, 1.45vw, 3.25rem);
-    --text-lead: clamp(1.3rem, 0.78vw, 1.5rem);
-    --text-body: clamp(1.05rem, 0.65vw, 1.2rem);
+    --shell: min(86vw, 132rem);
+    --text-hero: clamp(7.4rem, 3.6vw, 8.8rem);
+    --text-section: clamp(5rem, 2.4vw, 5.8rem);
+    --text-project: clamp(2.5rem, 1.25vw, 3rem);
+    --text-service: clamp(2.7rem, 1.35vw, 3.2rem);
+    --text-lead: clamp(1.45rem, 0.75vw, 1.6rem);
+    --text-body: clamp(1.16rem, 0.6vw, 1.26rem);
     --section-space: clamp(7.5rem, 4.5vw, 9rem);
     --grid-gap: clamp(1.5rem, 1.1vw, 2rem);
   }
@@ -380,7 +689,48 @@ video {
   }
 }
 
+/* On dense displays one CSS-pixel texel spans several device pixels and the
+   grain coarsens. Downsample the tile so it stays below the noticing
+   threshold, and pay back the lost contrast with a fraction of alpha. */
+@media (min-resolution: 2dppx) {
+  :root {
+    --texture-grain-size: 88px;
+    --texture-grain-opacity: 0.024;
+  }
+}
+
 @media (prefers-reduced-motion: reduce) {
+  [data-motion-section] [data-hero-eyebrow],
+  [data-motion-section] [data-hero-title],
+  [data-motion-section] [data-hero-lead],
+  [data-motion-section] [data-hero-actions],
+  [data-motion-section] [data-hero-media],
+  [data-motion-section] [data-hero-scroll-cue],
+  [data-motion-section] [data-work-eyebrow],
+  [data-motion-section] [data-work-title],
+  [data-motion-section] [data-work-intro],
+  [data-motion-section] [data-project-card],
+  [data-motion-section] [data-project-media],
+  [data-motion-section] [data-project-body],
+  [data-motion-section] [data-services-eyebrow],
+  [data-motion-section] [data-services-title],
+  [data-motion-section] [data-service-row],
+  [data-motion-section] [data-notez-backing],
+  [data-motion-section] [data-notez-image],
+  [data-motion-section] [data-notez-frame],
+  [data-motion-section] [data-notez-eyebrow],
+  [data-motion-section] [data-notez-status],
+  [data-motion-section] [data-notez-title],
+  [data-motion-section] [data-notez-body],
+  [data-motion-section] [data-notez-action],
+  [data-motion-section] [data-about-media],
+  [data-motion-section] [data-about-eyebrow],
+  [data-motion-section] [data-about-title],
+  [data-motion-section] [data-about-body],
+  [data-motion-section] [data-about-action] {
+    visibility: visible !important;
+  }
+
   [data-magnetic],
   [data-magnetic-content] {
     transform: none !important;

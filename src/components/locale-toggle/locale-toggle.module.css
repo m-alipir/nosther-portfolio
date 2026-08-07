@@ -17,8 +17,9 @@
   place-items: center;
   padding: 0.25rem 0.45rem;
   border: 0;
+  border-radius: calc(var(--radius-sm) - 0.15rem);
   background: transparent;
-  color: var(--color-muted);
+  color: rgb(16 44 59 / 40%);
   cursor: pointer;
   font-family: var(--font-mono);
   font-size: 0.68rem;
@@ -26,7 +27,14 @@
   letter-spacing: 0.08em;
 }
 
+/* The header sits on the frostiest surface in the system — a solid
+   near-black fill here was the one hard-edged rectangle on it. Selection is
+   expressed as a thicker slice of the same glass instead, the same move
+   the active services row makes: edge light, not a fill swap. */
 .option[data-active="true"] {
-  background: var(--color-ocean-ink);
-  color: var(--color-white);
+  background: rgb(255 255 255 / 55%);
+  box-shadow:
+    inset 0 1px 0 rgb(255 255 255 / 95%),
+    inset 0 -1px 0 rgb(16 44 59 / 10%);
+  color: var(--color-ocean-ink);
 }

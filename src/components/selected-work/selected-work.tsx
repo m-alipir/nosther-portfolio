@@ -1,6 +1,7 @@
 "use client";
 
-import { useLayoutEffect, useRef } from "react";
+import type React from "react";
+import { useCallback, useLayoutEffect, useRef, useState } from "react";
 
 import { ProjectCard } from "@/components/project-card/project-card";
 import type { Dictionary } from "@/content/dictionaries";
@@ -8,6 +9,7 @@ import { projects } from "@/content/projects";
 import type { Locale } from "@/content/types";
 import { useProjectCardTilt } from "@/hooks/motion/use-project-card-tilt";
 import { ensureGsapRegistered } from "@/lib/motion/gsap-client";
+import { lineWidthStagger } from "@/lib/motion/line-stagger";
 import styles from "./selected-work.module.css";
 
 interface SelectedWorkProps {
@@ -46,7 +48,7 @@ function getCardKind(card: HTMLElement): WorkCardKind {
 }
 
 const desktopProfile: WorkMotionProfile = {
-  cardGroups: [[0], [1], [2], [3], [4, 5]],
+  cardGroups: [[0, 1, 2], [3], [4, 5]],
   cardTimings: {
     flagship: { end: "center 56%", scrub: 0.86, start: "top 88%" },
     major: { end: "center 58%", scrub: 0.76, start: "top 89%" },
@@ -84,7 +86,7 @@ const tabletProfile: WorkMotionProfile = {
 
 const mobileProfile: WorkMotionProfile = {
   ...tabletProfile,
-  cardGroups: [[0], [1], [2], [3], [4], [5]],
+  cardGroups: [[0, 1, 2], [3], [4], [5]],
   cardTimings: {
     flagship: { end: "center 64%", scrub: 0.64, start: "top 89%" },
     major: { end: "center 65%", scrub: 0.6, start: "top 90%" },
@@ -104,6 +106,9 @@ const mobileProfile: WorkMotionProfile = {
 
 export function SelectedWork({ dictionary, locale }: SelectedWorkProps) {
   const rootRef = useRef<HTMLElement>(null);
+  const trackRef = useRef<HTMLDivElement>(null);
+  const dragStart = useRef<{ x: number; y: number } | null>(null);
+  const [activeSlide, setActiveSlide] = useState(0);
   const featuredProjects = projects
     .filter((project) => project.featuredRank !== null)
     .sort((a, b) => (a.featuredRank ?? 0) - (b.featuredRank ?? 0));
@@ -111,6 +116,58 @@ export function SelectedWork({ dictionary, locale }: SelectedWorkProps) {
     (project) => project.editorialClass === "supporting",
   );
   useProjectCardTilt(rootRef);
+
+  const slideCount = featuredProjects.length;
+
+  // The deck wraps, so stepping is modular rather than clamped.
+  const step = useCallback(
+    (delta: number) =>
+      setActiveSlide(
+        (previous) => (previous + delta + slideCount) % slideCount,
+      ),
+    [slideCount],
+  );
+
+  // Horizontal drag on the deck. The threshold keeps a vertical page scroll
+  // that happens to wobble sideways from flipping the card.
+  const handlePointerDown = useCallback((event: React.PointerEvent) => {
+    if (event.pointerType === "mouse" && event.button !== 0) {
+      return;
+    }
+    dragStart.current = { x: event.clientX, y: event.clientY };
+  }, []);
+
+  const handlePointerUp = useCallback(
+    (event: React.PointerEvent) => {
+      const start = dragStart.current;
+      dragStart.current = null;
+      if (!start) {
+        return;
+      }
+
+      const dx = event.clientX - start.x;
+      const dy = event.clientY - start.y;
+      if (Math.abs(dx) < 56 || Math.abs(dx) < Math.abs(dy) * 1.4) {
+        return;
+      }
+
+      step(dx < 0 ? 1 : -1);
+    },
+    [step],
+  );
+
+  const handleTrackKeyDown = useCallback(
+    (event: React.KeyboardEvent) => {
+      if (event.key === "ArrowRight") {
+        event.preventDefault();
+        step(1);
+      } else if (event.key === "ArrowLeft") {
+        event.preventDefault();
+        step(-1);
+      }
+    },
+    [step],
+  );
 
   useLayoutEffect(() => {
     const root = rootRef.current;
@@ -152,8 +209,12 @@ export function SelectedWork({ dictionary, locale }: SelectedWorkProps) {
             return;
           }
 
-          const heading = root.querySelector<HTMLElement>("[data-work-heading]");
-          const eyebrow = root.querySelector<HTMLElement>("[data-work-eyebrow]");
+          const heading = root.querySelector<HTMLElement>(
+            "[data-work-heading]",
+          );
+          const eyebrow = root.querySelector<HTMLElement>(
+            "[data-work-eyebrow]",
+          );
           const title = root.querySelector<HTMLElement>("[data-work-title]");
           const intro = root.querySelector<HTMLElement>("[data-work-intro]");
           const cards = Array.from(
@@ -181,15 +242,21 @@ export function SelectedWork({ dictionary, locale }: SelectedWorkProps) {
                   mask: "lines",
                   aria: "auto",
                   autoSplit: true,
-                  onSplit: (split) =>
-                    gsap
+                  // A staggered fromTo only renders the first target's start
+                  // state immediately, so the remaining lines stayed visible
+                  // until the timeline ran. Set them explicitly instead.
+                  onSplit: (split) => {
+                    gsap.set(split.lines, {
+                      autoAlpha: 0,
+                      yPercent: profile.titleY,
+                    });
+                    return gsap
                       .timeline({
-                        defaults: { ease: "power2.out" },
+                        defaults: { ease: "power2.out", immediateRender: true },
                         scrollTrigger: {
                           trigger: heading,
                           start: profile.headingStart,
-                          end: profile.headingEnd,
-                          scrub: profile.headingScrub,
+                          toggleActions: "play none none reverse",
                           invalidateOnRefresh: true,
                         },
                       })
@@ -199,13 +266,14 @@ export function SelectedWork({ dictionary, locale }: SelectedWorkProps) {
                         { autoAlpha: 1, duration: 0.28, y: 0 },
                         0,
                       )
-                      .fromTo(
+                      .to(
                         split.lines,
-                        { autoAlpha: 0, yPercent: profile.titleY },
                         {
                           autoAlpha: 1,
                           duration: 0.62,
-                          stagger: profile.isMobile ? 0.045 : 0.065,
+                          stagger: lineWidthStagger(
+                            profile.isMobile ? 0.045 : 0.065,
+                          ),
                           yPercent: 0,
                         },
                         0.12,
@@ -215,7 +283,8 @@ export function SelectedWork({ dictionary, locale }: SelectedWorkProps) {
                         { autoAlpha: 0, y: profile.introY },
                         { autoAlpha: 1, duration: 0.44, y: 0 },
                         0.5,
-                      ),
+                      );
+                  },
                 });
 
                 profile.cardGroups.forEach((group) => {
@@ -243,12 +312,11 @@ export function SelectedWork({ dictionary, locale }: SelectedWorkProps) {
                   };
 
                   const timeline = gsap.timeline({
-                    defaults: { ease: "power2.out" },
+                    defaults: { ease: "power2.out", immediateRender: true },
                     scrollTrigger: {
                       trigger: triggerCard,
                       start: timing.start,
-                      end: timing.end,
-                      scrub: timing.scrub,
+                      toggleActions: "play none none reverse",
                       invalidateOnRefresh: true,
                       onRefresh: (self) => syncRevealState(self.progress),
                       onUpdate: (self) => syncRevealState(self.progress),
@@ -282,7 +350,9 @@ export function SelectedWork({ dictionary, locale }: SelectedWorkProps) {
                         "[data-project-disclosure]",
                       ),
                       card.querySelector<HTMLElement>("[data-project-action]"),
-                    ].filter((target): target is HTMLElement => Boolean(target));
+                    ].filter((target): target is HTMLElement =>
+                      Boolean(target),
+                    );
                     const isFeatured = card.dataset.projectRank === "1";
                     const offset = groupIndex * (profile.isMobile ? 0 : 0.07);
 
@@ -331,12 +401,12 @@ export function SelectedWork({ dictionary, locale }: SelectedWorkProps) {
                         );
                       }
 
-                      timeline.fromTo(
-                          secondaryContent,
-                          { opacity: 0 },
-                          { duration: 0.32, opacity: 1, stagger: 0.035 },
-                          offset + 0.48,
-                        );
+                      gsap.set(secondaryContent, { opacity: 0 });
+                      timeline.to(
+                        secondaryContent,
+                        { duration: 0.32, opacity: 1, stagger: 0.035 },
+                        offset + 0.48,
+                      );
                       return;
                     }
 
@@ -391,12 +461,12 @@ export function SelectedWork({ dictionary, locale }: SelectedWorkProps) {
                       );
                     }
 
-                    timeline.fromTo(
-                        secondaryContent,
-                        { opacity: 0 },
-                        { duration: 0.34, opacity: 1, stagger: 0.04 },
-                        offset + (isFeatured ? 0.54 : 0.48),
-                      );
+                    gsap.set(secondaryContent, { opacity: 0 });
+                    timeline.to(
+                      secondaryContent,
+                      { duration: 0.34, opacity: 1, stagger: 0.04 },
+                      offset + (isFeatured ? 0.54 : 0.48),
+                    );
                   });
                 });
 
@@ -451,6 +521,10 @@ export function SelectedWork({ dictionary, locale }: SelectedWorkProps) {
       aria-labelledby="work-title"
       data-motion-section="work"
     >
+      <svg className="atmosphere atmosphere--current" aria-hidden="true" focusable="false" preserveAspectRatio="none">
+        <rect width="100%" height="100%" filter="url(#fx-current)" />
+      </svg>
+
       <div className="container">
         <div className={styles.heading} data-work-heading>
           <div>
@@ -466,20 +540,70 @@ export function SelectedWork({ dictionary, locale }: SelectedWorkProps) {
           </p>
         </div>
 
-        <div className={styles.featuredFlow}>
-          {featuredProjects.map((project) => {
-            const index = projects.indexOf(project);
-            return (
-              <ProjectCard
-                key={project.id}
-                project={project}
-                locale={locale}
-                dictionary={dictionary}
-                index={index}
-                projectNumber={`0${project.featuredRank}`}
-              />
-            );
-          })}
+        <div className={styles.featured}>
+          {/* data-lenis-prevent keeps the smooth-scroll wheel handler off this
+              horizontal track so trackpad swipes reach it natively. */}
+          <div
+            ref={trackRef}
+            className={styles.featuredTrack}
+            role="group"
+            aria-roledescription="carousel"
+            aria-label={dictionary.work.carouselLabel}
+            tabIndex={0}
+            data-lenis-prevent
+            onKeyDown={handleTrackKeyDown}
+            onPointerDown={handlePointerDown}
+            onPointerUp={handlePointerUp}
+            onPointerCancel={() => {
+              dragStart.current = null;
+            }}
+          >
+            {featuredProjects.map((project, slideIndex) => {
+              const index = projects.indexOf(project);
+              const depth =
+                (slideIndex - activeSlide + slideCount) % slideCount;
+              return (
+                <div
+                  key={project.id}
+                  className={styles.slide}
+                  data-depth={depth}
+                  aria-hidden={depth === 0 ? undefined : true}
+                  inert={depth === 0 ? undefined : true}
+                >
+                  <ProjectCard
+                    project={project}
+                    locale={locale}
+                    dictionary={dictionary}
+                    index={index}
+                    projectNumber={`0${project.featuredRank}`}
+                  />
+                </div>
+              );
+            })}
+          </div>
+
+          <button
+            type="button"
+            className={styles.navPrev}
+            onClick={() => step(-1)}
+            aria-label={dictionary.work.carouselPrev}
+          >
+            <span aria-hidden="true">←</span>
+          </button>
+          <button
+            type="button"
+            className={styles.navNext}
+            onClick={() => step(1)}
+            aria-label={dictionary.work.carouselNext}
+          >
+            <span aria-hidden="true">→</span>
+          </button>
+
+          <p className={styles.featuredStatus} aria-live="polite">
+            {String(activeSlide + 1).padStart(2, "0")}
+            <span aria-hidden="true"> / </span>
+            {String(featuredProjects.length).padStart(2, "0")}
+          </p>
         </div>
 
         <div
