@@ -148,3 +148,24 @@ The five content/media decisions are closed in D-011 through D-015. Palette cali
 - Decision: `public/media/portrait/Logo-V2.png` is the future primary N0STHER identity portrait / brand portrait. It is a blue illustrated brand mark and must not be described as a photograph of Ali. `Logo.png` remains secondary and is not the main About visual.
 - Audit: valid PNG, 1024×1024, square, RGBA container with fully opaque sampled alpha, 1,019,018 bytes (0.972 MiB), SHA-256 `EC7FB3E1C0347EDE4A2FB81CE340D0713F3EE72CBA26E4CBE3705604F3A67BF1`.
 - Delivery: preserve the source file; Phase 5 should use responsive WebP/AVIF derivatives or the existing optimized image pipeline. Phase 4 tracks and documents the asset but does not implement About.
+
+## D-022 — Post-Phase-4 hero creative reset
+
+- Date: 2026-07-19
+- Status: corrected 2026-07-20; uncommitted review candidate; user approval required
+- Decision: preserve Phase 4 commit `5adec8e` and its documentation, then temporarily supersede only the hero with **The Showreel Surface** on the existing `v2/tidal-glass` branch. Do not rebase, reset, squash, amend, replace commits, or otherwise rewrite history.
+- Corrected composition: use one dominant 75–88vw editorial surface with `/media/automotive/automotive-horizontal-preview.mp4` as the sole hero media source. The earlier BeamNG/Assetto/BeamNG Cargo montage and all internal cuts are rejected. Type, one partial frosted veil, CTAs, minimal editing/VFX metadata, and the third-party-footage disclosure share the single surface.
+- Copy: use localized `STORIES SHAPED IN MOTION` / `HİKÂYELER HAREKETLE ŞEKİLLENİR` headings and concise, truthful video-editing support copy for creators and digital brands.
+- Runtime: retain the existing sole-preview playback policy, mobile poster-only rule, visibility/intersection pausing, error/poster fallbacks, locale replay suppression, reduced-motion, fine-hover, touch, save-data, and codec gates. Add no dependency, WebGL/canvas layer, pinned scroll, or new GSAP choreography.
+- Gate: all reset changes and ignored screenshots stay uncommitted until screenshot review. Later-phase work remains paused; `next-env.d.ts` is explicitly outside reset scope.
+
+## D-023 — Tidal Editorial Cinema atmosphere refinement
+
+- Date: 2026-07-19
+- Status: uncommitted review candidate; user approval required
+- Decision: preserve Phase 4 commit `5adec8e` and the uncommitted Showreel Surface reset, then refine the whole page on the existing branch without history rewrite. Documents 28–31 remain the current iteration record; documents 24–27 and every earlier decision remain intact.
+- Materials: define three distinct variants—clear optical, frosted, and deep-water glass—with selective localized use. Static grain, sparse speckle, refraction bands, ocean shadows, and a restrained Warm Sand counter-accent may connect sections; literal ocean imagery, universal glass cards, animated full-page blur, WebGL/canvas, and dependency additions remain rejected.
+- Progression: hero horizon light → shallow-water Selected Work → shoreline Services → clear-daylight NoteZ → light-to-deep About → deep-to-coastal Contact/Footer. Implement `Logo-V2.png` in About as an identity mark, never as a photograph.
+- Hero correction: keep one dominant showreel field and sole eligible horizontal automotive video; remove every internal cut, tutorial/gameplay source, timecode, large index, playhead, and third metadata item. Mobile keeps the same source as a poster-only crop with no supporting media.
+- Selected Work/runtime: widen and strengthen existing media without changing typed project data, order, destinations, contribution claims, external-link semantics, or the singular preview coordinator. Preserve routing, locale, mobile menu, accessibility, SEO, security, and all fallback/playback policies.
+- Gate: keep every change uncommitted and undeployed until screenshot review. Do not touch `next-env.d.ts`; run the production build only in an isolated mirror.

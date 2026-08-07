@@ -1,6 +1,6 @@
-# V2 QA checklist
+# QA checklist
 
-Use this checklist at each relevant phase and complete it in full for Phase 7. Record browser/device, locale, result, and evidence rather than checking items from memory.
+Run this before any release-worthy change ships. Record browser/device, locale, result, and evidence rather than checking items from memory.
 
 ## Build and repository
 
@@ -82,15 +82,3 @@ Use this checklist at each relevant phase and complete it in full for Phase 7. R
 ## Baseline screenshot matrix
 
 Capture stable viewport images after fonts/media and relevant intro state settle. Include EN/TR desktop and mobile, all primary desktop targets, tablet, and reduced-motion evidence. If the tool cannot emulate reduced motion or stitch GSAP pages reliably, use exact viewport captures and record the limitation rather than accepting misleading output.
-
-## Phase 2 checkpoint
-
-Phase 2 evidence and exact results are recorded in [19-phase-2-visual-verification.md](19-phase-2-visual-verification.md). Exact viewport captures are ignored under `artifacts/v2-phase-2/`. The selected browser exposed viewport control but no reduced-motion, coarse-pointer, or touch emulation; Phase 2 therefore records interactive fine-pointer checks plus static verification of the existing reduced-motion/touch safeguards rather than claiming unavailable emulation.
-
-## Phase 3 checkpoint
-
-Phase 3 source provenance, motion deferrals, and exact verification results are recorded in [21-hero-media-source-map.md](21-hero-media-source-map.md), [22-phase-3-visual-verification.md](22-phase-3-visual-verification.md), and [23-phase-3-motion-deferrals.md](23-phase-3-motion-deferrals.md). Ignored captures under `artifacts/v2-phase-3/` cover the required EN/TR desktop, tablet, mobile, poster-only, and controlled media-error states. The browser still exposes no reduced-motion or coarse-pointer emulation; Phase 3 therefore verifies the complete poster-first source path, an explicit narrow-mobile poster policy, and the existing reduced-motion/fine-hover policy rather than claiming unavailable runtime emulation.
-
-## Phase 4 checkpoint
-
-Phase 4 architecture, source mapping, exact viewport evidence, and motion deferrals are recorded in [24-phase-4-summary.md](24-phase-4-summary.md), [25-selected-work-source-map.md](25-selected-work-source-map.md), [26-phase-4-visual-verification.md](26-phase-4-visual-verification.md), and [27-phase-4-motion-deferrals.md](27-phase-4-motion-deferrals.md). Ignored captures under `artifacts/v2-phase-4/` cover EN 1366/1440/1920, TR 1366/1440, tablet 1024/768, mobile 390/320, keyboard focus, locale/hash preservation, long Turkish copy, and both automotive disclosures. Sequential focus proved one active preview and blur reset it to zero; browser console and production stderr were clean. Touch/coarse-pointer, reduced-motion, save-data, and request interception remain unavailable in this browser, so their preserved policy and fallback code paths are recorded without claiming runtime emulation.

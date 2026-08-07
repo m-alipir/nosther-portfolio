@@ -1,62 +1,65 @@
 # Tidal Glass Editorial
 
-Status: V2 visual source of truth. The direction is approved, reconciled against the preserved 2560×6753 Lovable full-page reference, and calibrated as the Phase 2 global foundation. The screenshot is compositional evidence, not a source of final content or code.
+Status: current visual source of truth for the live site. This document describes what is actually implemented today, not a historical build log — process journals and phase-by-phase decision records live in `docs/v2/03-decision-log.md` for anyone who needs the "why."
 
 ## Identity
 
 Tidal Glass Editorial is a calm, premium, cinematic portfolio system for ALI, creator behind N0STHER. It is light-first and editorial rather than software-like: foam-white space, ice-blue atmosphere, ocean-ink typography, large moving-image compositions, restrained production metadata, and selective frosted surfaces. Gaming and automotive work appear as evidence within a broader video-editing practice for creators and digital brands.
 
-## Color tokens
+## Color tokens ("Deep Field")
 
-These tokens express hierarchy rather than decoration. Values are the controlled V2 starting palette and must be visually verified with real media before Phase 2 approval.
+One body of water at seven depths — every hue sits between roughly 185° and 205° so no section can drift out of the family. Warm Sand is the sole warm value and stays at hairline scale: an underline, a tag, a live indicator, never a fill larger than a button. Tokens live in `src/app/globals.css` as `--color-*`.
 
-| Token | Starting value | Role |
+| Token | Value | Role |
 | --- | --- | --- |
-| Foam White | `#F7FBFF` | Primary light canvas |
-| Ice Blue | `#E7F5FC` | Alternating light section atmosphere |
-| Soft Aqua | `#A9DCF2` | Quiet ambient light and glass edge accent |
-| Tidal Blue | `#4DAAD8` | Rules and restrained interactive accents |
-| Ocean Blue | `#1677A8` | Primary interactive color and metadata accent |
-| Deep Water | `#064564` | About/depth and footer contrast fields |
-| Ocean Ink | `#102C3B` | Primary light-surface typography |
-| Muted Ink | `#3D5F70` | Secondary copy and meaningful metadata |
-| Warm Sand | `#E8CDA7` | Optional, sparingly used warm counter-accent |
-| White Foam | `#FFFFFF` | Type on deep fields and glass highlights |
+| Foam | `#F1F5F6` | Primary light canvas |
+| Ice | `#DCE6E9` | Alternating light section atmosphere |
+| Aqua | `#BCD2D4` | Quiet ambient light and glass edge accent |
+| Tidal | `#8FB3B8` | Rules and restrained interactive accents |
+| Ocean | `#4E7C8A` | Primary interactive color and metadata accent |
+| Deep | `#1D3946` | About/depth contrast fields |
+| Ocean Ink | `#0A1319` | Deepest fields and primary light-surface typography |
+| Sand | `#C9B79C` | Hairline-only warm counter-accent |
 
-Purple-heavy gradients, neon cyan, and saturated synthetic “AI” color transitions are outside the system.
+Purple-heavy gradients, neon cyan, and saturated synthetic "AI" color transitions are outside the system.
 
 ## Typography direction
 
-- Display typography is editorial, high-contrast in scale, confident, and cinematic. It may be a refined grotesk or an editorial display face, but it must remain legible in Turkish and English.
-- Body typography is quiet, contemporary, and readable at normal monitor distances.
-- Small production metadata uses a monospaced face for format, role, year, timecode, and sequence cues.
-- Hierarchy comes from scale, weight, line breaks, and negative space—not from many type styles.
-- Turkish characters must render correctly, and line breaks must be designed separately for TR and EN.
+- Display: Archivo Variable, self-hosted. A locked type scale (`--d1`–`--d4` in `globals.css`) ties weight (780–840), tracking (-.028em to -.052em), and line-height to rendered size — heavier and tighter as headlines get larger — so no component hand-picks its own weight/tracking pair.
+- Body: Instrument Sans Variable.
+- Metadata: IBM Plex Mono, for format/role/year/tag/timecode-style labels.
+- Hierarchy comes from scale, weight, line breaks, and negative space — not from many type styles.
+- Turkish characters must render correctly, and line breaks are designed separately for TR and EN (see the Selected Work headline for an example of a manually forced break where the column width doesn't leave room for the natural wrap the copy needs).
 
 ## Glass usage
 
-Glass is a selective material, not a universal card treatment. Use it for the hero sequence stage, occasional metadata rails, or a contact detail where translucency clarifies layering. A glass surface needs a reason: it must connect media, depth, and typography. Avoid grids of glass cards, floating dashboard panels, and glass on every section.
+Glass is a selective material, not a universal card treatment. Three weights, one build, defined as token quartets (`fill`/`edge`/`cast`/`filter`, plus `drop` for clip-path surfaces) in `globals.css`:
 
-Phase 2 defines a milky white surface at approximately 72% opacity, a thin white/ice edge, an inner top highlight, a low ocean-colored shadow, and restrained `1.1rem` backdrop blur. The current floating header validates the material; later phases may reuse the shared primitive selectively.
+- **Clear** — 3px blur. Nearly invisible; only its lit edge says it's there. Nav bars, captions, thumbnails.
+- **Frosted** — 16px blur, saturation pushed so color behind it intensifies rather than greys out. The workhorse weight, used on most panels (header, hero copy plate, service-row hover, project-card body).
+- **Deep** — 34px blur, inner bloom. Only for panels that must obscure — dark grounds, long text, overlays (About's copy plate and media frame, Contact's card, Selected Work's supporting-heading panel).
 
-## Texture rules
+Avoid grids of glass cards, floating dashboard panels, and glass on every section — each surface needs a reason connecting media, depth, and typography.
 
-- Film grain is fine, low-contrast, and global or section-scoped; it must not dirty text or reduce media clarity.
-- Water-caustic light is abstract, soft, and very subtle. It is light behavior, not a literal ocean illustration.
+## Texture and photography rules
+
+- Film grain is fine, low-contrast, page-level (one layer, not per-section) and must not dirty text or reduce media clarity.
+- Water-caustic/current/cloud light is procedural SVG (`feTurbulence` chains defined in `src/components/atmosphere/atmosphere-defs.tsx`, applied via the `.atmosphere` utility classes) — abstract, soft, section-scoped, never a literal ocean illustration on its own.
+- Real coastal photography is now used as a subordinate background layer in Selected Work, Services, and About (`public/media/backgrounds/`), always sitting under the section's own color gradient — either alpha-blended or `multiply`-blended — so it reads as depth/texture within the palette, never as a raw, saturated stock photo. Keep it that way: a new background photo goes in tinted, not bare.
+- No fish, coral, shells, bubbles, water-droplet props, or decorative wave illustrations. Photography is real aerial/coastal imagery, not illustrated ocean kitsch.
 - Texture must degrade to a stable still state under reduced motion.
-- No fish, coral, shells, bubbles, water droplets, or literal ocean props.
-
-Phase 2 uses one lightweight inline SVG noise tile and static layered radial gradients. Neither texture animates; both remain stable under reduced motion and must stay low enough in contrast that text and media are unaffected.
 
 ## Section atmosphere
 
-The page begins in foam white and ice blue, with generous editorial breathing room. Selected Work uses large media and asymmetrical rhythm. Capabilities become a precise list rather than a grid of product cards. The page then transitions gradually into a deep-ocean About field before returning to a clear, spacious contact close. Section boundaries may use tonal shifts, fine rules, or controlled overlap; they must not feel like disconnected templates.
+One continuous progression, hero to footer, hero excluded from the rule below since it's a full-bleed cinematic object rather than a color field:
 
-The reference confirms an intentionally long page with large intervals between editorial moments, but implementation must reinterpret that rhythm for normal 1366×768, 1440×900, and 1920×1080 viewports rather than reproducing the screenshot as one tall artboard. Its strongest transferable patterns are the quiet top information rail, broad negative space, large work imagery with restrained metadata, ledger-like capabilities, and a single deep-blue chapter containing About and secondary Experiments.
+Selected Work (ice → aqua → ocean, "shallow-water depth") → Services (foam-dominant, "shoreline neutrality") → About (aqua → ocean → deep → ocean-ink, "light-to-deep chapter") → Contact (ocean-ink → ocean → aqua → ice → foam, "deep-to-ice release") → Footer (foam → ice, light coastal close).
+
+Section boundaries carry a thin sand-tinted hairline (`[data-motion-section] + [data-motion-section]::before` in `globals.css`) rather than a hard cut. Content width for every section below the hero is intentionally narrower than the hero's own full-bleed width (`min(84vw, 70rem)` vs. the hero's `min(88vw, 76rem)`/wider ultra-wide steps) — editorial reading content wants more edge margin than a cinematic media object does.
 
 ## Media hierarchy
 
-Real moving-image work is the primary visual proof. A small number of large frames outrank decorative surfaces. Every flagship item needs project-specific evidence, a strong poster, a purposeful preview, and a localized description. Experiments are secondary to client/portfolio editing work.
+Real moving-image work is the primary visual proof. A small number of large frames outrank decorative surfaces. Every flagship item needs project-specific evidence, a strong poster, a purposeful preview, and a localized description. Experiments (NoteZ) have been removed from the site entirely — video editing is the sole proof surface now, nothing subordinate to distinguish it from.
 
 ## Motion principles
 
@@ -67,10 +70,11 @@ Real moving-image work is the primary visual proof. A small number of large fram
 - Mobile motion is simpler and shorter. Touch never depends on hover.
 - Reduced motion produces a complete, legible, poster-led experience with no concealed content.
 - Preserve the one-preview-at-a-time rule and avoid simultaneous autoplay competition.
+- Cursor-tracked 3D tilt (hero copy plate, project-card media) is restrained — a few degrees of rotation, eased slower than the cursor — and runs only for fine pointers with hover and no reduced-motion preference.
 
 ## Desktop viewport targets
 
-Primary visual QA targets are 1366x768, 1440x900, and 1920x1080. The hero must fit intentionally within roughly 90–100svh on these normal desktop proportions. A tall artboard is not an acceptable substitute for viewport design.
+Primary visual QA targets are 1366×768, 1440×900, and 1920×1080. The hero fits intentionally within roughly one viewport on these normal desktop proportions. A tall artboard is not an acceptable substitute for viewport design. Below the hero, sections are allowed to run taller than one viewport — Selected Work's carousel + supporting grid, About's copy, and Contact all need more room than 100vh generally offers, and forcing them to fit would just cram content.
 
 ## Accessibility constraints
 
@@ -81,34 +85,34 @@ Primary visual QA targets are 1366x768, 1440x900, and 1920x1080. The hero must f
 - Do not encode state using motion, translucency, or color alone.
 - Honor reduced motion, coarse pointers, touch, save-data, and browser visibility.
 
-## Hero: Cinematic Sequence Stage
+## Hero: The Showreel Surface
 
-Phase 3 implements the static Cinematic Sequence Stage as one editorial object: a dominant BeamNG performance-comparison frame, an attached portrait cutaway from the Assetto setup guide, and a BeamNG cargo cockpit insert. A shared sequence rail, source timecodes, playhead, restrained production labels, glass edges, grain, and caustic light connect typography to media without imitating editing software. Desktop keeps all three surfaces; narrow mobile keeps the dominant frame and cutaway and becomes explicitly poster-only. Only the dominant source may preview, and only above the mobile breakpoint when the established fine-hover, reduced-motion, save-data, codec, visibility, and intersection policies allow it.
+The hero is one cinematic object: `/media/automotive/automotive-horizontal-preview.mp4` (poster: `/media/hero/automotive-single-reel.webp`) as the sole hero media source, filling the full content width and height-capped to roughly one viewport. A frosted glass copy plate sits on top of the footage at the bottom-left, holding the eyebrow, headline, lead, and both CTAs — with cursor-tracked 3D tilt (see Motion principles) on desktop.
 
-The three derived posters are real frames from self-produced N0STHER previews, recorded in `docs/v2/21-hero-media-source-map.md`. The composition is complete as a still. Phase 3 adds no GSAP; the existing intro/replay lifecycle and whole-stage scroll hooks remain unchanged pending the Phase 6 motion review.
+The localized headline is `STORIES SHAPED IN MOTION.` in English and `HİKÂYELER HAREKETLE ŞEKİLLENİR.` in Turkish, each rendered as three staggered lines with the middle line offset right for an editorial stack rather than a solid block. Because the edit uses third-party footage, visible copy claims editing and visual effects only, and a localized disclosure line sits directly beneath the media in normal flow (not boxed, not inside the footage). Ali's embedded `mamilex` creator watermark stays visible and unchanged inside the edit.
 
-The reference validates overlap, hierarchy, and sequence metadata as useful ingredients. It does not approve the reference's specific automotive stock frame, portrait inset, caustic tile, or exact text-left/media-right arrangement. V2 must create a stronger connection between the typography and the three real-media frames while avoiding three independent floating cards.
+Runtime policy: video mounts only above 767px width when the established fine-hover, reduced-motion, save-data, codec, visibility, and intersection checks all pass; narrow mobile is explicitly poster-only with a vertical glass fade and no secondary media. The single-preview, poster-fallback, and locale-replay-suppression policies are unchanged from the rest of the site's video handling.
 
-It must not become a text-left/cards-right split, three unrelated floating cards, a random collage, a software interface, or a single embedded video player.
+It must not become a text-left/media-right split, multiple floating cards, a random collage, a software-editing-interface imitation, timecodes/frame counters/playhead UI, or a montage of unrelated clips.
 
 ## Selected Work
 
-Selected Work is the portfolio’s evidence core. Lead with one or two flagship edits at generous scale, then establish supporting rhythm through asymmetry, orientation changes, and project-specific metadata. Preserve hover/focus previews and touch/reduced-motion posters. Avoid a bento-grid-heavy appearance and repeated generic descriptions.
+Selected Work is the portfolio's evidence core: three featured projects in a looping front-and-center carousel (Assetto Corsa Content Manager as the media-first flagship, BeamNG Performance as a text-first comparison composition, BeamNG Cargo as a narrower right-offset narrative composition), then a supporting grid (AC Rally plus two smaller automotive motion/VFX studies) below a glass heading panel. Numbering, original source titles, contributions, roles, years, tools, and exact third-party disclosures make the proof project-specific — no generic "published long-form work" filler descriptions.
 
-Phase 4 implements the approved proof hierarchy as one static editorial sequence. Assetto is a media-first flagship, BeamNG Performance is a text-first comparison composition, and BeamNG Cargo is a narrower right-offset narrative composition. A separate 6/3/3 desktop evidence rail places AC Rally ahead of two smaller automotive motion/VFX studies. Numbering, original source titles, contributions, roles, years, tools, and exact third-party disclosures make the proof project-specific. Overall card shells, equal columns, excessive radius, and glass repetition are excluded.
+The project-preview coordinator is singular: video sources are assigned on eligible pointer/focus intent, one preview plays at a time, and touch/reduced-motion/error states stay poster-led. On the supporting cards, the caption scrim slides down and fades out on hover/focus (fine pointer only) so the preview plays clean, and returns the moment the pointer leaves.
 
-The existing project preview coordinator remains singular: video sources are assigned on eligible pointer/focus intent, one preview plays at a time, and touch/reduced-motion/error states remain poster-led. Responsive layouts may reduce asymmetry, but the top-three order and distinct second-project text-first relationship remain visible.
+Avoid a bento-grid-heavy appearance, repeated generic descriptions, equal-column card shells, and excessive glass repetition.
 
-## About and Experiments
+## About
 
-About carries the deep-ocean contrast field and should feel personal, credible, and editorial. Use an approved real portrait or intentionally approved identity asset. NoteZ/Experiments remains visible but clearly secondary to video-editing work; it must not interrupt the portfolio proof hierarchy.
+About carries the deep-ocean contrast field (aqua → ocean → deep → ocean-ink) and should feel personal, credible, and editorial. The identity visual is `public/media/portrait/Logo-V2.png` — a square blue illustrated N0STHER brand mark, not a photograph of Ali — set inside a deep-glass media stage sized to read as a proportionate mark, not an oversized centerpiece. `Logo.png` remains secondary and is not used in About.
 
-The approved future primary identity visual is `public/media/portrait/Logo-V2.png`: a square blue illustrated N0STHER brand portrait, not a photograph of Ali. Preserve the master and serve responsive derivatives when About is implemented. The older `Logo.png` may remain secondary but is not the main About visual.
+NoteZ/Experiments has been removed from the site. About is now video-editing identity only, with no secondary "in development" section to subordinate.
 
 ## Contact
 
-The closing composition is spacious, direct, and confidence-building: a strong invitation, verified email, and verified social links. A restrained glass or light-transition detail may connect it to the system. Do not use placeholder addresses, invented availability claims, or decorative form fields without a real workflow.
+The closing composition is spacious, direct, and confidence-building: a strong invitation, verified email (`contact@nosther.site`), and verified social links, inside a single clear-glass card with a clipped top edge. Do not use placeholder addresses, invented availability claims, or decorative form fields without a real workflow.
 
 ## Anti-patterns
 
-Do not use stock imagery in the final portfolio, placeholder portraits, invented statistics, generic project names, random floating cards, excessive glass, generic SaaS/bento structures, Apple imitation, Adobe Premiere UI imitation, or literal ocean imagery. Do not copy the Lovable hero arrangement or any prototype implementation that conflicts with proven V1 behavior.
+Do not use placeholder portraits, invented statistics, generic project names, random floating cards, excessive glass, generic SaaS/bento structures, Apple imitation, Adobe Premiere UI imitation, literal ocean props (fish/coral/shells/bubbles/droplets), or decorative wave illustrations. Real coastal photography is allowed only tinted into the palette per the texture rules above — never shown raw/saturated, never the dominant element over type or media.
