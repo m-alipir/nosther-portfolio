@@ -9,8 +9,8 @@ export default function Icon() {
       <div
         style={{
           alignItems: "center",
-          background: "#0a0a0b",
-          color: "#f1eee8",
+          background: "#f1f5f6",
+          color: "#0a1319",
           display: "flex",
           fontFamily: "Arial, sans-serif",
           fontSize: 48,
@@ -22,17 +22,6 @@ export default function Icon() {
         }}
       >
         A
-        <span
-          style={{
-            background: "#c55252",
-            bottom: 6,
-            display: "flex",
-            height: 5,
-            position: "absolute",
-            right: 6,
-            width: 18,
-          }}
-        />
       </div>
     ),
     size,
