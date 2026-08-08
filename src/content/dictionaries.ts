@@ -29,6 +29,8 @@ export interface Dictionary {
       editType: string;
       mediaAlt: string;
       disclosure: string;
+      countdownLabel: string;
+      countdownUnit: string;
     };
     scrollCue: string;
   };
@@ -108,12 +110,14 @@ const en: Dictionary = {
     workCta: "View Work",
     contactCta: "Contact",
     stage: {
-      ariaLabel: "Single automotive showreel edited by ALI",
-      roleLabel: "Edited by ALI",
-      editType: "Automotive edit · Visual effects",
+      ariaLabel: "Motion graphics showreel produced by ALI",
+      roleLabel: "Produced by ALI",
+      editType: "Motion Graphics · Full Production",
       mediaAlt:
-        "Cinematic horizontal automotive edit featuring a black performance car in motion.",
-      disclosure: "Edited using third-party footage.",
+        "Motion graphics reel opening with bold kinetic typography and closing on a computer mouse product reveal.",
+      disclosure: "Independent motion graphics production.",
+      countdownLabel: "Full reel in",
+      countdownUnit: "s",
     },
     scrollCue: "Selected work below",
   },
@@ -197,12 +201,14 @@ const tr: Dictionary = {
     workCta: "İşleri Gör",
     contactCta: "İletişim",
     stage: {
-      ariaLabel: "ALI tarafından kurgulanan tek kaynaklı otomotiv showreel’i",
-      roleLabel: "ALI tarafından kurgulandı",
-      editType: "Otomotiv kurgusu · Görsel efektler",
+      ariaLabel: "ALI tarafından üretilen hareketli grafik showreel’i",
+      roleLabel: "ALI tarafından üretildi",
+      editType: "Hareketli Grafik · Tam Prodüksiyon",
       mediaAlt:
-        "Hareket hâlindeki siyah performans otomobilini gösteren yatay sinematik otomotiv kurgusu.",
-      disclosure: "Üçüncü taraf görüntüler kullanılarak kurgulandı.",
+        "Cesur devinimli tipografiyle açılan ve bir bilgisayar faresi ürün tanıtımıyla kapanan hareketli grafik kurgusu.",
+      disclosure: "Bağımsız hareketli grafik prodüksiyonu.",
+      countdownLabel: "Tam kayda",
+      countdownUnit: "sn",
     },
     scrollCue: "Seçili işler aşağıda",
   },

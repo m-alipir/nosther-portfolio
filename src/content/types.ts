@@ -6,6 +6,17 @@ export type ProjectStatus = "ready";
 
 export type ProjectEditorialClass = "featured" | "supporting";
 
+/**
+ * One encode per codec, listed in the order the browser should try them.
+ * WebM/VP9 is the smaller encode and wins wherever it is supported; the
+ * H.264 MP4 is the universal fallback (Safari, older iOS, embedded WebViews).
+ */
+export interface VideoSource {
+  src: string;
+  /** Full MIME + codecs string, so `canPlayType` can answer precisely. */
+  type: string;
+}
+
 export interface Project {
   id: string;
   title: LocalizedText;
@@ -25,7 +36,7 @@ export interface Project {
   posterAlt: LocalizedText;
   posterWidth: number;
   posterHeight: number;
-  previewVideoPath: string | null;
+  previewVideoSources: VideoSource[] | null;
   externalUrl: string | null;
   status: ProjectStatus;
   orientation: "landscape" | "portrait";

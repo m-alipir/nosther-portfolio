@@ -19,15 +19,19 @@ export function useVideoPlaybackPolicy(requireFineHover = false) {
   useEffect(() => {
     const connection = (navigator as NavigatorWithConnection).connection;
     const hoverQuery = window.matchMedia("(hover: hover) and (pointer: fine)");
-    const supportsMp4 = Boolean(
-      document.createElement("video").canPlayType("video/mp4"),
+    // Previews ship as a WebM/VP9 + MP4/H.264 pair, so either decoder is
+    // enough — builds without the proprietary H.264 decoder (some Linux
+    // Firefox packages) still get playback through the WebM encode.
+    const probe = document.createElement("video");
+    const supportsPreviewCodec = Boolean(
+      probe.canPlayType("video/mp4") || probe.canPlayType("video/webm"),
     );
 
     const updatePolicy = () => {
       setIsAllowed(
         !prefersReducedMotion &&
           !connection?.saveData &&
-          supportsMp4 &&
+          supportsPreviewCodec &&
           (!requireFineHover || hoverQuery.matches),
       );
     };

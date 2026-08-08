@@ -163,6 +163,23 @@
   color: var(--color-foam);
   -webkit-backdrop-filter: var(--glass-deep-filter);
   backdrop-filter: var(--glass-deep-filter);
+  /* Unconditional so the fade back in (below) still animates once the
+     forced opacity: 0 stops applying — at that point the cascade falls
+     through to GSAP's own inline opacity: 1 left over from the intro. */
+  transition: opacity .6s ease;
+}
+
+/* The card cycles with the reel: visible for the first
+   heroReelMedia.copyCardWindowSeconds of each loop, hidden the rest of the
+   way. `!important` is required to win against the inline opacity/visibility
+   GSAP's intro timeline leaves on this element after it completes. */
+.copy[data-card-revealed="false"] {
+  opacity: 0 !important;
+  pointer-events: none !important;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .copy { transition: none; }
 }
 
 .eyebrow {
@@ -179,6 +196,37 @@
 
 .eyebrow strong { color: #fff; font-weight: 600; }
 .eyebrow span { width: clamp(1.25rem, 2.5vw, 2.25rem); height: 1px; background: currentColor; opacity: .45; }
+
+/* One-time flourish: sits in the plate's free top-right corner while the
+   card counts down to its single hide-and-reveal cycle (see hero.tsx). */
+.countdown {
+  position: absolute;
+  z-index: 2;
+  top: clamp(1.1rem, 2.4vw, 2.4rem);
+  right: clamp(1.1rem, 2.4vw, 2.4rem);
+  display: flex;
+  align-items: baseline;
+  gap: .4rem;
+  margin: 0;
+  padding: .3rem .65rem;
+  border: 1px solid rgb(255 255 255 / 16%);
+  border-radius: 999px;
+  background: rgb(4 15 23 / 32%);
+  color: rgb(214 245 253 / 72%);
+  font-family: var(--font-mono);
+  font-size: .55rem;
+  letter-spacing: .12em;
+  text-transform: uppercase;
+  pointer-events: none;
+}
+
+.countdown strong {
+  color: #fff;
+  font-size: .68rem;
+  font-weight: 600;
+  letter-spacing: 0;
+  text-transform: none;
+}
 
 /* Sized off the plate's own inline size (cqi), not the viewport: whatever
    the plate's width clamp resolves to, the widest line ("STORIES" en /

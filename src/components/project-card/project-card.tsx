@@ -60,7 +60,8 @@ export function ProjectCard({
   const [isPlaying, setIsPlaying] = useState(false);
   const [posterFailed, setPosterFailed] = useState(false);
   const [videoFailed, setVideoFailed] = useState(false);
-  const hasPreview = Boolean(project.previewVideoPath);
+  const previewSources = project.previewVideoSources;
+  const hasPreview = Boolean(previewSources?.length);
   const platform = project.platform[locale];
   const role = project.role?.[locale];
   const hasDetails = Boolean(
@@ -204,6 +205,15 @@ export function ProjectCard({
     [requestPreview],
   );
 
+  // `<source>` children are inert until the element is told to re-select one,
+  // so the lazy mount that swaps them in has to be followed by `load()` —
+  // unlike a plain `src` swap, which the browser picks up on its own.
+  useEffect(() => {
+    if (sourceRequested && allowVideo) {
+      videoRef.current?.load();
+    }
+  }, [sourceRequested, allowVideo]);
+
   useEffect(() => {
     if (sourceRequested && wantsPlaybackRef.current) {
       void startPreview();
@@ -310,11 +320,6 @@ export function ProjectCard({
             ref={videoRef}
             className={styles.previewVideo}
             data-playing={isPlaying && allowVideo}
-            src={
-              sourceRequested && allowVideo
-                ? (project.previewVideoPath ?? undefined)
-                : undefined
-            }
             poster={project.posterPath}
             preload="metadata"
             muted
@@ -346,7 +351,17 @@ export function ProjectCard({
               setVideoFailed(true);
               stopPreview();
             }}
-          />
+          >
+            {sourceRequested && allowVideo
+              ? previewSources?.map((source) => (
+                  <source
+                    key={source.src}
+                    src={source.src}
+                    type={source.type}
+                  />
+                ))
+              : null}
+          </video>
         ) : null}
       </div>
     </div>

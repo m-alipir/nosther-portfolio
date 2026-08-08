@@ -1,3 +1,4 @@
+import { previewVideoSources } from "@/content/media";
 import type { Project } from "@/content/types";
 
 const tutorialRole = {
@@ -72,7 +73,9 @@ export const projects: Project[] = [
     },
     posterWidth: 1280,
     posterHeight: 720,
-    previewVideoPath: "/media/projects/youtube-02-preview.mp4",
+    previewVideoSources: previewVideoSources(
+      "/media/projects/youtube-02-preview",
+    ),
     externalUrl: "https://www.youtube.com/watch?v=q47Fa_4U9Q0",
     status: "ready",
     orientation: "landscape",
@@ -109,7 +112,9 @@ export const projects: Project[] = [
     },
     posterWidth: 1280,
     posterHeight: 720,
-    previewVideoPath: "/media/projects/youtube-01-preview.mp4",
+    previewVideoSources: previewVideoSources(
+      "/media/projects/youtube-01-preview",
+    ),
     externalUrl: "https://www.youtube.com/watch?v=w0ZkuiOucCo",
     status: "ready",
     orientation: "landscape",
@@ -142,7 +147,9 @@ export const projects: Project[] = [
     },
     posterWidth: 1280,
     posterHeight: 720,
-    previewVideoPath: "/media/projects/youtube-04-preview.mp4",
+    previewVideoSources: previewVideoSources(
+      "/media/projects/youtube-04-preview",
+    ),
     externalUrl: "https://www.youtube.com/watch?v=dnbg1JSiAQQ",
     status: "ready",
     orientation: "landscape",
@@ -175,7 +182,9 @@ export const projects: Project[] = [
     },
     posterWidth: 1280,
     posterHeight: 720,
-    previewVideoPath: "/media/projects/youtube-03-preview.mp4",
+    previewVideoSources: previewVideoSources(
+      "/media/projects/youtube-03-preview",
+    ),
     externalUrl: "https://www.youtube.com/watch?v=FzZYNCiZrNg",
     status: "ready",
     orientation: "landscape",
@@ -205,7 +214,9 @@ export const projects: Project[] = [
     },
     posterWidth: 720,
     posterHeight: 1280,
-    previewVideoPath: "/media/automotive/automotive-vertical-preview.mp4",
+    previewVideoSources: previewVideoSources(
+      "/media/automotive/automotive-vertical-preview",
+    ),
     externalUrl: null,
     status: "ready",
     orientation: "portrait",
@@ -234,8 +245,10 @@ export const projects: Project[] = [
       tr: "Üçüncü taraf yakın plan otomobil görüntüsü ve stilize görsel efektler içeren sinematik otomotiv kurgusu.",
     },
     posterWidth: 1280,
-    posterHeight: 720,
-    previewVideoPath: "/media/automotive/automotive-horizontal-preview.mp4",
+    posterHeight: 546,
+    previewVideoSources: previewVideoSources(
+      "/media/automotive/automotive-horizontal-preview",
+    ),
     externalUrl: null,
     status: "ready",
     orientation: "landscape",
