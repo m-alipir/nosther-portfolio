@@ -219,6 +219,9 @@
   --z-content: 20;
   --z-header: 100;
   --z-menu: 110;
+  /* Above the fixed grain layer on body::after (150) so the lightbox reads as
+     a clean surface, still below the custom cursor (200). */
+  --z-overlay: 160;
   --z-cursor: 200;
 
   --ease-standard: cubic-bezier(0.2, 0.75, 0.25, 1);
@@ -249,11 +252,6 @@ body {
   line-height: 1.68;
   text-rendering: optimizeLegibility;
   -webkit-font-smoothing: antialiased;
-}
-
-html[data-loading-screen="active"],
-html[data-loading-screen="active"] body {
-  overflow: hidden;
 }
 
 /* One grain layer for the whole page, fixed to the viewport, rather than one

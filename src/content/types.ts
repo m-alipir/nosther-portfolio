@@ -17,10 +17,33 @@ export interface VideoSource {
   type: string;
 }
 
+/**
+ * One craft area of a project's process, as shown in the lightbox side rail.
+ * `contributions` stays the short chip list on the card itself; this is the
+ * long form — what was actually done in Premiere/After Effects/Audition and
+ * why — so the two are deliberately separate fields rather than one reused
+ * list at two lengths.
+ *
+ * Every line here must describe work that genuinely happened. No invented
+ * durations, counts, clients, or outcomes (see docs/nosther-content-agent.md).
+ */
+export interface ProjectBreakdownGroup {
+  /** Craft area, e.g. "Editing", "Sound", "Motion & VFX". */
+  label: LocalizedText;
+  /** Concrete steps taken, one per line. */
+  items: LocalizedText[];
+}
+
 export interface Project {
   id: string;
   title: LocalizedText;
   description: LocalizedText;
+  /**
+   * Long-form process notes for the lightbox. `null` falls the side rail back
+   * to `contributions`, so a project without a written breakdown still
+   * renders rather than showing an empty panel.
+   */
+  breakdown: ProjectBreakdownGroup[] | null;
   disclosure: LocalizedText | null;
   editorialClass: ProjectEditorialClass;
   featuredRank: 1 | 2 | 3 | null;

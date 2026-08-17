@@ -58,6 +58,24 @@
   padding-inline: 0;
 }
 
+/* The rem cap above had no large-screen steps while --shell does, so past
+   ~1600px this section stopped growing and sat as a fixed 70rem block in the
+   middle of the screen — on a 1440p 27" panel that is under half the width,
+   with the deck's depth stack making it read as off-centre on top of that.
+   These steps track the same breakpoints as --shell at roughly 92% of it,
+   which is the editorial inset this section was already using at base size. */
+@media (min-width: 100rem) {
+  .section > :global(.container) { width: min(84vw, 78rem); }
+}
+
+@media (min-width: 120rem) {
+  .section > :global(.container) { width: min(84vw, 92rem); }
+}
+
+@media (min-width: 160rem) {
+  .section > :global(.container) { width: min(84vw, 120rem); }
+}
+
 .heading {
   display: grid;
   min-height: 16rem;

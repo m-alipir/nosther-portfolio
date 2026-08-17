@@ -54,6 +54,13 @@ export interface Dictionary {
     carouselLabel: string;
     carouselPrev: string;
     carouselNext: string;
+    lightboxOpen: string;
+    lightboxLabel: string;
+    lightboxClose: string;
+    lightboxPrev: string;
+    lightboxNext: string;
+    lightboxProcessLabel: string;
+    lightboxContributionsLabel: string;
   };
   services: {
     eyebrow: string;
@@ -138,11 +145,18 @@ const en: Dictionary = {
     supportingLabel: "Supporting work",
     supportingTitle: "More production and motion evidence.",
     supportingIntro:
-      "A self-produced rally episode followed by smaller automotive editing and visual-effects studies.",
+      "A self-produced rally episode, smaller automotive editing and visual-effects studies, and a motion graphics reel.",
     posterFallback: "Project poster unavailable",
     carouselLabel: "Featured projects",
     carouselPrev: "Previous project",
     carouselNext: "Next project",
+    lightboxOpen: "Play video",
+    lightboxLabel: "Project video",
+    lightboxClose: "Close video",
+    lightboxPrev: "Previous video",
+    lightboxNext: "Next video",
+    lightboxProcessLabel: "Process",
+    lightboxContributionsLabel: "What I did",
   },
   services: {
     eyebrow: "Services",
@@ -229,11 +243,18 @@ const tr: Dictionary = {
     supportingLabel: "Destekleyici işler",
     supportingTitle: "Ek prodüksiyon ve hareketli grafik kanıtları.",
     supportingIntro:
-      "Bağımsız üretilmiş bir rally bölümü ve ardından daha küçük otomotiv kurgu ve görsel efekt çalışmaları.",
+      "Bağımsız üretilmiş bir rally bölümü, daha küçük otomotiv kurgu ve görsel efekt çalışmaları ve bir hareketli grafik kurgusu.",
     posterFallback: "Proje posteri kullanılamıyor",
     carouselLabel: "Öne çıkan projeler",
     carouselPrev: "Önceki proje",
     carouselNext: "Sonraki proje",
+    lightboxOpen: "Videoyu oynat",
+    lightboxLabel: "Proje videosu",
+    lightboxClose: "Videoyu kapat",
+    lightboxPrev: "Önceki video",
+    lightboxNext: "Sonraki video",
+    lightboxProcessLabel: "Süreç",
+    lightboxContributionsLabel: "Ne yaptım",
   },
   services: {
     eyebrow: "Hizmetler",

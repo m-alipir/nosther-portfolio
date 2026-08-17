@@ -4,6 +4,7 @@ import type React from "react";
 import { useCallback, useLayoutEffect, useRef, useState } from "react";
 
 import { ProjectCard } from "@/components/project-card/project-card";
+import { VideoLightbox } from "@/components/video-lightbox/video-lightbox";
 import type { Dictionary } from "@/content/dictionaries";
 import { projects } from "@/content/projects";
 import type { Locale } from "@/content/types";
@@ -47,8 +48,12 @@ function getCardKind(card: HTMLElement): WorkCardKind {
   return "supporting";
 }
 
+// Indices address every [data-project-card] in DOM order: the three featured
+// carousel slides first, then the supporting grid. Adding a supporting card
+// means extending these — a card left out of every group never gets its
+// reveal timeline and stays stuck at opacity 0.
 const desktopProfile: WorkMotionProfile = {
-  cardGroups: [[0, 1, 2], [3], [4, 5]],
+  cardGroups: [[0, 1, 2], [3], [4, 5, 6]],
   cardTimings: {
     flagship: { end: "center 56%", scrub: 0.86, start: "top 88%" },
     major: { end: "center 58%", scrub: 0.76, start: "top 89%" },
@@ -86,7 +91,7 @@ const tabletProfile: WorkMotionProfile = {
 
 const mobileProfile: WorkMotionProfile = {
   ...tabletProfile,
-  cardGroups: [[0, 1, 2], [3], [4], [5]],
+  cardGroups: [[0, 1, 2], [3], [4], [5], [6]],
   cardTimings: {
     flagship: { end: "center 64%", scrub: 0.64, start: "top 89%" },
     major: { end: "center 65%", scrub: 0.6, start: "top 90%" },
@@ -116,6 +121,52 @@ export function SelectedWork({ dictionary, locale }: SelectedWorkProps) {
     (project) => project.editorialClass === "supporting",
   );
   useProjectCardTilt(rootRef);
+
+  // Gallery for the lightbox. The source order already matches what is on
+  // screen — featured by rank, then supporting — so stepping through it
+  // follows the page rather than jumping around.
+  const lightboxProjects = projects.filter((project) =>
+    Boolean(project.previewVideoSources?.length),
+  );
+  const [lightboxIndex, setLightboxIndex] = useState<number | null>(null);
+  const lightboxTriggerRef = useRef<HTMLElement | null>(null);
+
+  const openLightbox = useCallback(
+    (projectId: string, trigger: HTMLElement) => {
+      const target = lightboxProjects.findIndex(
+        (project) => project.id === projectId,
+      );
+      if (target === -1) {
+        return;
+      }
+      lightboxTriggerRef.current = trigger;
+      setLightboxIndex(target);
+    },
+    [lightboxProjects],
+  );
+
+  const closeLightbox = useCallback(() => {
+    const trigger = lightboxTriggerRef.current;
+    lightboxTriggerRef.current = null;
+    setLightboxIndex(null);
+    // Restore after the unmount commits, not inline: removing the focused
+    // close button drops focus to <body>, and that happens after this handler
+    // returns, so focusing earlier just gets undone. A timeout rather than
+    // rAF because rAF is throttled to nothing in a background tab.
+    window.setTimeout(() => trigger?.focus(), 0);
+  }, []);
+
+  const stepLightbox = useCallback(
+    (delta: number) =>
+      setLightboxIndex((previous) => {
+        if (previous === null) {
+          return previous;
+        }
+        const count = lightboxProjects.length;
+        return (previous + delta + count) % count;
+      }),
+    [lightboxProjects.length],
+  );
 
   const slideCount = featuredProjects.length;
 
@@ -349,7 +400,6 @@ export function SelectedWork({ dictionary, locale }: SelectedWorkProps) {
                       card.querySelector<HTMLElement>(
                         "[data-project-disclosure]",
                       ),
-                      card.querySelector<HTMLElement>("[data-project-action]"),
                     ].filter((target): target is HTMLElement =>
                       Boolean(target),
                     );
@@ -576,6 +626,7 @@ export function SelectedWork({ dictionary, locale }: SelectedWorkProps) {
                     dictionary={dictionary}
                     index={index}
                     projectNumber={`0${project.featuredRank}`}
+                    onOpenLightbox={openLightbox}
                   />
                 </div>
               );
@@ -633,12 +684,24 @@ export function SelectedWork({ dictionary, locale }: SelectedWorkProps) {
                   dictionary={dictionary}
                   index={index}
                   projectNumber={`S0${supportingIndex + 1}`}
+                  onOpenLightbox={openLightbox}
                 />
               );
             })}
           </div>
         </div>
       </div>
+
+      {lightboxIndex !== null ? (
+        <VideoLightbox
+          projects={lightboxProjects}
+          activeIndex={lightboxIndex}
+          locale={locale}
+          dictionary={dictionary}
+          onClose={closeLightbox}
+          onStep={stepLightbox}
+        />
+      ) : null}
     </section>
   );
 }

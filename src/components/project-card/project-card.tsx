@@ -15,6 +15,7 @@ interface ProjectCardProps {
   dictionary: Dictionary;
   index: number;
   projectNumber: string;
+  onOpenLightbox?: (projectId: string, trigger: HTMLElement) => void;
 }
 
 interface ActivePreview {
@@ -49,6 +50,7 @@ export function ProjectCard({
   dictionary,
   index,
   projectNumber,
+  onOpenLightbox,
 }: ProjectCardProps) {
   const title = project.title[locale];
   const videoRef = useRef<HTMLVideoElement>(null);
@@ -434,55 +436,23 @@ export function ProjectCard({
         </p>
       ) : null}
 
-      {project.externalUrl ? (
-        <span className={styles.action} data-project-action>
-          {dictionary.work.externalAction}
-          <span className="external-arrow" aria-hidden="true">
-            ↗
-          </span>
-        </span>
-      ) : null}
     </div>
   );
 
-  if (project.externalUrl) {
-    return (
-      <a
-        className={cardClassName}
-        href={project.externalUrl}
-        target="_blank"
-        rel="noopener noreferrer"
-        aria-label={title}
-        data-project-card
-        data-project-index={index}
-        data-project-featured={project.featuredRank ? "true" : undefined}
-        data-project-rank={project.featuredRank ?? undefined}
-        data-project-layout={layoutKind}
-        data-cursor-project
-        data-preview-policy={allowVideo ? "enabled" : "poster-only"}
-        data-preview-source={sourceRequested ? "requested" : "idle"}
-        onPointerEnter={trackPointerEnter}
-        onPointerMove={maintainPointerIntent}
-        onPointerLeave={stopPreview}
-        onFocus={requestPreview}
-        onBlur={stopPreview}
-      >
-        {media}
-        {body}
-      </a>
-    );
-  }
-
+  // One <article> for every card. The card used to become an <a> straight to
+  // YouTube when it had an externalUrl, but the lightbox trigger has to be a
+  // button and a button cannot live inside a link — so the whole card is now
+  // the trigger and the YouTube link moved into the lightbox itself.
   return (
     <article
       className={cardClassName}
       aria-labelledby={`${project.id}-title`}
-      tabIndex={hasPreview ? 0 : undefined}
       data-project-card
       data-project-index={index}
       data-project-featured={project.featuredRank ? "true" : undefined}
       data-project-rank={project.featuredRank ?? undefined}
       data-project-layout={layoutKind}
+      data-cursor-project={hasPreview ? "" : undefined}
       data-preview-policy={allowVideo ? "enabled" : "poster-only"}
       data-preview-source={sourceRequested ? "requested" : "idle"}
       onPointerEnter={trackPointerEnter}
@@ -493,6 +463,14 @@ export function ProjectCard({
     >
       {media}
       {body}
+      {hasPreview && onOpenLightbox ? (
+        <button
+          type="button"
+          className={styles.trigger}
+          aria-label={`${dictionary.work.lightboxOpen}: ${title}`}
+          onClick={(event) => onOpenLightbox(project.id, event.currentTarget)}
+        />
+      ) : null}
     </article>
   );
 }
