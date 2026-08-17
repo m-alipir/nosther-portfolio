@@ -66,7 +66,6 @@ export function MotionRuntime() {
     window.addEventListener("orientationchange", refreshAfterResize);
     window.addEventListener("pageshow", refreshAfterPageShow);
     window.addEventListener("hashchange", refreshAfterPageShow);
-    window.addEventListener("nosther:loading-complete", refreshAfterPageShow);
     document.addEventListener("visibilitychange", refreshAfterVisibility);
     document.addEventListener("load", refreshAfterMedia, true);
     document.addEventListener("loadeddata", refreshAfterMedia, true);
@@ -80,7 +79,6 @@ export function MotionRuntime() {
       window.removeEventListener("orientationchange", refreshAfterResize);
       window.removeEventListener("pageshow", refreshAfterPageShow);
       window.removeEventListener("hashchange", refreshAfterPageShow);
-      window.removeEventListener("nosther:loading-complete", refreshAfterPageShow);
       document.removeEventListener("visibilitychange", refreshAfterVisibility);
       document.removeEventListener("load", refreshAfterMedia, true);
       document.removeEventListener("loadeddata", refreshAfterMedia, true);

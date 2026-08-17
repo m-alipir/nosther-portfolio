@@ -16,18 +16,6 @@ import {
 } from "@/lib/motion/hero-intro";
 import styles from "./hero.module.css";
 
-/* Safety net if the loading screen never dispatches its handoff event. Must
-   outlast the loader's own MAX_WAIT_MS plus its exit. */
-const MAX_INTRO_HOLD_MS = 7500;
-
-/* The loader's handoff event fires the instant it starts its own exit
-   animation, not when the hero is actually clear of it — this extra beat
-   is what keeps the reel's first frame and the intro's first frame in sync
-   with what the visitor actually sees, instead of ticking away underneath
-   the loader. Shared by the video-start gate and the GSAP intro gate below
-   so both land on the same tick. */
-const PLAYBACK_HANDOFF_DELAY_MS = 1000;
-
 export function Hero({ dictionary }: { dictionary: Dictionary }) {
   const rootRef = useRef<HTMLElement>(null);
   const reelRef = useRef<HTMLDivElement>(null);
@@ -37,11 +25,6 @@ export function Hero({ dictionary }: { dictionary: Dictionary }) {
   const [isNarrowViewport, setIsNarrowViewport] = useState(true);
   const [videoPlaying, setVideoPlaying] = useState(false);
   const [videoFailed, setVideoFailed] = useState(false);
-  const [readyToPlayVideo, setReadyToPlayVideo] = useState(
-    () =>
-      typeof document !== "undefined" &&
-      !document.documentElement.dataset.loadingScreen,
-  );
   // The reel always plays through its full loop; only the glass copy card is
   // gated by this, mirroring where `currentTime` sits in the loop — no
   // separate timer to keep in sync with the loop.
@@ -83,43 +66,10 @@ export function Hero({ dictionary }: { dictionary: Dictionary }) {
     return () => query.removeEventListener("change", updateViewport);
   }, []);
 
-  // Mirrors the GSAP intro's own loader gate (below) so the reel's first
-  // frame and the intro's first frame land on the same tick — otherwise the
-  // video (previously autoplaying on mount) burns its opening seconds behind
-  // the loader before the visitor ever sees the hero.
-  useEffect(() => {
-    if (readyToPlayVideo) {
-      return;
-    }
-
-    let handoffTimeout = 0;
-    const scheduleReady = () => {
-      handoffTimeout = window.setTimeout(
-        () => setReadyToPlayVideo(true),
-        PLAYBACK_HANDOFF_DELAY_MS,
-      );
-    };
-    const onLoadingComplete = () => {
-      window.clearTimeout(fallback);
-      scheduleReady();
-    };
-    const fallback = window.setTimeout(scheduleReady, MAX_INTRO_HOLD_MS);
-
-    window.addEventListener("nosther:loading-complete", onLoadingComplete, {
-      once: true,
-    });
-
-    return () => {
-      window.clearTimeout(fallback);
-      window.clearTimeout(handoffTimeout);
-      window.removeEventListener("nosther:loading-complete", onLoadingComplete);
-    };
-  }, [readyToPlayVideo]);
-
   useEffect(() => {
     const reel = reelRef.current;
     const video = videoRef.current;
-    if (!reel || !video || !allowVideo || videoFailed || !readyToPlayVideo) {
+    if (!reel || !video || !allowVideo || videoFailed) {
       return;
     }
 
@@ -159,7 +109,7 @@ export function Hero({ dictionary }: { dictionary: Dictionary }) {
       document.removeEventListener("visibilitychange", handleVisibility);
       video.pause();
     };
-  }, [allowVideo, videoFailed, readyToPlayVideo]);
+  }, [allowVideo, videoFailed]);
 
   // Pointer parallax drives two custom properties on the section; only the
   // blurred background light fields read them, so nothing reflows.
@@ -244,13 +194,8 @@ export function Hero({ dictionary }: { dictionary: Dictionary }) {
     let cancelled = false;
     let setupGeneration = 0;
     let disposeAnimations: (() => void) | undefined;
-    let releaseIntroGate: (() => void) | undefined;
-    let introHandoffTimeout = 0;
 
     const clearAnimations = () => {
-      releaseIntroGate?.();
-      releaseIntroGate = undefined;
-      window.clearTimeout(introHandoffTimeout);
       disposeAnimations?.();
       disposeAnimations = undefined;
       root.dataset.heroMotion = "ready";
@@ -435,34 +380,7 @@ export function Hero({ dictionary }: { dictionary: Dictionary }) {
               ScrollTrigger.refresh();
             });
 
-            // The loader covers the hero. Playing now would spend the whole
-            // reveal behind it, so hold until the loader hands off — with a
-            // timeout in case that event never arrives. The extra
-            // PLAYBACK_HANDOFF_DELAY_MS beat (shared with the reel's own
-            // play-start gate above) is what keeps the intro reveal and the
-            // reel's first frame landing together instead of the loader's
-            // handoff firing before the visitor can actually see either.
-            if (document.documentElement.dataset.loadingScreen) {
-              const play = () => {
-                releaseIntroGate?.();
-                releaseIntroGate = undefined;
-                introHandoffTimeout = window.setTimeout(
-                  () => timeline.play(),
-                  PLAYBACK_HANDOFF_DELAY_MS,
-                );
-              };
-              const fallback = window.setTimeout(play, MAX_INTRO_HOLD_MS);
-
-              window.addEventListener("nosther:loading-complete", play, {
-                once: true,
-              });
-              releaseIntroGate = () => {
-                window.clearTimeout(fallback);
-                window.removeEventListener("nosther:loading-complete", play);
-              };
-            } else {
-              timeline.play();
-            }
+            timeline.play();
           }, root);
 
           const responsiveMotion = gsap.matchMedia();
