@@ -18,24 +18,60 @@ export function SmoothScrollProvider({ children }: { children: ReactNode }) {
     let dispose: (() => void) | undefined;
 
     void ensureGsapRegistered()
-      .then(({ gsap, ScrollTrigger }) => {
+      .then(({ ScrollTrigger }) => {
         if (cancelled) {
           return;
         }
 
         const lenis = new Lenis({
-          duration: 1,
+          duration: 0.78,
           smoothWheel: true,
           autoRaf: false,
         });
         const updateScrollTrigger = () => ScrollTrigger.update();
-        const updateLenis = (time: number) => lenis.raf(time * 1000);
+        let frame = 0;
+        let idleFrames = 0;
+
+        // GSAP's global ticker never sleeps while a callback is registered.
+        // Driving Lenis from it kept a full-page rAF loop alive even while the
+        // page was idle. Wake Lenis only when wheel/touch input begins and let
+        // the loop stop as soon as interpolation settles.
+        const updateLenis = (time: number) => {
+          lenis.raf(time);
+
+          if (lenis.isScrolling || Math.abs(lenis.velocity) > 0.01) {
+            idleFrames = 0;
+          } else {
+            idleFrames += 1;
+          }
+
+          if (idleFrames < 2 && !document.hidden) {
+            frame = window.requestAnimationFrame(updateLenis);
+          } else {
+            frame = 0;
+          }
+        };
+        const startLenis = () => {
+          idleFrames = 0;
+          if (!frame && !document.hidden) {
+            frame = window.requestAnimationFrame(updateLenis);
+          }
+        };
+        const stopWhenHidden = () => {
+          if (document.hidden && frame) {
+            window.cancelAnimationFrame(frame);
+            frame = 0;
+          }
+        };
 
         lenis.on("scroll", updateScrollTrigger);
-        gsap.ticker.add(updateLenis);
+        lenis.on("virtual-scroll", startLenis);
+        document.addEventListener("visibilitychange", stopWhenHidden);
         dispose = () => {
-          gsap.ticker.remove(updateLenis);
+          window.cancelAnimationFrame(frame);
           lenis.off("scroll", updateScrollTrigger);
+          lenis.off("virtual-scroll", startLenis);
+          document.removeEventListener("visibilitychange", stopWhenHidden);
           lenis.destroy();
         };
       })

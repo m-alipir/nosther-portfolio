@@ -20,8 +20,8 @@ These are release-blocking behaviors unless a change is explicitly approved, doc
 
 ## Motion and input
 
-- Reduced motion disables Lenis, custom cursor, magnetic motion, tilt, GSAP section motion, and video playback policy where applicable.
-- Custom cursor and magnetic/tilt behavior run only for fine mouse pointers with hover and no reduced-motion preference.
+- Reduced motion disables Lenis, custom cursor, magnetic motion, tilt, GSAP section motion, atmosphere drift, and video playback policy where applicable.
+- Custom cursor and magnetic/tilt behavior run only for fine mouse pointers with hover and no reduced-motion preference; their animation loops sleep while idle.
 - Keyboard users can reach the same project links/actions as pointer users; focus previews remain supported.
 - Touch never relies on hover-only information.
 - Every animation registers cleanup for media-query changes, unmounts, document visibility, frames, timers, observers, and global listeners.

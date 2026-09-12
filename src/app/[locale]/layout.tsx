@@ -14,7 +14,6 @@ import {
   locales,
 } from "@/lib/i18n/config";
 import { SEO_COPY, SITE_NAME, SITE_ORIGIN } from "@/lib/seo/site";
-import { AtmosphereDefs } from "@/components/atmosphere/atmosphere-defs";
 import { ClientProviders } from "@/providers/client-providers";
 
 export function generateStaticParams() {
@@ -88,11 +87,12 @@ export default async function LocaleLayout({
 
   const resolvedLocale = isLocale(locale) ? locale : defaultLocale;
   const dictionary = getDictionary(resolvedLocale);
-
   return (
     <html lang={resolvedLocale} suppressHydrationWarning>
+      <head>
+        <meta name="darkreader-lock" />
+      </head>
       <body>
-        <AtmosphereDefs />
         <ClientProviders cursorLabels={dictionary.cursor}>{children}</ClientProviders>
       </body>
     </html>

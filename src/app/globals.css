@@ -131,7 +131,7 @@
   --glass-clear-cast:
     0 1.4rem 3.4rem -1.2rem rgb(10 19 25 / 24%),
     0 0.35rem 1rem -0.6rem rgb(10 19 25 / 15%);
-  --glass-clear-filter: blur(3px) saturate(130%) brightness(1.05);
+  --glass-clear-filter: blur(2px) saturate(118%) brightness(1.03);
   --glass-clear-drop: drop-shadow(0 1.4rem 2.4rem rgb(10 19 25 / 22%));
 
   --glass-frosted-fill:
@@ -160,7 +160,7 @@
   --glass-frosted-cast:
     0 2rem 4.5rem -1.4rem rgb(10 19 25 / 26%),
     0 0.4rem 1.2rem -0.7rem rgb(10 19 25 / 16%);
-  --glass-frosted-filter: blur(16px) saturate(145%) brightness(1.06);
+  --glass-frosted-filter: blur(8px) saturate(125%) brightness(1.04);
   --glass-frosted-drop: drop-shadow(0 1.8rem 3rem rgb(10 19 25 / 24%));
 
   --glass-deep-fill:
@@ -188,7 +188,7 @@
   --glass-deep-cast:
     0 2rem 5rem -1.5rem rgb(4 8 11 / 46%),
     0 0.4rem 1.2rem -0.7rem rgb(4 8 11 / 30%);
-  --glass-deep-filter: blur(34px) saturate(112%) brightness(1.03);
+  --glass-deep-filter: blur(14px) saturate(108%) brightness(1.02);
   --glass-deep-drop: drop-shadow(0 2rem 3.4rem rgb(4 8 11 / 40%));
 
   /* Opaque stand-ins used when backdrop-filter is unavailable. */
@@ -435,7 +435,26 @@ video {
   inset: -12%;
   width: 124%;
   height: 124%;
+  contain: strict;
   pointer-events: none;
+  will-change: transform;
+  animation-play-state: paused !important;
+}
+
+.atmosphere[data-atmosphere-active="true"] { animation-play-state: running !important; }
+
+.atmosphere--current {
+  background:
+    radial-gradient(ellipse at 18% 42%, rgb(231 245 252 / 42%), transparent 34%),
+    radial-gradient(ellipse at 76% 66%, rgb(143 179 184 / 40%), transparent 31%),
+    linear-gradient(115deg, transparent 18%, rgb(188 210 212 / 22%) 42%, transparent 68%);
+}
+
+.atmosphere--cloud {
+  background:
+    radial-gradient(ellipse at 22% 28%, rgb(255 255 255 / 72%), transparent 38%),
+    radial-gradient(ellipse at 78% 62%, rgb(143 179 184 / 24%), transparent 36%),
+    linear-gradient(128deg, transparent 22%, rgb(255 255 255 / 34%) 48%, transparent 72%);
 }
 
 .atmosphere--caustic { opacity: .34; animation: atmosphereDrift 38s ease-in-out infinite; mix-blend-mode: screen; }

@@ -16,9 +16,7 @@ export function Services({ dictionary, locale }: ServicesProps) {
       aria-labelledby="services-title"
       data-motion-section="services"
     >
-      <svg className="atmosphere atmosphere--cloud" aria-hidden="true" focusable="false" preserveAspectRatio="none">
-        <rect width="100%" height="100%" filter="url(#fx-cloud)" />
-      </svg>
+      <span className="atmosphere atmosphere--cloud" aria-hidden="true" />
 
       <div className={"container " + styles.layout}>
         <div className={styles.heading} data-services-heading>

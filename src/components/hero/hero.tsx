@@ -111,8 +111,9 @@ export function Hero({ dictionary }: { dictionary: Dictionary }) {
     };
   }, [allowVideo, videoFailed]);
 
-  // Pointer parallax drives two custom properties on the section; only the
-  // blurred background light fields read them, so nothing reflows.
+  // Keep the desktop light-field parallax, but avoid a layout read on every
+  // pointer event. Bounds are refreshed only when the pointer enters or the
+  // viewport changes; animation work remains rAF-gated.
   useEffect(() => {
     const root = rootRef.current;
     if (!root) {
@@ -127,6 +128,7 @@ export function Hero({ dictionary }: { dictionary: Dictionary }) {
       navigator as Navigator & { connection?: { saveData?: boolean } }
     ).connection;
     let frame = 0;
+    let bounds = root.getBoundingClientRect();
     let currentX = 0;
     let currentY = 0;
     let targetX = 0;
@@ -134,6 +136,9 @@ export function Hero({ dictionary }: { dictionary: Dictionary }) {
 
     const canReact = () =>
       pointerQuery.matches && !motionQuery.matches && !connection?.saveData;
+    const refreshBounds = () => {
+      bounds = root.getBoundingClientRect();
+    };
     const renderShift = () => {
       currentX += (targetX - currentX) * 0.085;
       currentY += (targetY - currentY) * 0.085;
@@ -159,7 +164,6 @@ export function Hero({ dictionary }: { dictionary: Dictionary }) {
         return;
       }
 
-      const bounds = root.getBoundingClientRect();
       targetX = ((event.clientX - bounds.left) / bounds.width - 0.5) * 12;
       targetY = ((event.clientY - bounds.top) / bounds.height - 0.5) * 8;
       requestShift();
@@ -170,14 +174,18 @@ export function Hero({ dictionary }: { dictionary: Dictionary }) {
       requestShift();
     };
 
+    root.addEventListener("pointerenter", refreshBounds, { passive: true });
     root.addEventListener("pointermove", onPointerMove, { passive: true });
     root.addEventListener("pointerleave", resetShift);
+    window.addEventListener("resize", refreshBounds, { passive: true });
     motionQuery.addEventListener("change", resetShift);
     pointerQuery.addEventListener("change", resetShift);
 
     return () => {
+      root.removeEventListener("pointerenter", refreshBounds);
       root.removeEventListener("pointermove", onPointerMove);
       root.removeEventListener("pointerleave", resetShift);
+      window.removeEventListener("resize", refreshBounds);
       motionQuery.removeEventListener("change", resetShift);
       pointerQuery.removeEventListener("change", resetShift);
       cancelAnimationFrame(frame);
@@ -392,17 +400,15 @@ export function Hero({ dictionary }: { dictionary: Dictionary }) {
                 trigger: root,
                 start: "top top",
                 end: "bottom top",
-                scrub: 0.6,
+                scrub: 0.45,
                 invalidateOnRefresh: true,
               },
             });
 
-            // No separate y on the copy: it is a child of the reel now, so
-            // moving both would compound.
             timeline
-              .to(title, { filter: "blur(3px)", opacity: 0.3 }, 0)
-              .to([eyebrow, lead, actions], { opacity: 0.45 }, 0)
-              .to(media, { scale: 0.975, y: 40 }, 0);
+              .to(title, { opacity: 0.34, y: -8 }, 0)
+              .to([eyebrow, lead, actions], { opacity: 0.5 }, 0)
+              .to(media, { y: 24 }, 0);
 
             if (scrollCue) {
               timeline.to(scrollCue, { opacity: 0, y: -10, duration: 0.22 }, 0);

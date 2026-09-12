@@ -229,6 +229,7 @@ export function SelectedWork({ dictionary, locale }: SelectedWorkProps) {
     const reducedMotionQuery = window.matchMedia(
       "(prefers-reduced-motion: reduce)",
     );
+    const mobileQuery = window.matchMedia("(max-width: 767px)");
     let cancelled = false;
     let setupGeneration = 0;
     let disposeAnimations: (() => void) | undefined;
@@ -243,7 +244,7 @@ export function SelectedWork({ dictionary, locale }: SelectedWorkProps) {
       const currentGeneration = ++setupGeneration;
       clearAnimations();
 
-      if (reducedMotionQuery.matches) {
+      if (reducedMotionQuery.matches || mobileQuery.matches) {
         return;
       }
 
@@ -254,7 +255,8 @@ export function SelectedWork({ dictionary, locale }: SelectedWorkProps) {
           if (
             cancelled ||
             currentGeneration !== setupGeneration ||
-            reducedMotionQuery.matches
+            reducedMotionQuery.matches ||
+            mobileQuery.matches
           ) {
             root.dataset.workMotion = "ready";
             return;
@@ -555,10 +557,12 @@ export function SelectedWork({ dictionary, locale }: SelectedWorkProps) {
 
     setupAnimations();
     reducedMotionQuery.addEventListener("change", setupAnimations);
+    mobileQuery.addEventListener("change", setupAnimations);
 
     return () => {
       cancelled = true;
       reducedMotionQuery.removeEventListener("change", setupAnimations);
+      mobileQuery.removeEventListener("change", setupAnimations);
       clearAnimations();
     };
   }, [dictionary.work.title, locale]);
@@ -571,9 +575,7 @@ export function SelectedWork({ dictionary, locale }: SelectedWorkProps) {
       aria-labelledby="work-title"
       data-motion-section="work"
     >
-      <svg className="atmosphere atmosphere--current" aria-hidden="true" focusable="false" preserveAspectRatio="none">
-        <rect width="100%" height="100%" filter="url(#fx-current)" />
-      </svg>
+      <span className="atmosphere atmosphere--current" aria-hidden="true" />
 
       <div className="container">
         <div className={styles.heading} data-work-heading>
@@ -591,8 +593,6 @@ export function SelectedWork({ dictionary, locale }: SelectedWorkProps) {
         </div>
 
         <div className={styles.featured}>
-          {/* data-lenis-prevent keeps the smooth-scroll wheel handler off this
-              horizontal track so trackpad swipes reach it natively. */}
           <div
             ref={trackRef}
             className={styles.featuredTrack}

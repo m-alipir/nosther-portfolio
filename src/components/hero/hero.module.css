@@ -372,12 +372,27 @@
 }
 
 @media (max-width: 47.99rem) {
-  .hero { padding-block: 6.5rem 3.5rem; }
-  .reelFrame { aspect-ratio: 4 / 3; }
-  .tiltStage { margin-inline: 0; }
-  .title { font-size: clamp(2.5rem, 10.5vw, 3.6rem); }
+  .hero { padding-block: 5.75rem 3rem; }
+  .reelFrame {
+    min-height: 0;
+    aspect-ratio: 16 / 10;
+    border-radius: 1.25rem 1.25rem 0 0;
+  }
+  .reelFrame :is(img, video) { object-position: center; }
+  .tiltStage {
+    width: 100%;
+    margin: 0;
+  }
+  .copy {
+    padding: clamp(1.35rem, 5vw, 1.75rem);
+    border-radius: 0 0 1.25rem 1.25rem;
+    background: linear-gradient(155deg, rgb(40 76 90 / 98%), rgb(10 19 25 / 99%));
+  }
+  .title { font-size: clamp(2.15rem, 9.6vw, 3.1rem); line-height: .88; }
   .lead { max-width: 100%; }
-  .actions :global(.button) { flex: 1 1 11rem; }
+  .actions { gap: .65rem; }
+  .actions :global(.button) { flex: 1 1 100%; }
+  .disclosure { padding-inline: .25rem; font-size: .72rem; }
 }
 
 @media (max-width: 21.99rem) {
@@ -387,7 +402,7 @@
 
 /* Turkish headline words are longer; let them shrink rather than overflow. */
 @media (max-width: 47.99rem) {
-  :global(html[lang="tr"]) .title { font-size: clamp(1.95rem, 8.4vw, 2.9rem); letter-spacing: -.045em; }
+  :global(html[lang="tr"]) .title { font-size: clamp(2rem, 8.7vw, 2.8rem); letter-spacing: -.042em; }
 }
 
 @media (prefers-reduced-motion: reduce) {

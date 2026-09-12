@@ -33,18 +33,18 @@ Purple-heavy gradients, neon cyan, and saturated synthetic "AI" color transition
 
 ## Glass usage
 
-Glass is a selective material, not a universal card treatment. Three weights, one build, defined as token quartets (`fill`/`edge`/`cast`/`filter`, plus `drop` for clip-path surfaces) in `globals.css`:
+Glass is a selective material, not a universal card treatment. The material is built from opaque-enough layered fills, edge light, restrained cast shadows, and modest live blur. Blur radii stay deliberately bounded so the material does not trigger sustained full-page repaints while scrolling.
 
-- **Clear** — 3px blur. Nearly invisible; only its lit edge says it's there. Nav bars, captions, thumbnails.
-- **Frosted** — 16px blur, saturation pushed so color behind it intensifies rather than greys out. The workhorse weight, used on most panels (header, hero copy plate, service-row hover, project-card body).
-- **Deep** — 34px blur, inner bloom. Only for panels that must obscure — dark grounds, long text, overlays (About's copy plate and media frame, Contact's card, Selected Work's supporting-heading panel).
+- **Clear** — a light translucent fill with a crisp illuminated edge and 2px blur. Used for quiet controls and captions.
+- **Frosted** — a denser layered fill with stronger contrast and 8px blur. The workhorse surface for the header and project copy.
+- **Deep** — a dark gradient with inner bloom and 14px blur. Reserved for long copy over media and deep-section overlays.
 
 Avoid grids of glass cards, floating dashboard panels, and glass on every section — each surface needs a reason connecting media, depth, and typography.
 
 ## Texture and photography rules
 
 - Film grain is fine, low-contrast, page-level (one layer, not per-section) and must not dirty text or reduce media clarity.
-- Water-caustic/current/cloud light is procedural SVG (`feTurbulence` chains defined in `src/components/atmosphere/atmosphere-defs.tsx`, applied via the `.atmosphere` utility classes) — abstract, soft, section-scoped, never a literal ocean illustration on its own.
+- Water-light atmosphere comes from lightweight CSS gradients and tinted coastal photography. Only the visible section's gradient layer drifts; offscreen atmosphere animations stay paused, and procedural SVG turbulence is not used.
 - Real coastal photography is now used as a subordinate background layer in Selected Work, Services, and About (`public/media/backgrounds/`), always sitting under the section's own color gradient — either alpha-blended or `multiply`-blended — so it reads as depth/texture within the palette, never as a raw, saturated stock photo. Keep it that way: a new background photo goes in tinted, not bare.
 - No fish, coral, shells, bubbles, water-droplet props, or decorative wave illustrations. Photography is real aerial/coastal imagery, not illustrated ocean kitsch.
 - Texture must degrade to a stable still state under reduced motion.
@@ -70,7 +70,7 @@ Real moving-image work is the primary visual proof. A small number of large fram
 - Mobile motion is simpler and shorter. Touch never depends on hover.
 - Reduced motion produces a complete, legible, poster-led experience with no concealed content.
 - Preserve the one-preview-at-a-time rule and avoid simultaneous autoplay competition.
-- Cursor-tracked 3D tilt (hero copy plate, project-card media) is restrained — a few degrees of rotation, eased slower than the cursor — and runs only for fine pointers with hover and no reduced-motion preference.
+- Pointer-following cursor, magnetic, tilt, and hero parallax effects remain available for fine pointers. Their work is requestAnimationFrame-gated, geometry reads are cached where possible, and no effect keeps a permanent idle render loop alive.
 
 ## Desktop viewport targets
 
@@ -87,7 +87,7 @@ Primary visual QA targets are 1366×768, 1440×900, and 1920×1080. The hero fit
 
 ## Hero: The Showreel Surface
 
-The hero is one cinematic object: `/media/hero/hero-reel.{webm,mp4}` (poster: `/media/hero/hero-reel-poster.webp`) as the sole hero media source, filling the full content width and height-capped to roughly one viewport. The reel itself always plays in full; a frosted glass copy plate sits on top of it at the bottom-left, holding the eyebrow, headline, lead, and both CTAs, with cursor-tracked 3D tilt (see Motion principles) on desktop. That copy plate is a one-time reveal, not a repeating loop: it's visible for the first 10 seconds with a small countdown badge in its top-right corner, fades away so the reel plays unobstructed, then fades back in for good once the reel finishes its first pass — after that it stays up permanently.
+The hero is one cinematic object: `/media/hero/hero-reel.{webm,mp4}` (poster: `/media/hero/hero-reel-poster.webp`) as the sole hero media source, filling the full content width and height-capped to roughly one viewport. The reel itself always plays in full; a deep optical copy plate sits on top of it at the bottom-left on desktop, holding the eyebrow, headline, lead, and both CTAs, with restrained cursor-tracked tilt. On mobile the poster and copy become a compact stacked card with no overlap. The copy plate is a one-time reveal, not a repeating loop: it's visible for the first 10 seconds with a small countdown badge in its top-right corner, fades away so the reel plays unobstructed, then fades back in for good once the reel finishes its first pass — after that it stays up permanently.
 
 The localized headline is `STORIES SHAPED IN MOTION.` in English and `HİKÂYELER HAREKETLE ŞEKİLLENİR.` in Turkish, each rendered as three staggered lines with the middle line offset right for an editorial stack rather than a solid block. Because the edit uses third-party footage, visible copy claims editing and visual effects only, and a localized disclosure line sits directly beneath the media in normal flow (not boxed, not inside the footage). Ali's embedded `mamilex` creator watermark stays visible and unchanged inside the edit.
 

@@ -9,6 +9,33 @@ export function MotionRuntime() {
   const prefersReducedMotion = usePrefersReducedMotion();
 
   useEffect(() => {
+    const layers = Array.from(
+      document.querySelectorAll<HTMLElement>(".atmosphere"),
+    );
+    if (layers.length === 0 || prefersReducedMotion) {
+      return;
+    }
+
+    const observer = new IntersectionObserver(
+      (entries) => {
+        entries.forEach((entry) => {
+          (entry.target as HTMLElement).dataset.atmosphereActive = String(
+            entry.isIntersecting,
+          );
+        });
+      },
+      { rootMargin: "20% 0px", threshold: 0 },
+    );
+
+    layers.forEach((layer) => observer.observe(layer));
+
+    return () => {
+      observer.disconnect();
+      layers.forEach((layer) => layer.removeAttribute("data-atmosphere-active"));
+    };
+  }, [prefersReducedMotion]);
+
+  useEffect(() => {
     if (!prefersReducedMotion) {
       void ensureGsapRegistered().catch(() => undefined);
     }

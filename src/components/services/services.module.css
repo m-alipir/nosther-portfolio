@@ -167,12 +167,16 @@
 }
 
 @media (max-width: 55.99rem) {
+  .section { padding-block: 5.5rem; }
+  .layout { width: 90vw; }
   .heading { grid-template-columns: 1fr; }
-  .heading :global(.section-title) { font-size: clamp(2.4rem, 10vw, 3.4rem); }
+  .heading :global(.section-title) { font-size: clamp(2.35rem, 10vw, 3.4rem); line-height: .88; }
   .heading::after { display: none; }
-  .item { min-height: 14rem; grid-template-columns: 4.5rem 1fr; }
-  .number { padding-top: 3rem; }
-  .item h3 { font-size: clamp(1.8rem, 7vw, 2.6rem); }
+  .item { min-height: 0; grid-template-columns: 2.5rem 1fr; gap: .75rem; padding-block: 2.25rem; transform: none; }
+  .item::before { display: none; }
+  .number { padding-top: .15rem; font-size: 1rem; }
+  .item h3 { font-size: clamp(1.75rem, 7vw, 2.45rem); line-height: .94; }
+  .item p { margin-top: .9rem; font-size: 1rem; }
   .rule { display: none; }
 }
 
